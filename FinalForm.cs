@@ -2,19 +2,12 @@
 //Below are the required header files
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Kinect;
 using LightBuzz.Vitruvius;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
-using System.Timers;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -23,22 +16,26 @@ namespace Final_Kinect
 {
     public partial class FinalForm : Form
     {
-        //initializing Kinect Sensor
+        // Initializing Kinect Sensor
         KinectSensor kinect_sensor = null;
-        //Body frame reader used to detect body by kinect
+
+        // Body frame reader used to detect body by kinect
         MultiSourceFrameReader bodyframe_reader = null;
+
         Body[] body = null;
         int count = 0;
-        Stopwatch stp = new Stopwatch();
+        Stopwatch stopWatch = new Stopwatch();
+
         //To write to file we use Streamwriter and path for three files
         static String a1;
-        static string a;
-        static string a2;
-        static string a3;
-        static string a4;
-        static string a5;
-        static string a6;
-        static string a7;
+        static String a;
+        static String a2;
+        static String a3;
+        static String a4;
+        static String a5;
+        static String a6;
+        static String a7;
+
         StreamWriter file;
         StreamWriter file1;
         StreamWriter file2;
@@ -46,10 +43,13 @@ namespace Final_Kinect
         StreamWriter file4;
         StreamWriter file5;
         StreamWriter file6;
+
         String s = "00:40:00";
-        //variables were all the angles information is stored
+
+        // Variables where all the angles information is stored
         int x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10;
-        //variables used to get the average values
+
+        // Variables used to get the average values
         int sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0, sum5 = 0, sum6 = 0, sum7 = 0, sum8 = 0,counter_vary=0;
         int graph_counter = 0, graph_counter1 = 0, graph_counter2 = 0, graph_counter3 = 0, graph_counter4 = 0, graph_counter5 = 0;
         int file_writer_counter = 10;
@@ -60,113 +60,42 @@ namespace Final_Kinect
         int choice_color;
         int avg_mean1, avg_mean2, avg_mean3, avg_mean4, avg_mean5, avg_mean6,session_time=0,back_original;
 
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            count = 21;
-            button1.BackColor = Color.Red;
-            file_writer_counter = 10;
-
-        }
-
-        private void pictureBox6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void progressBar1_Click(object sender, EventArgs e)
-        {
-          
-        }
-
-        int counter_value1, counter_value2, counter_value3, counter_value4, counter_value5, counter_value6, counter_value7, counter_value8,counter_value9,counter_value10,counter_value11,counter_value12;
+        int counter_value1, counter_value2, counter_value3, counter_value4, counter_value5, counter_value6, counter_value7, counter_value8, counter_value9, counter_value10, counter_value11, counter_value12;
         string pass7;
         int angle_counter;
-        private void timer1_Tick_1(object sender, EventArgs e)
-        {
-
-            elapsedTime = DateTime.Now - startTime;
-            progressBar1.Maximum = (2 * session_time);
-
-            counter++;
-            if (counter % 60 == 0)
-            {
-                if (counter_value5 == 1)
-                {
-                    progressBar1.Increment(1);
-                   
-                    progressBar1.Refresh();
-                   
-
-                }
-            }
-           
-
-        }
-
-        private void button1_Click_3(object sender, EventArgs e)
-        {
-            count = 22;
-            // form7.Show();
-            warning1 = Convert.ToInt32(textBox2.Text);
-            notallowed1 = Convert.ToInt32(textBox3.Text);
-            warning = warning1;
-            notallowed = notallowed1;
-            button1.BackColor = Color.DeepSkyBlue;
-            if (file_writer_counter == 10)
-            {
-                file5.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement");
-                file5.WriteLine(user_name + "," + experiment_no + "," + base_smoothing + "," + warning + "," + notallowed);
-                file5.WriteLine(" " + "," + " " + "," + " " + "," + " " + "," + " ");
-                file5.WriteLine("ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "Movement");
-                file6.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement");
-                file6.WriteLine(user_name + "," + experiment_no + "," + base_smoothing + "," + warning + "," + notallowed);
-                file6.WriteLine("Elapsed_Time"+","+"Values");
-                file6.WriteLine(" " + "," + " ");
-                file_writer_counter = 0;
-            }
-        }
-
-        private void button1_Click_2(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-
-        }
 
         int mean_counter = 1;
         int average_tagged = 0;
         int base_smoothing;
+
         int[] median_smoothing1;
         int[] median_smoothing2;
         int[] median_smoothing3;
         int[] median_smoothing4;
         int[] median_smoothing5;
         int[] median_smoothing6;
-        int warning,warning1;
-        int notallowed,notallowed1;
+
+        int warning, warning1;
+        int notallowed, notallowed1;
         int median1, median2, median3, median4, median5, median6;
+
         static string user_name;
         static string experiment_no;
-        private void pictureBox1_Click_1(object sender, EventArgs e)
-        {
 
-        }
-        //Method to get the current date time and the time difference
+        // Method to get the current date time and the time difference
         DateTime startTime = new DateTime();
         TimeSpan elapsedTime = new TimeSpan();
         DateTime totalTime = new DateTime();
         TimeSpan elapsedTime1 = new TimeSpan();
+
         int counter = 0;
         int counter1 = 0;
         int counter_sum = 0;
         int counter_original = 0;
         int counter_warning = 0;
         int counter_na = 0;
-        //arrays where the temperoray values are stored
+
+        // Arrays where the temporary values are stored
         int[] temp1 = new int[2];
         int[] temp2 = new int[2];
         int[] temp3 = new int[2];
@@ -176,33 +105,36 @@ namespace Final_Kinect
         int[] temp7 = new int[2];
         int[] temp8 = new int[2];
         int i = 0;
-        //Timer method
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            elapsedTime = DateTime.Now - startTime;
 
-
-           
-            counter++;
-            if (counter % 60 == 0)
-            {
-                if (counter_value5 == 1)
-                {
-                    progressBar1.Value=++i;
-                    progressBar1.Update();
-                    
-                    //progressBar1.Value = counter;
-
-                }
-            }
-
-        }
-
-
-        public FinalForm(string pass_value1, string pass_value2, string pass_value3, string pass_value4, string pass_value5,int counter_new,int counter_1,int counter_2,int counter_3,int counter_4,int counter_5,int counter_6,int counter_7,int counter8,int counter_9,int counter_10,int counter_11,string pass_value6,int counter_12,string pass_value7,string file_value,int counter_angle,int color_choice)
+        public FinalForm(
+            string subjectInitials,
+            string experimentNumber,
+            string smoothingKernal,
+            string smallMovementLowerLimit,
+            string largeMovementLowerLimit,
+            int movieFrame,
+            int movie,
+            int movieSensitive,
+            int progressFrame,
+            int progress,
+            int progressSensitive,
+            int trafficFrame,
+            int traffic,
+            int trafficSensitive,
+            int rawMeasures,
+            int means,
+            int medians,
+            string sessionTime,
+            int lowerLimitLargeMovement,
+            string videoFile,
+            string filePath,
+            int counterAngle,
+            int colorChoice
+            )
         {
             InitializeComponent();
-            choice_color = color_choice;
+            choice_color = colorChoice;
+
             //Below code represents of how we represent data of the angles on all the charts
             chart1.ChartAreas[0].AxisY.ScaleView.Zoom(-20, 20);
             chart1.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
@@ -210,45 +142,51 @@ namespace Final_Kinect
             chart1.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
             chart1.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
             chart1.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
+
             chart2.ChartAreas[0].AxisY.ScaleView.Zoom(-20, 20);
             chart2.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
             chart2.ChartAreas[0].CursorX.IsUserEnabled = true;
             chart2.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
             chart2.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
             chart2.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
+
             chart3.ChartAreas[0].AxisY.ScaleView.Zoom(-20, 20);
             chart3.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
             chart3.ChartAreas[0].CursorX.IsUserEnabled = true;
             chart3.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
             chart3.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
             chart3.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
+
             chart4.ChartAreas[0].AxisY.ScaleView.Zoom(-20,20);
             chart4.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
             chart4.ChartAreas[0].CursorX.IsUserEnabled = true;
             chart4.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
             chart4.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
             chart4.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
+
             chart5.ChartAreas[0].AxisY.ScaleView.Zoom(-20, 20);
             chart5.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
             chart5.ChartAreas[0].CursorX.IsUserEnabled = true;
             chart5.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
             chart5.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
             chart5.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
+
             chart6.ChartAreas[0].AxisY.ScaleView.Zoom(-20, 20);
             chart6.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
             chart6.ChartAreas[0].CursorX.IsUserEnabled = true;
             chart6.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
             chart6.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
             chart6.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
-            user_name = pass_value1;
-            experiment_no = pass_value2;
-            base_smoothing = Convert.ToInt32(pass_value3);
-            warning = Convert.ToInt32(pass_value4);
-            notallowed = Convert.ToInt32(pass_value5);
+
+            user_name = subjectInitials;
+            experiment_no = experimentNumber;
+            base_smoothing = Convert.ToInt32(smoothingKernal);
+            warning = Convert.ToInt32(smallMovementLowerLimit);
+            notallowed = Convert.ToInt32(largeMovementLowerLimit);
             warning1 = warning;
             notallowed1 = notallowed;
-            session_time = Convert.ToInt32(pass_value6);
-            angle_counter = counter_angle;
+            session_time = Convert.ToInt32(sessionTime);
+            angle_counter = counterAngle;
             median_smoothing1 = new int[base_smoothing];
             median_smoothing2 = new int[base_smoothing];
             median_smoothing3 = new int[base_smoothing];
@@ -257,27 +195,27 @@ namespace Final_Kinect
             median_smoothing6 = new int[base_smoothing];
             textBox2.Text = warning1.ToString();
             textBox3.Text = notallowed1.ToString();
-            counter_value1 = counter_new;
-            counter_value2 = counter_1;
-            counter_value3 = counter_2;
-            counter_value4 = counter_3;
-            counter_value5 = counter_4;
-            counter_value6 = counter_5;
-            counter_value7 = counter_6;
-            counter_value8 = counter_7;
-            counter_value9 = counter8;
-            counter_value10 = counter_9;
-            counter_value11 = counter_10;
-            counter_value12 = counter_11;
-            pass7 = pass_value7;
-            progressBar1.Maximum = (2 * session_time);
-            axWindowsMediaPlayer1.URL = pass_value7;
+            counter_value1 = movieFrame;
+            counter_value2 = movie;
+            counter_value3 = movieSensitive;
+            counter_value4 = progressFrame;
+            counter_value5 = progress;
+            counter_value6 = progressSensitive;
+            counter_value7 = trafficFrame;
+            counter_value8 = traffic;
+            counter_value9 = trafficSensitive;
+            counter_value10 = rawMeasures;
+            counter_value11 = means;
+            counter_value12 = medians;
+            pass7 = videoFile;
+            progressBar.Maximum = (2 * session_time);
+            axWindowsMediaPlayer1.URL = videoFile;
             
-            if (counter_12==1)
+            if (lowerLimitLargeMovement==1)
             {
                 back_original = notallowed;
             }
-            if(counter_12==0)
+            if(lowerLimitLargeMovement==0)
             {
                 back_original = warning;
             }
@@ -287,7 +225,7 @@ namespace Final_Kinect
             }
             if(counter_value4==0)
             {
-                progressBar1.Hide();
+                progressBar.Hide();
             }
             if(counter_value7==0)
             {
@@ -303,13 +241,13 @@ namespace Final_Kinect
                 pictureBox3.Hide();
             }
             a1 = DateTime.Now.ToString("yyyyMMdd");
-            a = Path.Combine(file_value + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "raw" + ".csv");
-            a2 = Path.Combine(file_value + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "video" + ".csv");
-            a3 = Path.Combine(file_value + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "average" + ".csv");
-            a4 = Path.Combine(file_value + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "mean" + ".csv");
-            a5 = Path.Combine(file_value + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "median" + ".csv");
-            a6 = Path.Combine(file_value + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "difference" + ".csv");
-            a7 = Path.Combine(file_value+"\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "amplitude" + ".csv");
+            a = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "raw" + ".csv");
+            a2 = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "video" + ".csv");
+            a3 = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "average" + ".csv");
+            a4 = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "mean" + ".csv");
+            a5 = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "median" + ".csv");
+            a6 = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "difference" + ".csv");
+            a7 = Path.Combine(filePath+"\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "amplitude" + ".csv");
             file = new StreamWriter(a, true);
             file1 = new StreamWriter(a2, true);
             file2 = new StreamWriter(a3, true);
@@ -320,7 +258,7 @@ namespace Final_Kinect
             axWindowsMediaPlayer1.Ctlcontrols.stop();
             this.KeyPreview = true;
             totalTime = DateTime.Parse(s);
-            button1.BackColor = Color.Red;
+            startButton.BackColor = Color.Red;
             timer1.Tick += new EventHandler(timer1_Tick);
             timer1.Interval = 1000;
             timer1.Enabled = false;
@@ -336,10 +274,53 @@ namespace Final_Kinect
             initializeKinect();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void startButton_Click(object sender, EventArgs e)
         {
-            Form5 baseline = new Form5();
-            baseline.ShowDialog();
+            count = 22;
+            warning1 = Convert.ToInt32(textBox2.Text);
+            notallowed1 = Convert.ToInt32(textBox3.Text);
+            warning = warning1;
+            notallowed = notallowed1;
+            startButton.BackColor = Color.DeepSkyBlue;
+
+            if (file_writer_counter == 10)
+            {
+                // Headers
+
+                file5.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement");
+                file5.WriteLine(user_name + "," + experiment_no + "," + base_smoothing + "," + warning + "," + notallowed);
+                file5.WriteLine(" " + "," + " " + "," + " " + "," + " " + "," + " ");
+                file5.WriteLine("ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "Movement");
+
+                file6.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement");
+                file6.WriteLine(user_name + "," + experiment_no + "," + base_smoothing + "," + warning + "," + notallowed);
+                file6.WriteLine("Elapsed_Time" + "," + "Values");
+                file6.WriteLine(" " + "," + " ");
+
+                file_writer_counter = 0;
+            }
+        }
+
+        private void stopButton_Click(object sender, EventArgs e)
+        {
+            count = 21;
+            startButton.BackColor = Color.Red;
+            file_writer_counter = 10;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            elapsedTime = DateTime.Now - startTime;
+
+            counter++;
+            if (counter % 60 == 0)
+            {
+                if (counter_value5 == 1)
+                {
+                    progressBar.Value = ++i;
+                    progressBar.Update();
+                }
+            }
         }
 
         public void initializeKinect()
@@ -347,9 +328,9 @@ namespace Final_Kinect
             kinect_sensor = KinectSensor.GetDefault();
             if (kinect_sensor != null)
             {
-                kinect_sensor.Open();//turn on kinect
+                kinect_sensor.Open(); // Turn on kinect
             }
-            //as we are using kinect camera as well as body detection so here we have used multisourceframereader
+            // We are using kinect camera as well as body detection so here we have used MultiSourceFrameReader
             bodyframe_reader = kinect_sensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Body);
             if (bodyframe_reader != null)
             {
@@ -357,6 +338,7 @@ namespace Final_Kinect
             }
             form7.Show();
         }
+
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
             bool data_received = false;
@@ -446,17 +428,17 @@ namespace Final_Kinect
                     if (body_1.IsTracked)
                     {
                         if (count == 22)
-                            button1.BackColor = Color.DeepSkyBlue;
+                            startButton.BackColor = Color.DeepSkyBlue;
                         else if (count == 21)
                         {
-                            button1.BackColor = Color.Red;
+                            startButton.BackColor = Color.Red;
                             axWindowsMediaPlayer1.Ctlcontrols.pause();
                             timer1.Enabled = false;
                         }
                         else if (count == 20)
-                            button1.BackColor = Color.Blue;
+                            startButton.BackColor = Color.Blue;
                         else
-                            button1.BackColor = Color.Green;
+                            startButton.BackColor = Color.Green;
                         IReadOnlyDictionary<JointType, Joint> joints = body_1.Joints;
                         Dictionary<JointType, Point> joint_points = new Dictionary<JointType, Point>();
                         Joint Midspine = joints[JointType.Neck];
@@ -499,8 +481,8 @@ namespace Final_Kinect
                             // form7.transfer_values();
                             
                            // axWindowsMediaPlayer1.settings.mute = false;
-                            stp.Start();
-                            textBox1.Text = stp.Elapsed.ToString();
+                            stopWatch.Start();
+                            textBox1.Text = stopWatch.Elapsed.ToString();
                             
                             counter_sum++;
                            timer1.Enabled = true;
@@ -878,7 +860,7 @@ namespace Final_Kinect
                                             pictureBox1.Visible =true;
                                             pictureBox2.Visible = false;
                                             pictureBox3.Visible =false;
-                                            stp.Stop();
+                                            stopWatch.Stop();
                                             count = 21;
                                         }
                                         else
@@ -1219,7 +1201,6 @@ namespace Final_Kinect
                                     temp4[0] = y4;
                                     temp5[0] = y5;
                                     temp6[0] = y6;
-
                                 }
                                 if (counter_original == 2)
                                 {
@@ -1243,7 +1224,9 @@ namespace Final_Kinect
                                 counter_na = 0;
                                 counter_warning = 0;
                                 if (counter1 == 0)
+                                { 
                                     file.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6);
+                                }
                                 else
                                 {
                                     //small tagged  movement
@@ -1251,75 +1234,69 @@ namespace Final_Kinect
                                     {
                                         file.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "SmallMovement");
                                         counter1 = 0;
-
                                     }
                                     //medium tagged movement
                                     if (counter1 == 2)
                                     {
                                         file.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "MediumMovement");
                                         counter1 = 0;
-
                                     }
                                     //large tagged movement
                                     if (counter1 == 3)
                                     {
                                         file.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "LargeMovement");
                                         counter1 = 0;
-
                                     }
-
                                 }
                             }
-
-
-
                         }
                         else
                         {
-                            //we refer these angle values as the original position and compare with obtained angle values(y1,y2,y3,....)
+                            // We refer these angle values as the original position and compare with obtained angle values(y1,y2,y3,....)
                             x1 = (int)angle_1;
                             x2 = (int)angle_2;
                             x3 = (int)angle_3;
                             x4 = (int)angle_4;
                             x5 = (int)angle_5;
                             x6 = (int)angle_6;
+
                             if (count == 21)
                             {
-                                if (x1 > (original1 - (back_original)) && x1 < (original1 + (back_original)) && x2 > (original2 - back_original) && x2 < (original2 + back_original) && x3 > (original3 - back_original) && x3 < (original3 + back_original) && x4 > (original4 - back_original) && x4 < (original4 + back_original) && x5 > (original5 - back_original) && x5 < (original5 + back_original) && x6 > (original6 - back_original) && x6 < (original6 + back_original))
+                                if (x1 > (original1 - (back_original)) && 
+                                    x1 < (original1 + (back_original)) && 
+                                    x2 > (original2 - back_original) && 
+                                    x2 < (original2 + back_original) &&
+                                    x3 > (original3 - back_original) &&
+                                    x3 < (original3 + back_original) &&
+                                    x4 > (original4 - back_original) &&
+                                    x4 < (original4 + back_original) &&
+                                    x5 > (original5 - back_original) &&
+                                    x5 < (original5 + back_original) &&
+                                    x6 > (original6 - back_original) &&
+                                    x6 < (original6 + back_original))
                                 {
                                     count = 20;
                                     counter_vary = 0;
                                 }
                             }
-
                         }
-
-
                     }
-
                 }
             }
-
         }
 
-        //Form load method
-        private void Form6_Load(object sender, EventArgs e)
-        {
-           
-            //label1.Parent = progressBar1;
-            //label1.BackColor = Color.Transparent;
-            
+        private void FinalForm_Load(object sender, EventArgs e)
+        {            
             if (count == 22)
             {
                 this.BackColor = System.Drawing.Color.Black;
-
             }
-           
-
         }
-        //when we close the form
-        private void Form6_FormClosing(object sender, FormClosingEventArgs e)
+
+        private void FinalForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // Close all data files when form closes
+
             file.Close();
             file1.Close();
             file2.Close();
@@ -1328,23 +1305,19 @@ namespace Final_Kinect
             file5.Close();
             file6.Close();
         }
-        //method used for key press event
-        private void Form6_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
-        {
-            // button2.BackColor = Color.Green;
 
-            Console.WriteLine(e.KeyChar);
-            //for small movement press s key
+        private void FinalForm_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            // For small tagged movement press s key
             if (e.KeyChar == 's')
             {
-                Console.WriteLine("Hello World");
                 e.Handled = true;
                 counter1 = 1;
                 average_tagged = 1;
                 average_tagged1 = 1;
-
             }
-            //for medium tagged movement press m
+
+            // For medium tagged movement press m
             if (e.KeyChar == 'm')
             {
                 e.Handled = true;
@@ -1352,22 +1325,22 @@ namespace Final_Kinect
                 average_tagged = 1;
                 average_tagged1 = 1;
             }
-            //for large tagged movement press l
+
+            // For large tagged movement press l
             if (e.KeyChar == 'l')
             {
                 counter1 = 3;
                 average_tagged = 1;
                 average_tagged1 = 1;
             }
-            //to start the process press r
+
+            // To start the process press r
             if (e.KeyChar == 'r')
             {
                 count = 22;
 
-                button1.BackColor = Color.DeepSkyBlue;
+                startButton.BackColor = Color.DeepSkyBlue;
             }
-
         }
-
     }
 }

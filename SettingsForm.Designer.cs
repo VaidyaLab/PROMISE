@@ -44,7 +44,7 @@
             this.videoFileBrowseButton = new System.Windows.Forms.Button();
             this.videoFileTextBox = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
-            this.smootingKernalTextBox = new System.Windows.Forms.TextBox();
+            this.smoothingKernalTextBox = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -236,7 +236,7 @@
             this.panel3.Controls.Add(this.videoFileBrowseButton);
             this.panel3.Controls.Add(this.videoFileTextBox);
             this.panel3.Controls.Add(this.label15);
-            this.panel3.Controls.Add(this.smootingKernalTextBox);
+            this.panel3.Controls.Add(this.smoothingKernalTextBox);
             this.panel3.Controls.Add(this.label9);
             this.panel3.Controls.Add(this.label8);
             this.panel3.Location = new System.Drawing.Point(438, 172);
@@ -276,14 +276,14 @@
             this.label15.TabIndex = 3;
             this.label15.Text = "Video File:";
             // 
-            // smootingKernalTextBox
+            // smoothingKernalTextBox
             // 
-            this.smootingKernalTextBox.Location = new System.Drawing.Point(132, 50);
-            this.smootingKernalTextBox.Margin = new System.Windows.Forms.Padding(2);
-            this.smootingKernalTextBox.Name = "smootingKernalTextBox";
-            this.smootingKernalTextBox.Size = new System.Drawing.Size(68, 20);
-            this.smootingKernalTextBox.TabIndex = 2;
-            this.smootingKernalTextBox.Text = "8";
+            this.smoothingKernalTextBox.Location = new System.Drawing.Point(132, 50);
+            this.smoothingKernalTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.smoothingKernalTextBox.Name = "smoothingKernalTextBox";
+            this.smoothingKernalTextBox.Size = new System.Drawing.Size(68, 20);
+            this.smoothingKernalTextBox.TabIndex = 2;
+            this.smoothingKernalTextBox.Text = "8";
             // 
             // label9
             // 
@@ -853,7 +853,7 @@
             this.panel7.Size = new System.Drawing.Size(194, 42);
             this.panel7.TabIndex = 26;
             // 
-            // Form1
+            // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -866,7 +866,7 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "Form1";
+            this.Name = "SettingsForm";
             this.Text = "Form1";
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -906,7 +906,7 @@
         private System.Windows.Forms.Label label11;
         public System.Windows.Forms.TextBox experimentNumberTextBox;
         public System.Windows.Forms.TextBox subjectInitialsTextBox;
-        public System.Windows.Forms.TextBox smootingKernalTextBox;
+        public System.Windows.Forms.TextBox smoothingKernalTextBox;
         public System.Windows.Forms.TextBox largeMovementLowerLimitTextBox;
         public System.Windows.Forms.TextBox smallMovementLowerLimitTextBox;
         private System.Windows.Forms.TextBox sessionTimeTextBox;

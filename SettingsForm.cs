@@ -35,13 +35,13 @@ namespace Final_Kinect
                 counter_angle = 3;
             }
 
-            // Run Baseline
+            // Run Baseline - I believe this is not used at all and may not even work
             if (baselineVersionRadioButton.Checked)
             {
                 BaselineForm baselineForm = new BaselineForm(
                     subjectInitialsTextBox.Text,
                     experimentNumberTextBox.Text,
-                    smootingKernalTextBox.Text,
+                    smoothingKernalTextBox.Text,
                     smallMovementLowerLimitTextBox.Text,
                     largeMovementLowerLimitTextBox.Text,
                     filePathTextBox.Text,
@@ -51,13 +51,14 @@ namespace Final_Kinect
 
                 baselineForm.Show();
             }
+
            // Run Final (with all components)
             else if (finalVersionRadioButton.Checked)
             {
                 FinalForm baseline = new FinalForm(
                     subjectInitialsTextBox.Text,
                     experimentNumberTextBox.Text,
-                    smootingKernalTextBox.Text,
+                    smoothingKernalTextBox.Text,
                     smallMovementLowerLimitTextBox.Text,
                     largeMovementLowerLimitTextBox.Text,
                     movieFrameCheckBox.Checked ? 1 : 0,

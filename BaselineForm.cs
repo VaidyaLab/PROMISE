@@ -21,51 +21,56 @@ namespace Final_Kinect
 {
     public partial class BaselineForm : Form
     {
-        //initializing Kinect Sensor
-        KinectSensor kinect_sensor = null;
-        //Body frame reader used to detect body by kinect
-        MultiSourceFrameReader bodyframe_reader = null;
+        // Initializing Kinect Sensor
+        KinectSensor kinectSensor = null;
+
+        // Body frame reader used to detect body by kinect
+        MultiSourceFrameReader bodyFrameReader = null;
+
         Body[] body = null;
+
         int count = 0;
-        Stopwatch stp = new Stopwatch();
+
+        Stopwatch stopWatch = new Stopwatch();
+
         //To write to file we use Streamwriter and path for three files
-        static String a1 ;
-        static string a ;
-        static string a2;
-        static string a3;
-        static string a4;
-        static string a5;
-        static string a6;
-        static string a7;
-        StreamWriter file ;
-        StreamWriter file1 ;
-        StreamWriter file2 ;
+        static String a1;
+        static String a;
+        static String a2;
+        static String a3;
+        static String a4;
+        static String a5;
+        static String a6;
+        static String a7;
+        StreamWriter file;
+        StreamWriter file1;
+        StreamWriter file2;
         StreamWriter file3;
         StreamWriter file4;
         StreamWriter file5;
         StreamWriter file6;
         String s = "00:40:00";
-        //variables were all the angles information is stored
+
+        // Variables where all the angles information is stored
         int x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10;
         int file_writer_counter = 10;
-        //variables used to get the average values
+
+        // Variables used to get the average values
         int sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0, sum5 = 0, sum6 = 0, sum7 = 0, sum8 = 0;
         double avg1, avg2, avg3, avg4, avg5, avg6, avg7, avg8;
         int mean_sum1 = 0, mean_sum2 = 0, mean_sum3 = 0, mean_sum4 = 0, mean_sum5 = 0, mean_sum6 = 0;
-        int avg_mean1, avg_mean2, avg_mean3, avg_mean4, avg_mean5, avg_mean6,average_tagged1=0;
-        int graph_counter = 0;
+        int avg_mean1, avg_mean2, avg_mean3, avg_mean4, avg_mean5, avg_mean6, average_tagged1 = 0;
+        int graph_counter = 0;  
 
-       
-
-        private void button7_Click(object sender, EventArgs e)
+        private void stopButton_Click(object sender, EventArgs e)
         {
             count = 21;
-            button7.BackColor = Color.Red;
+            stopButton.BackColor = Color.Red;
             file_writer_counter = 10;
         }
 
         int angle_counter,choice_color;
-        private void button1_Click_1(object sender, EventArgs e)
+        private void startResumeButton_Click(object sender, EventArgs e)
         {
             Form3 baseline = new Form3();
             //baseline.ShowDialog();
@@ -85,11 +90,8 @@ namespace Final_Kinect
         int median1, median2, median3, median4, median5, median6;
         static string user_name;
         static string experiment_no;
-        private void pictureBox1_Click_1(object sender, EventArgs e)
-        {
 
-        }
-        //Method to get the current date time and the time difference
+        // Method to get the current date time and the time difference
         DateTime startTime = new DateTime();
         TimeSpan elapsedTime = new TimeSpan();
         DateTime totalTime = new DateTime();
@@ -123,7 +125,16 @@ namespace Final_Kinect
         }
 
        
-        public BaselineForm(string pass_value1,string pass_value2,string pass_value3,string pass_value4,string pass_value5,string file_value,int counter_angle,int color_choice)
+        public BaselineForm(
+            string subjectInitials,
+            string experimentNumber,
+            string smoothingKernal,
+            string smallMovementLowerLimit,
+            string largeMovementLowerLimit,
+            string filePath,
+            int counterAngle,
+            int colorChoice
+        )
         {
             InitializeComponent();
             chart1.ChartAreas[0].AxisY.ScaleView.Zoom(0, 15);
@@ -131,15 +142,15 @@ namespace Final_Kinect
             chart1.ChartAreas[0].CursorX.IsUserEnabled = true;
             chart1.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
             chart1.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
-            choice_color = color_choice;
-            angle_counter = counter_angle;
-            user_name = pass_value1;
-            experiment_no = pass_value2;
-            base_smoothing = Convert.ToInt32(pass_value3);
-            warning = Convert.ToInt32(pass_value4);
+            choice_color = colorChoice;
+            angle_counter = counterAngle;
+            user_name = subjectInitials;
+            experiment_no = experimentNumber;
+            base_smoothing = Convert.ToInt32(smoothingKernal);
+            warning = Convert.ToInt32(smallMovementLowerLimit);
             warning1 = warning;
            
-            notallowed = Convert.ToInt32(pass_value5);
+            notallowed = Convert.ToInt32(largeMovementLowerLimit);
             notallowed1 = notallowed;
             median_smoothing1 = new int[base_smoothing];
             median_smoothing2 = new int[base_smoothing];
@@ -150,13 +161,13 @@ namespace Final_Kinect
             textBox2.Text = warning1.ToString();
             textBox3.Text = notallowed1.ToString();
             a1 = DateTime.Now.ToString("yyyyMMdd");
-            a = Path.Combine(file_value+"\\"+user_name+"-" +experiment_no+"-"+ a1 +"-"+"raw"+".csv");
-            a2 = Path.Combine(file_value+"\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "video" + ".csv");
-            a3 = Path.Combine(file_value+"\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "average" + ".csv");
-            a4 = Path.Combine(file_value+"\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "mean" + ".csv");
-            a5 = Path.Combine(file_value + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "median" + ".csv");
-            a6 = Path.Combine(file_value+"\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "difference" + ".csv");
-            a7 = Path.Combine(file_value + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "amplitude" + ".csv");
+            a = Path.Combine(filePath+"\\"+user_name+"-" +experiment_no+"-"+ a1 +"-"+"raw"+".csv");
+            a2 = Path.Combine(filePath+"\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "video" + ".csv");
+            a3 = Path.Combine(filePath+"\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "average" + ".csv");
+            a4 = Path.Combine(filePath+"\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "mean" + ".csv");
+            a5 = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "median" + ".csv");
+            a6 = Path.Combine(filePath+"\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "difference" + ".csv");
+            a7 = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + a1 + "-" + "amplitude" + ".csv");
             file = new StreamWriter(a, true);
             file1 = new StreamWriter(a2, true);
             file2 = new StreamWriter(a3, true);
@@ -166,7 +177,7 @@ namespace Final_Kinect
             file6 = new StreamWriter(a7, true);
             this.KeyPreview = true;
             totalTime = DateTime.Parse(s);
-            button1.BackColor = Color.Red;
+            startResumeButton.BackColor = Color.Red;
             timer1.Tick += new EventHandler(timer1_Tick);
             timer1.Interval = 1000;
             timer1.Enabled = false;
@@ -194,16 +205,16 @@ namespace Final_Kinect
 
         public void initializeKinect()
         {
-            kinect_sensor = KinectSensor.GetDefault();
-            if (kinect_sensor != null)
+            kinectSensor = KinectSensor.GetDefault();
+            if (kinectSensor != null)
             {
-                kinect_sensor.Open();//turn on kinect
+                kinectSensor.Open();//turn on kinect
             }
             //as we are using kinect camera as well as body detection so here we have used multisourceframereader
-            bodyframe_reader = kinect_sensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color| FrameSourceTypes.Depth | FrameSourceTypes.Body);
-            if (bodyframe_reader != null)
+            bodyFrameReader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color| FrameSourceTypes.Depth | FrameSourceTypes.Body);
+            if (bodyFrameReader != null)
             {
-                bodyframe_reader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
+                bodyFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
             }
         }
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
@@ -296,11 +307,11 @@ namespace Final_Kinect
 
 
                         if (count == 22)
-                            button1.BackColor = Color.DeepSkyBlue;
+                            startResumeButton.BackColor = Color.DeepSkyBlue;
                         else if(count==21)
-                            button1.BackColor = Color.DeepSkyBlue;
+                            startResumeButton.BackColor = Color.DeepSkyBlue;
                         else
-                            button1.BackColor = Color.Green;
+                            startResumeButton.BackColor = Color.Green;
                         IReadOnlyDictionary<JointType, Joint> joints = body_1.Joints;
                         Dictionary<JointType, Point> joint_points = new Dictionary<JointType, Point>();
                         Joint Midspine = joints[JointType.Neck];
@@ -339,8 +350,8 @@ namespace Final_Kinect
                         //once the user has pressed the start button
                         if (count == 22)
                         {
-                            stp.Start();
-                            textBox1.Text = stp.Elapsed.ToString();
+                            stopWatch.Start();
+                            textBox1.Text = stopWatch.Elapsed.ToString();
                             counter_sum++;
                             timer1.Enabled = true;
                             y1 = (int)angle_1;
@@ -880,7 +891,7 @@ namespace Final_Kinect
             file4.Close();
             file5.Close();
             file6.Close();
-            stp.Stop();
+            stopWatch.Stop();
         }
         //method used for key press event
         private void Form2_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
@@ -921,7 +932,7 @@ namespace Final_Kinect
                 notallowed1 = Convert.ToInt32(textBox3.Text);
                 warning = warning1;
                 notallowed = notallowed1;
-                button1.BackColor = Color.DeepSkyBlue;
+                startResumeButton.BackColor = Color.DeepSkyBlue;
                 if (file_writer_counter == 10)
                 {
                     file5.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement");
@@ -936,6 +947,5 @@ namespace Final_Kinect
             }
 
         }
-
     }
 }

@@ -1,6 +1,4 @@
-﻿//Final Version
-//Below are the required header files
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -23,18 +21,26 @@ namespace Final_Kinect
         MultiSourceFrameReader bodyframe_reader = null;
 
         Body[] body = null;
-        int count = 0;
+
+        // This is the form on which the participant will view the movie.
+        SubjectMovieForm subjectMovieForm;
+
         Stopwatch stopWatch = new Stopwatch();
 
+        // This is being used to determine if session is started or stopped, but in some ways that I need to look further into.
+        int count = 0;
+  
+        string mCurrentDate;
+        string mFilePath;
+
         //To write to file we use Streamwriter and path for three files
-        static String currentDate;
-        static String rawCsvPath;
-        static String videoCsvPath;
-        static String averageCsvPath;
-        static String meanCsvPath;
-        static String medianCsvPath;
-        static String differenceCsvPath;
-        static String amplitudeCsvPath;
+        string rawCsvPath;
+        string videoCsvPath;
+        string averageCsvPath;
+        string meanCsvPath;
+        string medianCsvPath;
+        string differenceCsvPath;
+        string amplitudeCsvPath;
 
         StreamWriter rawCsvFile;
         StreamWriter videoCsvFile;
@@ -44,61 +50,75 @@ namespace Final_Kinect
         StreamWriter differenceCsvFile;
         StreamWriter amplitdueCsvFile;
 
-        String s = "00:40:00";
-
         // Variables where all the angles information is stored
         int x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10;
 
         // Variables used to get the average values
-        int sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0, sum5 = 0, sum6 = 0, sum7 = 0, sum8 = 0,counter_vary=0;
+        int sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0, sum5 = 0, sum6 = 0, sum7 = 0, sum8 = 0, counter_vary=0;
+
         int graph_counter = 0, graph_counter1 = 0, graph_counter2 = 0, graph_counter3 = 0, graph_counter4 = 0, graph_counter5 = 0;
-        int file_writer_counter = 10;
+
+        bool mStarted = false;
 
         double avg1, avg2, avg3, avg4, avg5, avg6, avg7, avg8;
 
         int mean_sum1 = 0, mean_sum2 = 0, mean_sum3 = 0, mean_sum4 = 0, mean_sum5 = 0, mean_sum6 = 0,average_tagged1=0,original1=0,original2=0,original3=0,original4=0,original5=0,original6=0;
 
-        SubjectMovieForm subjectMovieForm;
-
-        int c_progress = 0;
-        int choice_color;
+        int mColorFrameReference;
 
         int avg_mean1, avg_mean2, avg_mean3, avg_mean4, avg_mean5, avg_mean6,session_time=0,back_original;
 
-        int counter_value1, counter_value2, counter_value3, counter_value4, counter_value5, counter_value6, counter_value7, counter_value8, counter_value9, counter_value10, counter_value11, counter_value12;
+        int mMovie,
+            mMovieSensitive,
+            mProgress,
+            mProgressSensitive,
+            mTrafficSensitive,
+            mRawMeasures,
+            mMeans,
+            mMedians;
 
         int angle_counter;
 
         int mean_counter = 1;
         int average_tagged = 0;
-        int base_smoothing;
+        int mSmoothingKernal;
 
-        int[] median_smoothing1;
-        int[] median_smoothing2;
-        int[] median_smoothing3;
-        int[] median_smoothing4;
-        int[] median_smoothing5;
-        int[] median_smoothing6;
+        int[] median_smoothing1,
+            median_smoothing2,
+            median_smoothing3,
+            median_smoothing4,
+            median_smoothing5,
+            median_smoothing6;
 
-        int warning, warning1;
-        int notallowed, notallowed1;
-        int median1, median2, median3, median4, median5, median6;
+        int warning;
+        int notAllowed;
 
-        static string user_name;
-        static string experiment_no;
+        int median1,
+            median2,
+            median3,
+            median4,
+            median5,
+            median6;
 
-        // Method to get the current date time and the time difference
+        string mSubjectInitials;
+        string mExperimentNumber;
+
+        // These are used to determine the elapsed time of the session.
         DateTime startTime = new DateTime();
         TimeSpan elapsedTime = new TimeSpan();
-        DateTime totalTime = new DateTime();
-        TimeSpan elapsedTime1 = new TimeSpan();
 
-        int counter = 0;
+        /* This will be incremented on every tick. When the tick interval
+         * is set for 1000, then mTickCount % 60 will be 0 and thus allow
+         * us to perform an action every 1 second - specifically, increment
+         * the progress bar.
+         */
+        int mTickCount = 0;
+
         int counter1 = 0;
         int counter_sum = 0;
         int counter_original = 0;
-        int counter_warning = 0;
-        int counter_na = 0;
+        int mOverWarning = 0;
+        int mOverNotAllowed = 0;
 
         // Arrays where the temporary values are stored
         int[] temp1 = new int[2];
@@ -109,7 +129,6 @@ namespace Final_Kinect
         int[] temp6 = new int[2];
         int[] temp7 = new int[2];
         int[] temp8 = new int[2];
-        int i = 0;
 
         public FinalForm(
             string subjectInitials,
@@ -134,13 +153,14 @@ namespace Final_Kinect
             string videoFile,
             string filePath,
             int counterAngle,
-            int colorChoice
+            int colorFrameReference
             )
         {
             InitializeComponent();
-            choice_color = colorChoice;
+            mColorFrameReference = colorFrameReference;
 
-            //Below code represents of how we represent data of the angles on all the charts
+            // Below code implements how we represent data of the angles on all the charts
+
             chart1.ChartAreas[0].AxisY.ScaleView.Zoom(-20, 20);
             chart1.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
             chart1.ChartAreas[0].CursorX.IsUserEnabled = true;
@@ -183,91 +203,71 @@ namespace Final_Kinect
             chart6.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
             chart6.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
 
-            user_name = subjectInitials;
-            experiment_no = experimentNumber;
-            base_smoothing = Convert.ToInt32(smoothingKernal);
+            mSubjectInitials = subjectInitials;
+            mExperimentNumber = experimentNumber;
+            mSmoothingKernal = Convert.ToInt32(smoothingKernal);
 
             warning = Convert.ToInt32(smallMovementLowerLimit);
-            notallowed = Convert.ToInt32(largeMovementLowerLimit);
-            warning1 = warning;
-            notallowed1 = notallowed;
+            notAllowed = Convert.ToInt32(largeMovementLowerLimit);
+
+            lowerLimitSmallMovementTextBox.Text = warning.ToString();
+            lowerLimitLargeMovementTextBox.Text = notAllowed.ToString();
 
             session_time = Convert.ToInt32(sessionTime);
             angle_counter = counterAngle;
 
-            median_smoothing1 = new int[base_smoothing];
-            median_smoothing2 = new int[base_smoothing];
-            median_smoothing3 = new int[base_smoothing];
-            median_smoothing4 = new int[base_smoothing];
-            median_smoothing5 = new int[base_smoothing];
-            median_smoothing6 = new int[base_smoothing];
+            median_smoothing1 = new int[mSmoothingKernal];
+            median_smoothing2 = new int[mSmoothingKernal];
+            median_smoothing3 = new int[mSmoothingKernal];
+            median_smoothing4 = new int[mSmoothingKernal];
+            median_smoothing5 = new int[mSmoothingKernal];
+            median_smoothing6 = new int[mSmoothingKernal];
 
-            lowerLimitSmallMovementTextBox.Text = warning1.ToString();
-            lowerLimitLargeMovementTextBox.Text = notallowed1.ToString();
-
-            counter_value1 = movieFrame;
-            counter_value2 = movie;
-            counter_value3 = movieSensitive;
-            counter_value4 = progressFrame;
-            counter_value5 = progress;
-            counter_value6 = progressSensitive;
-            counter_value7 = trafficFrame;
-            counter_value8 = traffic;
-            counter_value9 = trafficSensitive;
-            counter_value10 = rawMeasures;
-            counter_value11 = means;
-            counter_value12 = medians;
+            mMovie = movie;
+            mMovieSensitive = movieSensitive;
+            mProgress = progress;
+            mProgressSensitive = progressSensitive;
+            mTrafficSensitive = trafficSensitive;
+            mRawMeasures = rawMeasures;
+            mMeans = means;
+            mMedians = medians;
 
             progressBar.Maximum = (2 * session_time);
             axWindowsMediaPlayer1.URL = videoFile;
-            
-            if (lowerLimitLargeMovement==1)
-            {
-                back_original = notallowed;
-            }
 
-            if(lowerLimitLargeMovement==0)
-            {
-                back_original = warning;
-            }
+            back_original = lowerLimitLargeMovement == 1 ? notAllowed : warning;
 
-            if (counter_value1==0)
+            if (movieFrame == 0)
             {
                 axWindowsMediaPlayer1.Hide();
             }
 
-            if(counter_value4==0)
+            if (progressFrame == 0)
             {
                 progressBar.Hide();
             }
 
-            if(counter_value7 == 0 || counter_value8 == 0)
+            if (trafficFrame == 0 || traffic == 0)
             {              
                redLightPictureBox.Hide();
                yellowLightPictureBox.Hide();
                greenLightPictureBox.Hide();
             }
 
-            currentDate = DateTime.Now.ToString("yyyyMMdd");
-            rawCsvPath = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + currentDate + "-" + "raw" + ".csv");
-            videoCsvPath = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + currentDate + "-" + "video" + ".csv");
-            averageCsvPath = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + currentDate + "-" + "average" + ".csv");
-            meanCsvPath = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + currentDate + "-" + "mean" + ".csv");
-            medianCsvPath = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + currentDate + "-" + "median" + ".csv");
-            differenceCsvPath = Path.Combine(filePath + "\\" + user_name + "-" + experiment_no + "-" + currentDate + "-" + "difference" + ".csv");
-            amplitudeCsvPath = Path.Combine(filePath+"\\" + user_name + "-" + experiment_no + "-" + currentDate + "-" + "amplitude" + ".csv");
+            mCurrentDate = DateTime.Now.ToString("yyyyMMdd");
+            this.mFilePath = filePath;
 
-            rawCsvFile = new StreamWriter(rawCsvPath, true);
-            videoCsvFile = new StreamWriter(videoCsvPath, true);
-            averageCsvFile = new StreamWriter(averageCsvPath, true);
-            meanCsvFile = new StreamWriter(meanCsvPath, true);
-            medianCsvFile = new StreamWriter(medianCsvPath, true);
-            differenceCsvFile = new StreamWriter(differenceCsvPath, true);
-            amplitdueCsvFile = new StreamWriter(amplitudeCsvPath, true);
+            rawCsvFile = new StreamWriter(getCsvPath("raw"), true);
+            videoCsvFile = new StreamWriter(getCsvPath("video"), true);
+            averageCsvFile = new StreamWriter(getCsvPath("average"), true);
+            meanCsvFile = new StreamWriter(getCsvPath("mean"), true);
+            medianCsvFile = new StreamWriter(getCsvPath("median"), true);
+            differenceCsvFile = new StreamWriter(getCsvPath("difference"), true);
+            amplitdueCsvFile = new StreamWriter(getCsvPath("amplitude"), true);
 
             axWindowsMediaPlayer1.Ctlcontrols.stop();
+
             this.KeyPreview = true;
-            totalTime = DateTime.Parse(s);
             startButton.BackColor = Color.Red;
             timer1.Tick += new EventHandler(timer1_Tick);
             timer1.Interval = 1000;
@@ -282,21 +282,21 @@ namespace Final_Kinect
             medianCsvFile.WriteLine("Date&Time" + "," + "ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "Movement");
 
             subjectMovieForm = new SubjectMovieForm(
-                base_smoothing.ToString(),
+                mSmoothingKernal.ToString(),
                 warning.ToString(),
-                notallowed.ToString(),
-                counter_value1,
-                counter_value2,
-                counter_value3,
-                counter_value4,
-                counter_value5,
-                counter_value6,
-                counter_value7,
-                counter_value8,
-                counter_value9,
-                counter_value10,
-                counter_value11,
-                counter_value12,
+                notAllowed.ToString(),
+                movieFrame,
+                mMovie,
+                mMovieSensitive,
+                progressFrame,
+                mProgress,
+                mProgressSensitive,
+                trafficFrame,
+                traffic,
+                mTrafficSensitive,
+                mRawMeasures,
+                mMeans,
+                mMedians,
                 session_time,
                 videoFile
                 );
@@ -307,27 +307,25 @@ namespace Final_Kinect
         private void startButton_Click(object sender, EventArgs e)
         {
             count = 22;
-            warning1 = Convert.ToInt32(lowerLimitSmallMovementTextBox.Text);
-            notallowed1 = Convert.ToInt32(lowerLimitLargeMovementTextBox.Text);
-            warning = warning1;
-            notallowed = notallowed1;
+            warning = Convert.ToInt32(lowerLimitSmallMovementTextBox.Text);
+            notAllowed = Convert.ToInt32(lowerLimitLargeMovementTextBox.Text);
             startButton.BackColor = Color.DeepSkyBlue;
 
-            if (file_writer_counter == 10)
+            if (mStarted == false)
             {
                 // Headers
 
                 differenceCsvFile.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement");
-                differenceCsvFile.WriteLine(user_name + "," + experiment_no + "," + base_smoothing + "," + warning + "," + notallowed);
+                differenceCsvFile.WriteLine(mSubjectInitials + "," + mExperimentNumber + "," + mSmoothingKernal + "," + warning + "," + notAllowed);
                 differenceCsvFile.WriteLine(" " + "," + " " + "," + " " + "," + " " + "," + " ");
                 differenceCsvFile.WriteLine("ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "Movement");
 
                 amplitdueCsvFile.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement");
-                amplitdueCsvFile.WriteLine(user_name + "," + experiment_no + "," + base_smoothing + "," + warning + "," + notallowed);
+                amplitdueCsvFile.WriteLine(mSubjectInitials + "," + mExperimentNumber + "," + mSmoothingKernal + "," + warning + "," + notAllowed);
                 amplitdueCsvFile.WriteLine("Elapsed_Time" + "," + "Values");
                 amplitdueCsvFile.WriteLine(" " + "," + " ");
 
-                file_writer_counter = 0;
+                mStarted = true;
             }
         }
 
@@ -335,21 +333,21 @@ namespace Final_Kinect
         {
             count = 21;
             startButton.BackColor = Color.Red;
-            file_writer_counter = 10;
+            mStarted = false;
         }
 
+        // Timer event for progress bar
         private void timer1_Tick(object sender, EventArgs e)
         {
             elapsedTime = DateTime.Now - startTime;
 
-            counter++;
-            if (counter % 60 == 0)
+            mTickCount++;
+
+            // Every second, increase progress
+            if (mTickCount % 60 == 0 && mProgress == 1)
             {
-                if (counter_value5 == 1)
-                {
-                    progressBar.Value = ++i;
-                    progressBar.Update();
-                }
+                progressBar.Value++;
+                progressBar.Update();                
             }
         }
 
@@ -377,8 +375,9 @@ namespace Final_Kinect
         {
             bool data_received = false;
             var reference = e.FrameReference.AcquireFrame();
-            //method for getting video in depth view
-            if (choice_color == 0)
+
+            // Method for getting video in depth view
+            if (mColorFrameReference == 0)
             {
                 using (var frame = reference.ColorFrameReference.AcquireFrame())
                 {
@@ -388,6 +387,7 @@ namespace Final_Kinect
                         var height = frame.FrameDescription.Height;
                         ushort[] data = new ushort[width * height];
                         byte[] pixels = new byte[width * height * 32 / 8];
+
                         if (frame.RawColorImageFormat == ColorImageFormat.Bgra)
                         {
                             frame.CopyRawFrameDataToArray(pixels);
@@ -396,16 +396,18 @@ namespace Final_Kinect
                         {
                             frame.CopyConvertedFrameDataToArray(pixels, ColorImageFormat.Bgra);
                         }
+
                         var bitmap = new Bitmap(width, height, PixelFormat.Format32bppRgb);
                         var bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+
                         Marshal.Copy(pixels, 0, bitmapData.Scan0, pixels.Length);
+
                         bitmap.UnlockBits(bitmapData);
                         bitmap.RotateFlip(RotateFlipType.Rotate180FlipY);
-                       // pictureBox6.Image = bitmap;
                     }
                 }
             }
-            if (choice_color == 1)
+            if (mColorFrameReference == 1)
             {
                 using (var frame = reference.DepthFrameReference.AcquireFrame())
                 {
@@ -433,7 +435,6 @@ namespace Final_Kinect
                         Marshal.Copy(pixels, 0, bitmapData.Scan0, pixels.Length);
                         bitmap.UnlockBits(bitmapData);
                         bitmap.RotateFlip(RotateFlipType.Rotate180FlipY);
-                        //pictureBox6.Image = bitmap;
                     }
                 }
             }
@@ -451,18 +452,18 @@ namespace Final_Kinect
                     body_frame.GetAndRefreshBodyData(body);
                     data_received = true;
                 }
-
             }
             if (data_received)
             {
-
                 foreach (Body body_1 in body)
                 {
-                    //process if the body has been detected
+                    // Process if the body has been detected
                     if (body_1.IsTracked)
                     {
                         if (count == 22)
+                        {
                             startButton.BackColor = Color.DeepSkyBlue;
+                        }
                         else if (count == 21)
                         {
                             startButton.BackColor = Color.Red;
@@ -470,9 +471,14 @@ namespace Final_Kinect
                             timer1.Enabled = false;
                         }
                         else if (count == 20)
+                        {
                             startButton.BackColor = Color.Blue;
+                        }
                         else
+                        {
                             startButton.BackColor = Color.Green;
+                        }
+
                         IReadOnlyDictionary<JointType, Joint> joints = body_1.Joints;
                         Dictionary<JointType, Point> joint_points = new Dictionary<JointType, Point>();
                         Joint Midspine = joints[JointType.Neck];
@@ -481,7 +487,7 @@ namespace Final_Kinect
                         float z = Midspine.Position.Z;
                         var point = body_1.Joints[JointType.SpineBase].Position;
                         CameraSpacePoint myPoint = Midspine.Position;
-                        //All the angles: "ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "ElbowLeft" + "," + "ElbowRight" + "," + "Movement"
+                        // All the angles: "ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "ElbowLeft" + "," + "ElbowRight" + "," + "Movement"
                         var start_1 = body_1.Joints[JointType.Neck];
                         var center_1 = body_1.Joints[JointType.ShoulderRight];
                         var end_1 = body_1.Joints[JointType.ElbowRight];
@@ -507,25 +513,36 @@ namespace Final_Kinect
                         var end_6 = body_1.Joints[JointType.SpineShoulder];
                         var angle_6 = center_6.Angle(start_6, end_6);
                         
-                        subjectMovieForm.transfer_values(count,(int)angle_1, (int)angle_2, (int)angle_3, (int)angle_4, (int)angle_5, (int)angle_6,warning,notallowed,count);
-                        //once the user has pressed the start button
+                        subjectMovieForm.transfer_values(
+                            count,
+                            (int) angle_1,
+                            (int) angle_2,
+                            (int) angle_3,
+                            (int) angle_4,
+                            (int) angle_5,
+                            (int) angle_6,
+                            warning,
+                            notAllowed,
+                            count
+                        );
+
+                        // Once the user has pressed the start button
                        
                         if (count == 22)
                         {
-                            // form7.transfer_values();
-                            
-                           // axWindowsMediaPlayer1.settings.mute = false;
                             stopWatch.Start();
-                            textBox1.Text = stopWatch.Elapsed.ToString();
+                            elapsedTimeTextBox.Text = stopWatch.Elapsed.ToString();
                             
                             counter_sum++;
-                           timer1.Enabled = true;
-                            y1 = (int)angle_1;
-                            y2 = (int)angle_2;
-                            y3 = (int)angle_3;
-                            y4 = (int)angle_4;
-                            y5 = (int)angle_5;
-                            y6 = (int)angle_6;
+                            timer1.Enabled = true;
+
+                            y1 = (int) angle_1;
+                            y2 = (int) angle_2;
+                            y3 = (int) angle_3;
+                            y4 = (int) angle_4;
+                            y5 = (int) angle_5;
+                            y6 = (int) angle_6;
+
                             if (angle_counter == 1)
                             {
                                 x4 = 0;
@@ -534,9 +551,10 @@ namespace Final_Kinect
                                 y5 = 0;
                                 x6 = 0;
                                 y6 = 0;
-                               label6.Hide();
-                               label7.Hide();
-                               label8.Hide();
+
+                               neckLabel.Hide();
+                               neck1Label.Hide();
+                               spineShoulderLabel.Hide();
                             }
                             if (angle_counter == 2)
                             {
@@ -546,11 +564,12 @@ namespace Final_Kinect
                                 y2 = 0;
                                 x3 = 0;
                                 y3 = 0;
-                                label3.Hide();
-                                label4.Hide();
-                                label5.Hide();
+
+                                shoulderRightLabel.Hide();
+                                shoulderLeftLabel.Hide();
+                                spineMidLabel.Hide();
                             }
-                            if (counter_vary==0)
+                            if (counter_vary == 0)
                             {
                                 original1 = y1;
                                 original2 = y2;
@@ -560,12 +579,14 @@ namespace Final_Kinect
                                 original6 = y6;
                                 counter_vary++;
                             }
+
                             median_smoothing1[mean_counter - 1] = y1;
                             median_smoothing2[mean_counter - 1] = y2;
                             median_smoothing3[mean_counter - 1] = y3;
                             median_smoothing4[mean_counter - 1] = y4;
                             median_smoothing5[mean_counter - 1] = y5;
                             median_smoothing6[mean_counter - 1] = y6;
+
                             sum1 = sum1 + y1;
                             sum2 = sum2 + y2;
                             sum3 = sum3 + y3;
@@ -580,19 +601,19 @@ namespace Final_Kinect
                             mean_sum5 = mean_sum5 + y5;
                             mean_sum6 = mean_sum6 + y6;
 
-
-                            if (mean_counter == base_smoothing)
+                            if (mean_counter == mSmoothingKernal)
                             {
-                                avg_mean1 = mean_sum1 / base_smoothing;
-                                avg_mean2 = mean_sum2 / base_smoothing;
-                                avg_mean3 = mean_sum3 / base_smoothing;
-                                avg_mean4 = mean_sum4 / base_smoothing;
-                                avg_mean5 = mean_sum5 / base_smoothing;
-                                avg_mean6 = mean_sum6 / base_smoothing;
+                                avg_mean1 = mean_sum1 / mSmoothingKernal;
+                                avg_mean2 = mean_sum2 / mSmoothingKernal;
+                                avg_mean3 = mean_sum3 / mSmoothingKernal;
+                                avg_mean4 = mean_sum4 / mSmoothingKernal;
+                                avg_mean5 = mean_sum5 / mSmoothingKernal;
+                                avg_mean6 = mean_sum6 / mSmoothingKernal;
+
                                 int tmp;
-                                for (int i = 0; i < base_smoothing; i++)
+                                for (int i = 0; i < mSmoothingKernal; i++)
                                 {
-                                    for (int j = i + 1; j < base_smoothing; j++)
+                                    for (int j = i + 1; j < mSmoothingKernal; j++)
                                     {
                                         if (median_smoothing1[j] < median_smoothing1[i])
                                         {
@@ -602,13 +623,17 @@ namespace Final_Kinect
                                         }
                                     }
                                 }
-                                if (base_smoothing % 2 == 0)
-                                    median1 = (median_smoothing1[base_smoothing / 2] + median_smoothing1[base_smoothing / 2 + 1]) / 2;
-                                else
-                                    median1 = median_smoothing1[(base_smoothing + 1) / 2];
-                                for (int i = 0; i < base_smoothing; i++)
+                                if (mSmoothingKernal % 2 == 0)
                                 {
-                                    for (int j = i + 1; j < base_smoothing; j++)
+                                    median1 = (median_smoothing1[mSmoothingKernal / 2] + median_smoothing1[mSmoothingKernal / 2 + 1]) / 2;
+                                }
+                                else
+                                {
+                                    median1 = median_smoothing1[(mSmoothingKernal + 1) / 2];
+                                }
+                                for (int i = 0; i < mSmoothingKernal; i++)
+                                {
+                                    for (int j = i + 1; j < mSmoothingKernal; j++)
                                     {
                                         if (median_smoothing2[j] < median_smoothing2[i])
                                         {
@@ -618,13 +643,18 @@ namespace Final_Kinect
                                         }
                                     }
                                 }
-                                if (base_smoothing % 2 == 0)
-                                    median2 = (median_smoothing2[base_smoothing / 2] + median_smoothing2[base_smoothing / 2 + 1]) / 2;
-                                else
-                                    median2 = median_smoothing2[(base_smoothing + 1) / 2];
-                                for (int i = 0; i < base_smoothing; i++)
+                                if (mSmoothingKernal % 2 == 0)
                                 {
-                                    for (int j = i + 1; j < base_smoothing; j++)
+                                    median2 = (median_smoothing2[mSmoothingKernal / 2] + median_smoothing2[mSmoothingKernal / 2 + 1]) / 2;
+                                }
+                                else
+                                {
+                                    median2 = median_smoothing2[(mSmoothingKernal + 1) / 2];
+                                }
+
+                                for (int i = 0; i < mSmoothingKernal; i++)
+                                {
+                                    for (int j = i + 1; j < mSmoothingKernal; j++)
                                     {
                                         if (median_smoothing3[j] < median_smoothing3[i])
                                         {
@@ -634,13 +664,19 @@ namespace Final_Kinect
                                         }
                                     }
                                 }
-                                if (base_smoothing % 2 == 0)
-                                    median3 = (median_smoothing3[base_smoothing / 2] + median_smoothing3[base_smoothing / 2 + 1]) / 2;
-                                else
-                                    median3 = median_smoothing3[(base_smoothing + 1) / 2];
-                                for (int i = 0; i < base_smoothing; i++)
+
+                                if (mSmoothingKernal % 2 == 0)
                                 {
-                                    for (int j = i + 1; j < base_smoothing; j++)
+                                    median3 = (median_smoothing3[mSmoothingKernal / 2] + median_smoothing3[mSmoothingKernal / 2 + 1]) / 2;
+                                }
+                                else
+                                {
+                                    median3 = median_smoothing3[(mSmoothingKernal + 1) / 2];
+                                }
+
+                                for (int i = 0; i < mSmoothingKernal; i++)
+                                {
+                                    for (int j = i + 1; j < mSmoothingKernal; j++)
                                     {
                                         if (median_smoothing4[j] < median_smoothing4[i])
                                         {
@@ -650,13 +686,19 @@ namespace Final_Kinect
                                         }
                                     }
                                 }
-                                if (base_smoothing % 2 == 0)
-                                    median4 = (median_smoothing4[base_smoothing / 2] + median_smoothing4[base_smoothing / 2 + 1]) / 2;
-                                else
-                                    median4 = median_smoothing4[(base_smoothing + 1) / 2];
-                                for (int i = 0; i < base_smoothing; i++)
+
+                                if (mSmoothingKernal % 2 == 0)
                                 {
-                                    for (int j = i + 1; j < base_smoothing; j++)
+                                    median4 = (median_smoothing4[mSmoothingKernal / 2] + median_smoothing4[mSmoothingKernal / 2 + 1]) / 2;
+                                }
+                                else
+                                {
+                                    median4 = median_smoothing4[(mSmoothingKernal + 1) / 2];
+                                }
+
+                                for (int i = 0; i < mSmoothingKernal; i++)
+                                {
+                                    for (int j = i + 1; j < mSmoothingKernal; j++)
                                     {
                                         if (median_smoothing5[j] < median_smoothing5[i])
                                         {
@@ -666,13 +708,19 @@ namespace Final_Kinect
                                         }
                                     }
                                 }
-                                if (base_smoothing % 2 == 0)
-                                    median5 = (median_smoothing5[base_smoothing / 2] + median_smoothing5[base_smoothing / 2 + 1]) / 2;
-                                else
-                                    median5 = median_smoothing5[(base_smoothing + 1) / 2];
-                                for (int i = 0; i < base_smoothing; i++)
+
+                                if (mSmoothingKernal % 2 == 0)
                                 {
-                                    for (int j = i + 1; j < base_smoothing; j++)
+                                    median5 = (median_smoothing5[mSmoothingKernal / 2] + median_smoothing5[mSmoothingKernal / 2 + 1]) / 2;
+                                }
+                                else
+                                {
+                                    median5 = median_smoothing5[(mSmoothingKernal + 1) / 2];
+                                }
+
+                                for (int i = 0; i < mSmoothingKernal; i++)
+                                {
+                                    for (int j = i + 1; j < mSmoothingKernal; j++)
                                     {
                                         if (median_smoothing6[j] < median_smoothing6[i])
                                         {
@@ -682,22 +730,28 @@ namespace Final_Kinect
                                         }
                                     }
                                 }
-                                if (base_smoothing % 2 == 0)
-                                    median6 = (median_smoothing6[base_smoothing / 2] + median_smoothing6[base_smoothing / 2 + 1]) / 2;
-                                else
-                                    median6 = median_smoothing6[(base_smoothing + 1) / 2];
-                                if (median1 > (x1 + notallowed) || median1 < (x1 - notallowed) || median2 > (x2 + notallowed) || median2 < (x2 - notallowed) || median3 > (x3 + notallowed) || median3 < (x3 - notallowed) || median4 > (x4 + notallowed) || median4 < (x4 - notallowed) || median5 > (x5 + notallowed) || median5 < (x5 - notallowed) || median6 > (x6 + notallowed) || median6 < (x6 - notallowed))
+
+                                if (mSmoothingKernal % 2 == 0)
                                 {
-                                    if (counter_value12 == 1)
+                                    median6 = (median_smoothing6[mSmoothingKernal / 2] + median_smoothing6[mSmoothingKernal / 2 + 1]) / 2;
+                                }
+                                else
+                                {
+                                    median6 = median_smoothing6[(mSmoothingKernal + 1) / 2];
+                                }
+
+                                if (median1 > (x1 + notAllowed) || median1 < (x1 - notAllowed) || median2 > (x2 + notAllowed) || median2 < (x2 - notAllowed) || median3 > (x3 + notAllowed) || median3 < (x3 - notAllowed) || median4 > (x4 + notAllowed) || median4 < (x4 - notAllowed) || median5 > (x5 + notAllowed) || median5 < (x5 - notAllowed) || median6 > (x6 + notAllowed) || median6 < (x6 - notAllowed))
+                                {
+                                    if (mMedians == 1)
                                     {
-                                        if (counter_value2 == 1)
+                                        if (mMovie == 1)
                                         {
-                                            if (counter_value3 == 1)
+                                            if (mMovieSensitive == 1)
                                                 axWindowsMediaPlayer1.Ctlcontrols.pause();
                                             else
                                                 axWindowsMediaPlayer1.Ctlcontrols.play();
                                         }
-                                        if (counter_value6 == 1)
+                                        if (mProgressSensitive == 1)
                                         {
                                             timer1.Enabled = false;
                                         }
@@ -705,7 +759,7 @@ namespace Final_Kinect
                                         {
                                             timer1.Enabled = true;
                                         }
-                                        if (counter_value9 == 1)
+                                        if (mTrafficSensitive == 1)
                                         {
                                             redLightPictureBox.Visible = true;
                                             yellowLightPictureBox.Visible = false;
@@ -717,23 +771,27 @@ namespace Final_Kinect
                                             greenLightPictureBox.Visible = true;
                                         }
                                     }
-                                    if (average_tagged1== 1)
+                                    if (average_tagged1 == 1)
                                     {
                                         medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + median1 + "," + median2 + "," + median3 + "," + median4 + "," + median5 + "," + median6 + "," + "Tagged");
-                                        //average_tagged = 0;
                                     }
-                                    //if there was not tagged moment
+                                    // If there was not tagged moment
                                     else
+                                    {
                                         medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + median1 + "," + median2 + "," + median3 + "," + median4 + "," + median5 + "," + median6);
+                                    }
                                 }
                                 else if (median1 > (x1 + warning) || median1 < (x1 - warning) || median2 > (x2 + warning) || median2 < (x2 - warning) || median3 > (x3 + warning) || median3 < (x3 - warning) || median4 > (x4 + warning) || median4 < (x4 - warning) || median5 > (x5 + warning) || median5 < (x5 - warning) || median6 > (x6 + warning) || median6 < (x6 - warning))
                                 {
-                                    if (counter_value12 == 1)
+                                    if (mMedians == 1)
                                     {
                                         timer1.Enabled = true;
-                                        if (counter_value2 == 1)
+                                        if (mMovie == 1)
+                                        {
                                             axWindowsMediaPlayer1.Ctlcontrols.play();
-                                        if (counter_value9 == 1)
+                                        }
+
+                                        if (mTrafficSensitive == 1)
                                         {
                                             redLightPictureBox.Visible = false;
                                             yellowLightPictureBox.Visible = true;
@@ -744,23 +802,29 @@ namespace Final_Kinect
                                             greenLightPictureBox.Visible = true;
                                         }
                                     }
+
                                     if (average_tagged1 == 1)
                                     {
                                         medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + median1 + "," + median2 + "," + median3 + "," + median4 + "," + median5 + "," + median6 + "," + "Tagged");
-                                        //average_tagged = 0;
                                     }
-                                    //if there was not tagged moment
+                                    // If there was not tagged moment
                                     else
+                                    {
                                         medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + median1 + "," + median2 + "," + median3 + "," + median4 + "," + median5 + "," + median6);
+                                    }
                                 }
                                 else
                                 {
-                                    if (counter_value12 == 1)
+                                    if (mMedians == 1)
                                     {
                                         timer1.Enabled = true;
-                                        if (counter_value2 == 1)
+
+                                        if (mMovie == 1)
+                                        {
                                             axWindowsMediaPlayer1.Ctlcontrols.play();
-                                        if (counter_value9 == 1)
+                                        }
+
+                                        if (mTrafficSensitive == 1)
                                         {
                                             redLightPictureBox.Visible = false;
                                             yellowLightPictureBox.Visible = false;
@@ -771,117 +835,154 @@ namespace Final_Kinect
                                             greenLightPictureBox.Visible = true;
                                         }
                                     }
-                                    if (average_tagged1== 1)
+                                    if (average_tagged1 == 1)
                                     {
                                         medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + median1 + "," + median2 + "," + median3 + "," + median4 + "," + median5 + "," + median6 + "," + "Tagged");
-                                        //average_tagged = 0;
                                     }
-                                    //if there was not tagged moment
+                                    // If there was not tagged moment
                                     else
+                                    {
                                         medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + median1 + "," + median2 + "," + median3 + "," + median4 + "," + median5 + "," + median6);
+                                    }
                                 }
                                 mean_counter = 0;
+
                                 // If there was a tagged moment
                                 double amplitude = Math.Sqrt(((x1 - y1) * (x1 - y1)) + ((x2 - y2) * (x2 - y2)) + ((x3 - y3) * (x3 - y3)) + ((x4 - y4) * (x4 - y4)) + ((x5 - y5) * (x5 - y5)) + ((x6 - y6) * (x6 - y6)));
                                 double final_amplitude = (amplitude / 6);
+
                                 chart1.Series[0].Points.AddXY(graph_counter, (x1-y1));
                                 chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                                 chart1.ChartAreas[0].AxisX.ScaleView.Position = chart1.Series[0].Points.Count - chart1.ChartAreas[0].AxisX.ScaleView.Size;
+
                                 if (graph_counter % 100 == 0)
                                 {
                                     chart1.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
                                     graph_counter++;
                                 }
                                 else
+                                {
                                     graph_counter++;
+                                }
+
                                 chart2.Series[0].Points.AddXY(graph_counter1, (x2 - y2));
                                 chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                                 chart2.ChartAreas[0].AxisX.ScaleView.Position = chart2.Series[0].Points.Count - chart2.ChartAreas[0].AxisX.ScaleView.Size;
+
                                 if (graph_counter1 % 100 == 0)
                                 {
                                     chart2.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
                                     graph_counter1++;
                                 }
                                 else
+                                {
                                     graph_counter1++;
+                                }
+
                                 chart3.Series[0].Points.AddXY(graph_counter2, (x3 - y3));
                                 chart3.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                                 chart3.ChartAreas[0].AxisX.ScaleView.Position = chart3.Series[0].Points.Count - chart3.ChartAreas[0].AxisX.ScaleView.Size;
+
                                 if (graph_counter2 % 100 == 0)
                                 {
                                     chart3.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
                                     graph_counter2++;
                                 }
                                 else
+                                {
                                     graph_counter2++;
+                                }
+
                                 chart4.Series[0].Points.AddXY(graph_counter3, (x4 - y4));
                                 chart4.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                                 chart4.ChartAreas[0].AxisX.ScaleView.Position = chart4.Series[0].Points.Count - chart4.ChartAreas[0].AxisX.ScaleView.Size;
+
                                 if (graph_counter3 % 100 == 0)
                                 {
                                     chart4.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
                                     graph_counter3++;
                                 }
                                 else
+                                {
                                     graph_counter3++;
+                                }
+
                                 chart5.Series[0].Points.AddXY(graph_counter4, (x5 - y5));
                                 chart5.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                                 chart5.ChartAreas[0].AxisX.ScaleView.Position = chart5.Series[0].Points.Count - chart5.ChartAreas[0].AxisX.ScaleView.Size;
+
                                 if (graph_counter4 % 100 == 0)
                                 {
                                     chart5.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
                                     graph_counter4++;
                                 }
                                 else
+                                {
                                     graph_counter4++;
+                                }
+
                                 chart6.Series[0].Points.AddXY(graph_counter5, (x6 - y6));
                                 chart6.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                                 chart6.ChartAreas[0].AxisX.ScaleView.Position = chart6.Series[0].Points.Count - chart6.ChartAreas[0].AxisX.ScaleView.Size;
+
                                 if (graph_counter5 % 100 == 0)
                                 {
                                     chart6.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
                                     graph_counter5++;
                                 }
                                 else
-                                    graph_counter5++;
-                                //file6.WriteLine(final_amplitude);
-                                if (avg_mean1 > (x1 + notallowed) || avg_mean1 < (x1 - notallowed) || avg_mean2 > (x2 + notallowed) || avg_mean2 < (x2 - notallowed) || avg_mean3 > (x3 + notallowed) || avg_mean3 < (x3 - notallowed) || avg_mean4 > (x4 + notallowed) || avg_mean4 < (x4 - notallowed) || avg_mean5 > (x5 + notallowed) || avg_mean5 < (x5 - notallowed) || avg_mean6 > (x6 + notallowed) || avg_mean6 < (x6 - notallowed))
                                 {
-                                    if (avg_mean1 > (x1 + notallowed) || avg_mean1 < (x1 - notallowed))
+                                    graph_counter5++;
+                                }
+
+                                if (avg_mean1 > (x1 + notAllowed) || avg_mean1 < (x1 - notAllowed) || avg_mean2 > (x2 + notAllowed) || avg_mean2 < (x2 - notAllowed) || avg_mean3 > (x3 + notAllowed) || avg_mean3 < (x3 - notAllowed) || avg_mean4 > (x4 + notAllowed) || avg_mean4 < (x4 - notAllowed) || avg_mean5 > (x5 + notAllowed) || avg_mean5 < (x5 - notAllowed) || avg_mean6 > (x6 + notAllowed) || avg_mean6 < (x6 - notAllowed))
+                                {
+                                    if (avg_mean1 > (x1 + notAllowed) || avg_mean1 < (x1 - notAllowed))
                                     {
-                                        label3.ForeColor = Color.Red;
+                                        shoulderRightLabel.ForeColor = Color.Red;
                                     }
-                                    if (avg_mean2 > (x2 + notallowed) || avg_mean2 < (x2 - notallowed))
+
+                                    if (avg_mean2 > (x2 + notAllowed) || avg_mean2 < (x2 - notAllowed))
                                     {
-                                        label4.ForeColor = Color.Red;
+                                        shoulderLeftLabel.ForeColor = Color.Red;
                                     }
-                                    if (avg_mean3 > (x3 + notallowed) || avg_mean3 < (x3 - notallowed))
+
+                                    if (avg_mean3 > (x3 + notAllowed) || avg_mean3 < (x3 - notAllowed))
                                     {
-                                        label5.ForeColor = Color.Red;
+                                        spineMidLabel.ForeColor = Color.Red;
                                     }
-                                    if (avg_mean4 > (x4 + notallowed) || avg_mean4 < (x4 - notallowed))
+
+                                    if (avg_mean4 > (x4 + notAllowed) || avg_mean4 < (x4 - notAllowed))
                                     {
-                                        label6.ForeColor = Color.Red;
+                                        neckLabel.ForeColor = Color.Red;
                                     }
-                                    if (avg_mean5 > (x5 + notallowed) || avg_mean5 < (x5 - notallowed))
+
+                                    if (avg_mean5 > (x5 + notAllowed) || avg_mean5 < (x5 - notAllowed))
                                     {
-                                        label7.ForeColor = Color.Red;
+                                        neck1Label.ForeColor = Color.Red;
                                     }
-                                    if (avg_mean6 > (x6 + notallowed) || avg_mean6 < (x6 - notallowed))
+
+                                    if (avg_mean6 > (x6 + notAllowed) || avg_mean6 < (x6 - notAllowed))
                                     {
-                                        label8.ForeColor = Color.Red;
+                                        spineShoulderLabel.ForeColor = Color.Red;
                                     }
-                                    if (counter_value11 == 1)
+
+                                    if (mMeans == 1)
                                     {
                                         timer1.Enabled = false;
-                                        if (counter_value2 == 1)
+
+                                        if (mMovie == 1)
                                         {
-                                            if (counter_value3 == 1)
+                                            if (mMovieSensitive == 1)
+                                            {
                                                 axWindowsMediaPlayer1.Ctlcontrols.pause();
+                                            }
                                             else
+                                            {
                                                 axWindowsMediaPlayer1.Ctlcontrols.play();
+                                            }
                                         }
-                                        if (counter_value6 == 1)
+                                        if (mProgressSensitive == 1)
                                         {
                                             timer1.Enabled = false;
                                         }
@@ -889,7 +990,7 @@ namespace Final_Kinect
                                         {
                                             timer1.Enabled = true;
                                         }
-                                        if (counter_value9 == 1)
+                                        if (mTrafficSensitive == 1)
                                         {
                                             redLightPictureBox.Visible =true;
                                             yellowLightPictureBox.Visible = false;
@@ -911,7 +1012,7 @@ namespace Final_Kinect
                                         meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement" + "," + avg_mean1 + "," + avg_mean2 + "," + avg_mean3 + "," + avg_mean4 + "," + avg_mean5 + "," + avg_mean6 + "," + "Tagged");
                                         average_tagged1 = 0;
                                     }
-                                    //if there was not tagged moment
+                                    // If there was not tagged moment
                                     else
                                     {
                                         differenceCsvFile.WriteLine((x1 - y1).ToString() + "," + (x2 - y2).ToString() + "," + (x3 - y3).ToString() + "," + (x4 - y4).ToString() + "," + (x5 - y5).ToString() + "," + (x6 - y6).ToString());
@@ -919,23 +1020,26 @@ namespace Final_Kinect
                                         amplitdueCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + final_amplitude);
                                         amplitdueCsvFile.WriteLine(" " + " ");
                                         meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement" + "," + avg_mean1 + "," + avg_mean2 + "," + avg_mean3 + "," + avg_mean4 + "," + avg_mean5 + "," + avg_mean6);
-                                    }//initialize all the sum variables to zero
+                                    } // Initialize all the sum variables to zero
                                     
                                 }
                                 else if (avg_mean1 > (x1 + warning) || avg_mean1 < (x1 - warning) || avg_mean2 > (x2 + warning) || avg_mean2 < (x2 - warning) || avg_mean3 > (x3 + warning) || avg_mean3 < (x3 - warning) || avg_mean4 > (x4 + warning) || avg_mean4 < (x4 - warning) || avg_mean5 > (x5 + warning) || avg_mean5 < (x5 - warning) || avg_mean6 > (x6 + warning) || avg_mean6 < (x6 - warning))
                                 {
-                                    label3.ForeColor = Color.Black;
-                                    label4.ForeColor = Color.Black;
-                                    label5.ForeColor = Color.Black;
-                                    label6.ForeColor = Color.Black;
-                                    label7.ForeColor = Color.Black;
-                                    label8.ForeColor = Color.Black;
-                                    if (counter_value11 == 1)
+                                    shoulderRightLabel.ForeColor = Color.Black;
+                                    shoulderLeftLabel.ForeColor = Color.Black;
+                                    spineMidLabel.ForeColor = Color.Black;
+                                    neckLabel.ForeColor = Color.Black;
+                                    neck1Label.ForeColor = Color.Black;
+                                    spineShoulderLabel.ForeColor = Color.Black;
+                                    if (mMeans == 1)
                                     {
                                         timer1.Enabled = true;
-                                        if (counter_value2 == 1)
+                                        if (mMovie == 1)
+                                        {
                                             axWindowsMediaPlayer1.Ctlcontrols.play();
-                                        if (counter_value9 == 1)
+                                        }
+
+                                        if (mTrafficSensitive == 1)
                                         {
                                             redLightPictureBox.Visible = false;
                                             yellowLightPictureBox.Visible = true;
@@ -953,28 +1057,32 @@ namespace Final_Kinect
                                         amplitdueCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + final_amplitude);
                                         average_tagged1 = 0;
                                     }
-                                    //if there was not tagged moment
+                                    // If there was not tagged moment
                                     else
                                     {
                                         meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Small Movement" + "," + avg_mean1 + "," + avg_mean2 + "," + avg_mean3 + "," + avg_mean4 + "," + avg_mean5 + "," + avg_mean6);
                                         differenceCsvFile.WriteLine((x1 - y1).ToString() + "," + (x2 - y2).ToString() + "," + (x3 - y3).ToString() + "," + (x4 - y4).ToString() + "," + (x5 - y5).ToString() + "," + (x6 - y6).ToString());
                                         amplitdueCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + final_amplitude);
-                                    }//initialize all the sum variables to zero
+                                    } // Initialize all the sum variables to zero
                                 }
                                 else
                                 {
-                                    label3.ForeColor = Color.Black;
-                                    label4.ForeColor = Color.Black;
-                                    label5.ForeColor = Color.Black;
-                                    label6.ForeColor = Color.Black;
-                                    label7.ForeColor = Color.Black;
-                                    label8.ForeColor = Color.Black;
-                                    if (counter_value11 == 1)
+                                    shoulderRightLabel.ForeColor = Color.Black;
+                                    shoulderLeftLabel.ForeColor = Color.Black;
+                                    spineMidLabel.ForeColor = Color.Black;
+                                    neckLabel.ForeColor = Color.Black;
+                                    neck1Label.ForeColor = Color.Black;
+                                    spineShoulderLabel.ForeColor = Color.Black;
+
+                                    if (mMeans == 1)
                                     {
                                         timer1.Enabled = true;
-                                        if (counter_value2 == 1)
+                                        if (mMovie == 1)
+                                        {
                                             axWindowsMediaPlayer1.Ctlcontrols.play();
-                                        if (counter_value9 == 1)
+                                        }
+
+                                        if (mTrafficSensitive == 1)
                                         {
                                             redLightPictureBox.Visible = false;
                                             yellowLightPictureBox.Visible = false;
@@ -985,6 +1093,7 @@ namespace Final_Kinect
                                             greenLightPictureBox.Visible = true;
                                         }
                                     }
+
                                     if (average_tagged1 == 1)
                                     {
                                         meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original" + "," + avg_mean1 + "," + avg_mean2 + "," + avg_mean3 + "," + avg_mean4 + "," + avg_mean5 + "," + avg_mean6 + "," + "Tagged");
@@ -992,14 +1101,15 @@ namespace Final_Kinect
                                         amplitdueCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + final_amplitude);
                                         average_tagged1 = 0;
                                     }
-                                    //if there was not tagged moment
+                                    // If there was not tagged moment
                                     else
                                     {
                                         differenceCsvFile.WriteLine((x1 - y1).ToString() + "," + (x2 - y2).ToString() + "," + (x3 - y3).ToString() + "," + (x4 - y4).ToString() + "," + (x5 - y5).ToString() + "," + (x6 - y6).ToString());
                                         meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original" + "," + avg_mean1 + "," + avg_mean2 + "," + avg_mean3 + "," + avg_mean4 + "," + avg_mean5 + "," + avg_mean6);
                                         amplitdueCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + final_amplitude);
-                                    }//initialize all the sum variables to zero
+                                    } // Initialize all the sum variables to zero
                                 }
+
                                 mean_sum1 = 0;
                                 mean_sum2 = 0;
                                 mean_sum3 = 0;
@@ -1008,7 +1118,9 @@ namespace Final_Kinect
                                 mean_sum6 = 0;
 
                             }
+
                             mean_counter++;
+
                             if (counter_sum == 15)
                             {
                                 avg1 = sum1 / 15;
@@ -1025,10 +1137,13 @@ namespace Final_Kinect
                                     averageCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + avg1 + "," + avg2 + "," + avg3 + "," + avg4 + "," + avg5 + "," + avg6 + "," + "Tagged");
                                     average_tagged = 0;
                                 }
-                                //if there was not tagged moment
+                                // If there was not tagged moment
                                 else
+                                {
                                     averageCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + avg1 + "," + avg2 + "," + avg3 + "," + avg4 + "," + avg5 + "," + avg6);
-                                //initialize all the sum variables to zero
+                                }
+
+                                // Initialize all the sum variables to zero
                                 sum1 = 0;
                                 sum2 = 0;
                                 sum3 = 0;
@@ -1038,19 +1153,24 @@ namespace Final_Kinect
                                 sum7 = 0;
                                 sum8 = 0;
                             }
-                            //if the movement is more than 3mm
-                            if (y1 > (x1 + notallowed) || y1 < (x1 - notallowed) || y2 > (x2 + notallowed) || y2 < (x2 - notallowed) || y3 > (x3 + notallowed) || y3 < (x3 - notallowed) ||y4 > (x4 + notallowed) || y4 < (x4 - notallowed) || y5 > (x5 + notallowed) || y5 < (x5 - notallowed) || y6 > (x6 + notallowed) || y6 < (x6 - notallowed))
+                            // If the movement is more than 3mm
+                            if (y1 > (x1 + notAllowed) || y1 < (x1 - notAllowed) || y2 > (x2 + notAllowed) || y2 < (x2 - notAllowed) || y3 > (x3 + notAllowed) || y3 < (x3 - notAllowed) ||y4 > (x4 + notAllowed) || y4 < (x4 - notAllowed) || y5 > (x5 + notAllowed) || y5 < (x5 - notAllowed) || y6 > (x6 + notAllowed) || y6 < (x6 - notAllowed))
                             {
-                                if (counter_value10 == 1)
+                                if (mRawMeasures == 1)
                                 {
-                                    if (counter_value2 == 1)
+                                    if (mMovie == 1)
                                     {
-                                        if (counter_value3 == 1)
+                                        if (mMovieSensitive == 1)
+                                        {
                                             axWindowsMediaPlayer1.Ctlcontrols.pause();
+                                        }
                                         else
+                                        {
                                             axWindowsMediaPlayer1.Ctlcontrols.play();
+                                        }
                                     }
-                                    if (counter_value6 == 1)
+
+                                    if (mProgressSensitive == 1)
                                     {
                                         timer1.Enabled = false;
                                     }
@@ -1058,7 +1178,8 @@ namespace Final_Kinect
                                     {
                                         timer1.Enabled = true;
                                     }
-                                    if (counter_value9 == 1)
+
+                                    if (mTrafficSensitive == 1)
                                     {
                                         redLightPictureBox.Visible = true;
                                         yellowLightPictureBox.Visible = false;
@@ -1070,14 +1191,17 @@ namespace Final_Kinect
                                         greenLightPictureBox.Visible = true;
                                     }
                                 }
-                                counter_na++;
-                                if (counter_warning > 0)
+
+                                mOverNotAllowed++;
+
+                                if (mOverWarning > 0)
                                 {
                                     videoCsvFile.WriteLine("--------");
                                 }
+
                                 if (counter1 == 0)
                                 {
-                                    if (counter_na == 1)
+                                    if (mOverNotAllowed == 1)
                                     {
                                         videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement" + "," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
                                         videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement" + "," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
@@ -1089,55 +1213,60 @@ namespace Final_Kinect
                                 }
                                 else
                                 {
-                                    //If there is a small tagged movement
+                                    // If there is a small tagged movement
                                     if (counter1 == 1)
                                     {
-                                        if (counter_na == 1)
+                                        if (mOverNotAllowed == 1)
                                         {
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
                                         }
+
                                         rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "SmallMovement");
                                         counter1 = 0;
 
                                     }
-                                    //if there is a medium  tagged movement
+                                    // If there is a medium tagged movement
                                     if (counter1 == 2)
                                     {
-                                        if (counter_na == 1)
+                                        if (mOverNotAllowed == 1)
                                         {
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
                                         }
+
                                         rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "MediumMovement");
                                         counter1 = 0;
-
                                     }
-                                    //if there is a large tagged movement
+
+                                    // If there is a large tagged movement
                                     if (counter1 == 3)
                                     {
-                                        if (counter_na == 1)
+                                        if (mOverNotAllowed == 1)
                                         {
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
                                         }
+
                                         rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "LargeMovement");
                                         counter1 = 0;
-
                                     }
-
                                 }
                             }
-                            //If the movement is more than 2mm
+
+                            // If the movement is more than 2mm
                             else if (y1 > (x1 + warning) || y1 < (x1 - warning) || y2 > (x2 + warning) || y2 < (x2 - warning) || y3 > (x3 + warning) || y3 < (x3 - warning) || y4 > (x4 + warning) || y4 < (x4 - warning) || y5 > (x5 + warning) || y5 < (x5 - warning) || y6 > (x6 + warning) || y6 < (x6 - warning))
                             {
-
-                                if (counter_value10 == 1)
+                                if (mRawMeasures == 1)
                                 {
                                     timer1.Enabled = true;
-                                    if (counter_value2 == 1)
+
+                                    if (mMovie == 1)
+                                    {
                                         axWindowsMediaPlayer1.Ctlcontrols.play();
-                                    if (counter_value9 == 1)
+                                    }
+
+                                    if (mTrafficSensitive == 1)
                                     {
                                         redLightPictureBox.Visible = false;
                                         yellowLightPictureBox.Visible = true;
@@ -1148,71 +1277,80 @@ namespace Final_Kinect
                                         greenLightPictureBox.Visible = true;
                                     }
                                 }
-                                counter_warning++;
-                                if (counter_na > 0)
+
+                                mOverWarning++;
+
+                                if (mOverNotAllowed > 0)
                                 {
                                     videoCsvFile.WriteLine("--------");
                                 }
+
                                 if (counter1 == 0)
                                 {
-                                    if (counter_warning == 1)
+                                    if (mOverWarning == 1)
                                     {
                                         videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
                                         videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
                                     }
+
                                     rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Small Movement," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6);
                                     videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Small Movement," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6);
                                 }
                                 else
                                 {
-                                    //if the tagged movement is small movement
+                                    // If the tagged movement is small movement
                                     if (counter1 == 1)
                                     {
-                                        if (counter_warning == 1)
+                                        if (mOverWarning == 1)
                                         {
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
                                         }
+
                                         rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Small Movement," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "SmallMovement");
                                         counter1 = 0;
-
                                     }
-                                    //if the tagged movement is medium movement
+
+                                    // If the tagged movement is medium movement
                                     if (counter1 == 2)
                                     {
-                                        if (counter_warning == 1)
+                                        if (mOverWarning == 1)
                                         {
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
                                         }
+
                                         rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Small Movement," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "MediumMovement");
                                         counter1 = 0;
-
                                     }
-                                    //if the tagged movement is large movement
+
+                                    // If the tagged movement is large movement
                                     if (counter1 == 3)
                                     {
-                                        if (counter_warning == 1)
+                                        if (mOverWarning == 1)
                                         {
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
                                             videoCsvFile.WriteLine(elapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
                                         }
+
                                         rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Small Movement," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "LargeMovement");
                                         counter1 = 0;
-
                                     }
-
                                 }
                             }
                             else
                             {
                                 //if the movement is less than 2mm
-                                if (counter_value10 == 1)
+                                if (mRawMeasures == 1)
                                 {
                                     timer1.Enabled = true;
-                                    if (counter_value2 == 1)
+
+                                    if (mMovie == 1)
+                                    {
                                         axWindowsMediaPlayer1.Ctlcontrols.play();
-                                    if (counter_value9 == 1)
+                                    }
+
+                                    if (mTrafficSensitive == 1)
                                     {
                                         redLightPictureBox.Visible = false;
                                         yellowLightPictureBox.Visible = false;
@@ -1225,6 +1363,7 @@ namespace Final_Kinect
                                 }
                                
                                 counter_original++;
+
                                 //here we are storing the values to temp array
                                 //here we are storing to temp original values
                                 if (counter_original == 1)
@@ -1236,6 +1375,7 @@ namespace Final_Kinect
                                     temp5[0] = y5;
                                     temp6[0] = y6;
                                 }
+
                                 if (counter_original == 2)
                                 {
                                     temp1[1] = y1;
@@ -1247,35 +1387,39 @@ namespace Final_Kinect
 
                                     counter_original = 0;
                                 }
-                                if (counter_na > 0)
+
+                                if (mOverNotAllowed > 0)
                                 {
                                     videoCsvFile.WriteLine("--------");
                                 }
-                                if (counter_warning > 0)
+
+                                if (mOverWarning > 0)
                                 {
                                     videoCsvFile.WriteLine("--------");
                                 }
-                                counter_na = 0;
-                                counter_warning = 0;
+
+                                mOverNotAllowed = 0;
+                                mOverWarning = 0;
+
                                 if (counter1 == 0)
                                 { 
                                     rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6);
                                 }
                                 else
                                 {
-                                    //small tagged  movement
+                                    // Small tagged movement
                                     if (counter1 == 1)
                                     {
                                         rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "SmallMovement");
                                         counter1 = 0;
                                     }
-                                    //medium tagged movement
+                                    // Medium tagged movement
                                     if (counter1 == 2)
                                     {
                                         rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "MediumMovement");
                                         counter1 = 0;
                                     }
-                                    //large tagged movement
+                                    // Large tagged movement
                                     if (counter1 == 3)
                                     {
                                         rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + y1 + "," + y2 + "," + y3 + "," + y4 + "," + y5 + "," + y6 + "," + "LargeMovement");
@@ -1317,6 +1461,11 @@ namespace Final_Kinect
                     }
                 }
             }
+        }
+
+        private String getCsvPath(String fileType)
+        {
+            return Path.Combine(mFilePath + "\\" + mSubjectInitials + "-" + mExperimentNumber + "-" + mCurrentDate + "-" + fileType + ".csv");
         }
 
         private void FinalForm_Load(object sender, EventArgs e)

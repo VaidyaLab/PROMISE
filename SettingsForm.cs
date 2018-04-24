@@ -18,7 +18,7 @@ namespace Final_Kinect
         private void startButton_Click(object sender, EventArgs e)
         {
             // If not depth, then color
-            int color_choice = depthRadioButton.Checked ? 1 : 0;
+            int depthFrameReference = depthRadioButton.Checked ? 1 : 0;
 
             int counter_angle = 0;
 
@@ -46,7 +46,7 @@ namespace Final_Kinect
                     largeMovementLowerLimitTextBox.Text,
                     filePathTextBox.Text,
                     counter_angle,
-                    color_choice
+                    depthFrameReference
                 );
 
                 baselineForm.Show();
@@ -78,7 +78,7 @@ namespace Final_Kinect
                     videoFileTextBox.Text,
                     filePathTextBox.Text,
                     counter_angle,
-                    color_choice
+                    depthFrameReference
                 );
 
                 baseline.Show();

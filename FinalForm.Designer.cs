@@ -133,12 +133,12 @@
             this.stopButton.UseVisualStyleBackColor = true;
             this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
             // 
-            // textBox1
+            // elapsedTimeTextBox
             // 
             this.elapsedTimeTextBox.Font = new System.Drawing.Font("Times New Roman", 10.125F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.elapsedTimeTextBox.Location = new System.Drawing.Point(26, 361);
             this.elapsedTimeTextBox.Margin = new System.Windows.Forms.Padding(2);
-            this.elapsedTimeTextBox.Name = "textBox1";
+            this.elapsedTimeTextBox.Name = "elapsedTimeTextBox";
             this.elapsedTimeTextBox.Size = new System.Drawing.Size(76, 23);
             this.elapsedTimeTextBox.TabIndex = 4;
             // 

@@ -15,17 +15,17 @@ namespace Final_Kinect
     public partial class FinalForm : Form
     {
         // Initializing Kinect Sensor
-        KinectSensor kinect_sensor = null;
+        KinectSensor mKinectSensor = null;
 
         // Body frame reader used to detect body by kinect
-        MultiSourceFrameReader bodyframe_reader = null;
+        MultiSourceFrameReader mBodyframeReader = null;
 
         Body[] mBody = null;
 
         // This is the form on which the participant will view the movie.
-        SubjectMovieForm subjectMovieForm;
+        SubjectMovieForm mSubjectMovieForm;
 
-        Stopwatch stopWatch = new Stopwatch();
+        Stopwatch mStopwatch = new Stopwatch();
 
         // This is being used to determine if session is started or stopped, but in some ways that I need to look further into.
         int mSessionState = 0;
@@ -253,7 +253,7 @@ namespace Final_Kinect
 
             InitializeDataFiles();
 
-            subjectMovieForm = new SubjectMovieForm(
+            mSubjectMovieForm = new SubjectMovieForm(
                 mSmoothingKernal.ToString(),
                 mWarning.ToString(),
                 mNotAllowed.ToString(),
@@ -273,7 +273,7 @@ namespace Final_Kinect
                 videoFile
                 );
 
-            initializeKinect();
+            InitializeKinect();
         }
 
         // Do we need amplitude and difference files? If so, ought their creation be moved out of here and with rest?
@@ -324,24 +324,25 @@ namespace Final_Kinect
             }
         }
 
-        public void initializeKinect()
+        public void InitializeKinect()
         {
-            kinect_sensor = KinectSensor.GetDefault();
+            mKinectSensor = KinectSensor.GetDefault();
 
-            if (kinect_sensor != null)
+            if (mKinectSensor != null)
             {
-                kinect_sensor.Open(); // Turn on kinect
+                // Turn on kinect
+                mKinectSensor.Open();
             }
 
             // We are using kinect camera as well as body detection so here we have used MultiSourceFrameReader
-            bodyframe_reader = kinect_sensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Body);
+            mBodyframeReader = mKinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Body);
 
-            if (bodyframe_reader != null)
+            if (mBodyframeReader != null)
             {
-                bodyframe_reader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
+                mBodyframeReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
             }
 
-            subjectMovieForm.Show();
+            mSubjectMovieForm.Show();
         }
 
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
@@ -469,7 +470,7 @@ namespace Final_Kinect
                         var headToShoulderRightAngle = neck.Angle(head, shoulderRight);
                         var headToSpineShoulder = neck.Angle(head, spineShoulder);
 
-                        subjectMovieForm.transfer_values(
+                        mSubjectMovieForm.transfer_values(
                             mSessionState,
                             (int) neckToElbowRightAngle,
                             (int) neckToElbowLeftAngle,
@@ -486,8 +487,8 @@ namespace Final_Kinect
                         if (mSessionState == 22) // and deep sky blue button
                         {
                             startButton.BackColor = Color.DeepSkyBlue;
-                            stopWatch.Start(); // May need to add if (stopWatch.Started == false) check or something
-                            elapsedTimeTextBox.Text = stopWatch.Elapsed.ToString();
+                            mStopwatch.Start(); // May need to add if (stopWatch.Started == false) check or something
+                            elapsedTimeTextBox.Text = mStopwatch.Elapsed.ToString();
                             timer1.Enabled = true; // May need to add if (timer1.Enabled == false) check or something.
 
                             mNeckToElbowRightAngle = (int) neckToElbowRightAngle;
@@ -907,7 +908,7 @@ namespace Final_Kinect
                     redLightPictureBox.Visible = true;
                     yellowLightPictureBox.Visible = false;
                     greenLightPictureBox.Visible = false;
-                    stopWatch.Stop(); // diff
+                    mStopwatch.Stop(); // diff
                     mSessionState = 21;
                 }
                 else

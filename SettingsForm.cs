@@ -17,72 +17,48 @@ namespace Final_Kinect
 
         private void startButton_Click(object sender, EventArgs e)
         {
-            // If not depth, then color
-            int depthFrameReference = depthRadioButton.Checked ? 1 : 0;
-
-            int counter_angle = 0;
+            int bodyTrackingArea = 0;
 
             if (headRadioButton.Checked)
             {
-                counter_angle = 2;
+                bodyTrackingArea = 2;
             }
             else if (torsoRadioButton.Checked)
             {
-                counter_angle = 1;
+                bodyTrackingArea = 1;
             }
             else if (allRadioButton.Checked)
             {
-                counter_angle = 3;
+                bodyTrackingArea = 3;
             }
 
-            // Run Baseline - I believe this is not used at all and may not even work
-            if (baselineVersionRadioButton.Checked)
-            {
-                BaselineForm baselineForm = new BaselineForm(
-                    subjectInitialsTextBox.Text,
-                    experimentNumberTextBox.Text,
-                    smoothingKernalTextBox.Text,
-                    smallMovementLowerLimitTextBox.Text,
-                    largeMovementLowerLimitTextBox.Text,
-                    filePathTextBox.Text,
-                    counter_angle,
-                    depthFrameReference
-                );
+            FinalForm finalForm = new FinalForm(
+                subjectInitialsTextBox.Text,
+                experimentNumberTextBox.Text,
+                smoothingKernalTextBox.Text,
+                smallMovementLowerLimitTextBox.Text,
+                largeMovementLowerLimitTextBox.Text,
+                movieFrameCheckBox.Checked ? 1 : 0,
+                movieCheckBox.Checked ? 1 : 0,
+                movieSensitiveCheckBox.Checked ? 1 : 0,
+                progressFrameCheckBox.Checked ? 1 : 0,
+                progressCheckBox.Checked ? 1 : 0,
+                progressSensitiveCheckBox.Checked ? 1 : 0,
+                trafficFrameCheckBox.Checked ? 1 : 0,
+                trafficCheckBox.Checked ? 1 : 0,
+                trafficSensitiveCheckBox.Checked ? 1 : 0,
+                rawMeasuresRadioButton.Checked ? 1 : 0,
+                meansRadioButton.Checked ? 1 : 0,
+                mediansRadioButton.Checked ? 1 : 0,
+                sessionTimeTextBox.Text,
+                lowerLimitLargeMovementCheckBox.Checked ? 1 : 0,
+                videoFileTextBox.Text,
+                filePathTextBox.Text,
+                bodyTrackingArea,
+                depthRadioButton.Checked ? 1 : 0 // If not depth, then color
+            );
 
-                baselineForm.Show();
-            }
-
-           // Run Final (with all components)
-            else if (finalVersionRadioButton.Checked)
-            {
-                FinalForm baseline = new FinalForm(
-                    subjectInitialsTextBox.Text,
-                    experimentNumberTextBox.Text,
-                    smoothingKernalTextBox.Text,
-                    smallMovementLowerLimitTextBox.Text,
-                    largeMovementLowerLimitTextBox.Text,
-                    movieFrameCheckBox.Checked ? 1 : 0,
-                    movieCheckBox.Checked ? 1 : 0,
-                    movieSensitiveCheckBox.Checked ? 1 : 0,
-                    progressFrameCheckBox.Checked ? 1 : 0,
-                    progressCheckBox.Checked ? 1 : 0,
-                    progressSensitiveCheckBox.Checked ? 1 : 0,
-                    trafficFrameCheckBox.Checked ? 1 : 0,
-                    trafficCheckBox.Checked ? 1 : 0,
-                    trafficSensitiveCheckBox.Checked ? 1 : 0,
-                    rawMeasuresRadioButton.Checked ? 1 : 0,
-                    meansRadioButton.Checked ? 1 : 0,
-                    mediansRadioButton.Checked ? 1 : 0,
-                    sessionTimeTextBox.Text,
-                    lowerLimitLargeMovementCheckBox.Checked ? 1 : 0,
-                    videoFileTextBox.Text,
-                    filePathTextBox.Text,
-                    counter_angle,
-                    depthFrameReference
-                );
-
-                baseline.Show();
-            }
+            finalForm.Show();           
         }
 
         // To select the video file

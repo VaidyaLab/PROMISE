@@ -248,12 +248,6 @@ namespace Final_Kinect
             //transfer_values();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Form5 baseline = new Form5();
-            baseline.ShowDialog();
-        }
-
         public void transfer_values(int count,int angle_1,int angle_2,int angle_3,int angle_4,int angle_5,int angle_6,int warning1,int notallowed1,int count1)
         {
             // Console.WriteLine("Hello World");

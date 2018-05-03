@@ -232,23 +232,13 @@ namespace Final_Kinect
             InitializeDataFiles();
 
             mSubjectMovieForm = new SubjectMovieForm(
-                mSmoothingKernal.ToString(),
-                mWarning.ToString(),
-                mNotAllowed.ToString(),
                 movieFrame,
                 mMovie,
-                mMovieSensitive,
                 progressFrame,
-                mProgress,
-                mProgressSensitive,
                 trafficFrame,
                 traffic,
-                mTrafficSensitive,
-                mRawMeasures,
-                mMeans,
-                mMedians,
-                mSessionTime,
-                videoFile
+                videoFile,
+                progressBar.Maximum
                 );
 
             InitializeKinect();
@@ -299,6 +289,11 @@ namespace Final_Kinect
             {
                 progressBar.Value++;
                 progressBar.Update();
+
+                if (mSubjectMovieForm != null)
+                {
+                    mSubjectMovieForm.UpdateProgressBar();
+                }              
             }
         }
 
@@ -385,19 +380,6 @@ namespace Final_Kinect
                         var headToShoulderLeftAngle = neck.Angle(head, shoulderLeft);
                         var headToShoulderRightAngle = neck.Angle(head, shoulderRight);
                         var headToSpineShoulder = neck.Angle(head, spineShoulder);
-
-                        mSubjectMovieForm.transfer_values(
-                            mSessionState,
-                            (int) neckToElbowRightAngle,
-                            (int) neckToElbowLeftAngle,
-                            (int) spineBaseToHeadAngle,
-                            (int) headToShoulderLeftAngle,
-                            (int) headToShoulderRightAngle,
-                            (int) headToSpineShoulder,
-                            mWarning,
-                            mNotAllowed,
-                            mSessionState
-                        );
 
                         // Once the user has pressed the start button                       
                         if (mSessionState == 22) // and deep sky blue button
@@ -717,11 +699,21 @@ namespace Final_Kinect
                     if (mMovieSensitive == 1)
                     {
                         axWindowsMediaPlayer1.Ctlcontrols.pause();
+
+                        if (mSubjectMovieForm != null)
+                        {
+                            mSubjectMovieForm.MediaPlayerPause();
+                        }
                     }
                     else
                     {
                         // What if already playing?
                         axWindowsMediaPlayer1.Ctlcontrols.play();
+
+                        if (mSubjectMovieForm != null)
+                        {
+                            mSubjectMovieForm.MediaPlayerPlay();
+                        }
                     }
                 }
 
@@ -740,6 +732,14 @@ namespace Final_Kinect
                     redLightPictureBox.Visible = true;
                     yellowLightPictureBox.Visible = false;
                     greenLightPictureBox.Visible = false;
+
+                    if (mSubjectMovieForm != null)
+                    {
+                        mSubjectMovieForm.SetRedLightVisible(true);
+                        mSubjectMovieForm.SetYellowLightVisible(false);
+                        mSubjectMovieForm.SetGreenLightVisible(false);
+                    }
+
                     mStopwatch.Stop(); // diff
                     mSessionState = 21;
                 }
@@ -747,6 +747,11 @@ namespace Final_Kinect
                 {
                     // What if already visible?
                     greenLightPictureBox.Visible = true;
+
+                    if (mSubjectMovieForm != null)
+                    {
+                        mSubjectMovieForm.SetGreenLightVisible(true);
+                    }
                 }
             }
 
@@ -771,6 +776,11 @@ namespace Final_Kinect
                 if (mMovie == 1)
                 {
                     axWindowsMediaPlayer1.Ctlcontrols.play();
+
+                    if (mSubjectMovieForm != null)
+                    {
+                        mSubjectMovieForm.MediaPlayerPlay();
+                    }
                 }
 
                 if (mTrafficSensitive == 1)
@@ -778,10 +788,22 @@ namespace Final_Kinect
                     redLightPictureBox.Visible = false;
                     yellowLightPictureBox.Visible = true;
                     greenLightPictureBox.Visible = false;
+
+                    if (mSubjectMovieForm != null)
+                    {
+                        mSubjectMovieForm.SetRedLightVisible(false);
+                        mSubjectMovieForm.SetYellowLightVisible(true);
+                        mSubjectMovieForm.SetGreenLightVisible(false);
+                    }
                 }
                 else
                 {
                     greenLightPictureBox.Visible = true;
+
+                    if (mSubjectMovieForm != null)
+                    {
+                        mSubjectMovieForm.SetGreenLightVisible(true);
+                    }
                 }
             }
 
@@ -803,6 +825,11 @@ namespace Final_Kinect
                 if (mMovie == 1)
                 {
                     axWindowsMediaPlayer1.Ctlcontrols.play();
+
+                    if (mSubjectMovieForm != null)
+                    {
+                        mSubjectMovieForm.MediaPlayerPlay();
+                    }
                 }
 
                 if (mTrafficSensitive == 1)
@@ -810,10 +837,23 @@ namespace Final_Kinect
                     redLightPictureBox.Visible = false;
                     yellowLightPictureBox.Visible = false;
                     greenLightPictureBox.Visible = true;
+
+                    if (mSubjectMovieForm != null)
+                    {
+                        mSubjectMovieForm.SetRedLightVisible(false);
+                        mSubjectMovieForm.SetYellowLightVisible(false);
+                        mSubjectMovieForm.SetGreenLightVisible(true);
+                    }
+
                 }
                 else
                 {
                     greenLightPictureBox.Visible = true;
+
+                    if (mSubjectMovieForm != null)
+                    {
+                        mSubjectMovieForm.SetGreenLightVisible(true);
+                    }
                 }
             }
 
@@ -829,9 +869,13 @@ namespace Final_Kinect
                 if (mMovie == 1)
                 {
                     if (mMovieSensitive == 1)
+                    {
                         axWindowsMediaPlayer1.Ctlcontrols.pause();
+                    }
                     else
+                    {
                         axWindowsMediaPlayer1.Ctlcontrols.play();
+                    }
                 }
                 if (mProgressSensitive == 1)
                 {
@@ -1437,7 +1481,6 @@ namespace Final_Kinect
 
             rawCsvFile.Close();
             videoCsvFile.Close();
-            averageCsvFile.Close();
             meanCsvFile.Close();
             medianCsvFile.Close();
             differenceCsvFile.Close();

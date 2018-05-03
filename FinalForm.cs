@@ -354,8 +354,7 @@ namespace Final_Kinect
                         {
                             startButton.BackColor = Color.DeepSkyBlue;
                         }
-
-                        if (mSessionState == 21)
+                        else if (mSessionState == 21)
                         {
                             startButton.BackColor = Color.Red; // Start button normally starts as red, fyi.
                             MediaPlayersPause();

@@ -350,6 +350,11 @@ namespace Final_Kinect
                     // Process if the body has been detected
                     if (body.IsTracked)
                     {
+                        if (mSessionState == 22)
+                        {
+                            startButton.BackColor = Color.DeepSkyBlue;
+                        }
+
                         if (mSessionState == 21)
                         {
                             startButton.BackColor = Color.Red; // Start button normally starts as red, fyi.
@@ -360,6 +365,10 @@ namespace Final_Kinect
                         else if (mSessionState == 20) // This is when state was not 22, and then there was too much movement, I believe.
                         {
                             startButton.BackColor = Color.Blue;
+                        }
+                        else
+                        {
+                            startButton.BackColor = Color.Green;
                         }
 
                         // Joints

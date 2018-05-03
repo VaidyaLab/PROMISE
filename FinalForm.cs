@@ -233,7 +233,6 @@ namespace Final_Kinect
 
             mSubjectMovieForm = new SubjectMovieForm(
                 movieFrame,
-                mMovie,
                 progressFrame,
                 trafficFrame,
                 traffic,
@@ -354,7 +353,8 @@ namespace Final_Kinect
                         if (mSessionState == 21)
                         {
                             startButton.BackColor = Color.Red; // Start button normally starts as red, fyi.
-                            axWindowsMediaPlayer1.Ctlcontrols.pause();
+                            MediaPlayersPause();
+
                             timer1.Enabled = false;
                         }
                         else if (mSessionState == 20) // This is when state was not 22, and then there was too much movement, I believe.
@@ -698,22 +698,12 @@ namespace Final_Kinect
                 {
                     if (mMovieSensitive == 1)
                     {
-                        axWindowsMediaPlayer1.Ctlcontrols.pause();
-
-                        if (mSubjectMovieForm != null)
-                        {
-                            mSubjectMovieForm.MediaPlayerPause();
-                        }
+                        MediaPlayersPause();
                     }
                     else
                     {
                         // What if already playing?
-                        axWindowsMediaPlayer1.Ctlcontrols.play();
-
-                        if (mSubjectMovieForm != null)
-                        {
-                            mSubjectMovieForm.MediaPlayerPlay();
-                        }
+                        MediaPlayersPlay();
                     }
                 }
 
@@ -727,40 +717,22 @@ namespace Final_Kinect
                     timer1.Enabled = true;
                 }
 
+                SetAllTrafficLights(true, false, false);
+
                 if (mTrafficSensitive == 1)
                 {
-                    redLightPictureBox.Visible = true;
-                    yellowLightPictureBox.Visible = false;
-                    greenLightPictureBox.Visible = false;
-
-                    if (mSubjectMovieForm != null)
-                    {
-                        mSubjectMovieForm.SetRedLightVisible(true);
-                        mSubjectMovieForm.SetYellowLightVisible(false);
-                        mSubjectMovieForm.SetGreenLightVisible(false);
-                    }
-
                     mStopwatch.Stop(); // diff
                     mSessionState = 21;
-                }
-                else
-                {
-                    // What if already visible?
-                    greenLightPictureBox.Visible = true;
-
-                    if (mSubjectMovieForm != null)
-                    {
-                        mSubjectMovieForm.SetGreenLightVisible(true);
-                    }
                 }
             }
 
             differenceCsvFile.WriteLine((mStartedOriginalShoulderRight - mNeckToElbowRightAngle).ToString() + "," + (mStartedOriginalShoulderLeft - mNeckToElbowLeftAngle).ToString() + "," + (mStartedOriginalSpineMid - mSpineBaseToHeadAngle).ToString() + "," + (mStartedOriginalNeck - mHeadToShoulderLeftAngle).ToString() + "," + (mStartedOriginalNeck1 - mHeadToShoulderRightAngle).ToString() + "," + (mStartedOriginalSpineShoulder - mHeadToSpineShoulder).ToString() + (mMarkTagged == 1 ? ",Tagged" : ""));
             differenceCsvFile.WriteLine(" " + "," + " " + "," + " " + "," + " " + "," + " " + "," + " ");
+
             amplitdueCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + final_amplitude);
             amplitdueCsvFile.WriteLine(" " + " ");
-            meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement" + "," + mShoulderRightMean + "," + mShoulderLeftMean + "," + mSpineMidMean + "," + mNeckMean + "," + mNeck1Mean + "," + mSpineShoulderMean + (mMarkTagged == 1 ? ",Tagged" : ""));
-            
+
+            meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement" + "," + mShoulderRightMean + "," + mShoulderLeftMean + "," + mSpineMidMean + "," + mNeckMean + "," + mNeck1Mean + "," + mSpineShoulderMean + (mMarkTagged == 1 ? ",Tagged" : ""));            
         }
 
         private void MeanYellowLightUpdate()
@@ -775,36 +747,10 @@ namespace Final_Kinect
 
                 if (mMovie == 1)
                 {
-                    axWindowsMediaPlayer1.Ctlcontrols.play();
-
-                    if (mSubjectMovieForm != null)
-                    {
-                        mSubjectMovieForm.MediaPlayerPlay();
-                    }
+                    MediaPlayersPlay();
                 }
 
-                if (mTrafficSensitive == 1)
-                {
-                    redLightPictureBox.Visible = false;
-                    yellowLightPictureBox.Visible = true;
-                    greenLightPictureBox.Visible = false;
-
-                    if (mSubjectMovieForm != null)
-                    {
-                        mSubjectMovieForm.SetRedLightVisible(false);
-                        mSubjectMovieForm.SetYellowLightVisible(true);
-                        mSubjectMovieForm.SetGreenLightVisible(false);
-                    }
-                }
-                else
-                {
-                    greenLightPictureBox.Visible = true;
-
-                    if (mSubjectMovieForm != null)
-                    {
-                        mSubjectMovieForm.SetGreenLightVisible(true);
-                    }
-                }
+                SetAllTrafficLights(false, true, false);
             }
 
             meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Small Movement" + "," + mShoulderRightMean + "," + mShoulderLeftMean + "," + mSpineMidMean + "," + mNeckMean + "," + mNeck1Mean + "," + mSpineShoulderMean + (mMarkTagged == 1 ? ",Tagged" : ""));
@@ -824,37 +770,10 @@ namespace Final_Kinect
 
                 if (mMovie == 1)
                 {
-                    axWindowsMediaPlayer1.Ctlcontrols.play();
-
-                    if (mSubjectMovieForm != null)
-                    {
-                        mSubjectMovieForm.MediaPlayerPlay();
-                    }
+                    MediaPlayersPlay();
                 }
-
-                if (mTrafficSensitive == 1)
-                {
-                    redLightPictureBox.Visible = false;
-                    yellowLightPictureBox.Visible = false;
-                    greenLightPictureBox.Visible = true;
-
-                    if (mSubjectMovieForm != null)
-                    {
-                        mSubjectMovieForm.SetRedLightVisible(false);
-                        mSubjectMovieForm.SetYellowLightVisible(false);
-                        mSubjectMovieForm.SetGreenLightVisible(true);
-                    }
-
-                }
-                else
-                {
-                    greenLightPictureBox.Visible = true;
-
-                    if (mSubjectMovieForm != null)
-                    {
-                        mSubjectMovieForm.SetGreenLightVisible(true);
-                    }
-                }
+                              
+                SetAllTrafficLights(false, false, true);
             }
 
             meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original" + "," + mShoulderRightMean + "," + mShoulderLeftMean + "," + mSpineMidMean + "," + mNeckMean + "," + mNeck1Mean + "," + mSpineShoulderMean + (mMarkTagged == 1 ? ",Tagged" : ""));
@@ -1464,6 +1383,52 @@ namespace Final_Kinect
             if (mMarkTagged == 1)
             {
                 mMarkTagged = 0;
+            }
+        }
+
+        private void MediaPlayersPlay()
+        {
+            axWindowsMediaPlayer1.Ctlcontrols.play();
+
+            if (mSubjectMovieForm != null)
+            {
+                mSubjectMovieForm.MediaPlayerPlay();
+            }
+        }
+
+        private void MediaPlayersPause()
+        {
+            axWindowsMediaPlayer1.Ctlcontrols.pause();
+
+            if (mSubjectMovieForm != null)
+            {
+                mSubjectMovieForm.MediaPlayerPause();
+            }
+        }
+
+        private void SetAllTrafficLights(bool redVisible, bool yellowVisible, bool greenVisible)
+        {
+            if (mTrafficSensitive == 1)
+            {
+                redLightPictureBox.Visible = redVisible;
+                yellowLightPictureBox.Visible = yellowVisible;
+                greenLightPictureBox.Visible = greenVisible;
+
+                if (mSubjectMovieForm != null)
+                {
+                    mSubjectMovieForm.SetRedLightVisible(redVisible);
+                    mSubjectMovieForm.SetYellowLightVisible(yellowVisible);
+                    mSubjectMovieForm.SetGreenLightVisible(greenVisible);
+                }
+            }
+            else
+            {
+                greenLightPictureBox.Visible = true;
+
+                if (mSubjectMovieForm != null)
+                {
+                    mSubjectMovieForm.SetGreenLightVisible(true);
+                }
             }
         }
 

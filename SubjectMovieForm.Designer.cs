@@ -162,7 +162,6 @@
             this.Name = "SubjectMovieForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Version 3 (Final Version)";
-            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.Load += new System.EventHandler(this.SubjectMovieForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
             this.panel1.ResumeLayout(false);

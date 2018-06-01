@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+
 namespace Final_Kinect
 {
     public partial class SubjectMovieForm : Form
@@ -34,13 +35,15 @@ namespace Final_Kinect
 
         //Form load method
         private void SubjectMovieForm_Load(object sender, EventArgs e)
-        {   
+        {
             /*
             if (count == 22)
             {
                 this.BackColor = System.Drawing.Color.Black;
             }
             */
+
+            PositionOnSecondScreen();           
         }
         public void UpdateProgressBar()
         {
@@ -66,6 +69,15 @@ namespace Final_Kinect
         public void SetGreenLightVisible(bool visible)
         {
             mGreenLightPictureBox.Visible = visible;
+        }
+        public void PositionOnSecondScreen()
+        {
+            Screen[] screens = Screen.AllScreens;
+
+            System.Drawing.Rectangle bounds = screens[1].Bounds;
+            this.SetBounds(bounds.X, bounds.Y, bounds.Width, bounds.Height);
+
+            WindowState = FormWindowState.Maximized;
         }
     }
 }

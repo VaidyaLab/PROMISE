@@ -268,7 +268,6 @@ namespace Final_Kinect
                 mStarted = true;
             }
         }
-
         private void stopButton_Click(object sender, EventArgs e)
         {
             mSessionState = 21;
@@ -295,7 +294,6 @@ namespace Final_Kinect
                 }              
             }
         }
-
         public void InitializeKinect()
         {
             mKinectSensor = KinectSensor.GetDefault();
@@ -317,7 +315,6 @@ namespace Final_Kinect
             // What if already showing?
             mSubjectMovieForm.Show();
         }
-
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
             bool dataReceived = false;
@@ -486,12 +483,10 @@ namespace Final_Kinect
                 }
             }
         }
-
         private String GetCsvPath(String fileType)
         {
             return Path.Combine(mFilePath + "\\" + mSubjectInitials + "-" + mExperimentNumber + "-" + mCurrentDate + "-" + fileType + ".csv");
         }
-
         private void SetCharts()
         {
             // Below code implements the representation on charts of angle data of the angles on all the charts
@@ -507,7 +502,6 @@ namespace Final_Kinect
                 chart.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
             }
         }
-
         private void UpdateChart(Chart chart, int graphCounter, int x, int angle)
         {
             chart.Series[0].Points.AddXY(graphCounter, (x - angle));
@@ -524,7 +518,6 @@ namespace Final_Kinect
 
             graphCounter++;
         }
-
         private void UpdateAllCharts()
         {
             UpdateChart(chart1, graph_counter, mStartedOriginalShoulderRight, mNeckToElbowRightAngle);
@@ -534,14 +527,12 @@ namespace Final_Kinect
             UpdateChart(chart5, graph_counter4, mStartedOriginalNeck1, mHeadToShoulderRightAngle);
             UpdateChart(chart6, graph_counter5, mStartedOriginalSpineShoulder, mHeadToSpineShoulder);
         }
-
         private void SetTimer()
         {
             timer1.Tick += new EventHandler(timer1_Tick);
             timer1.Interval = 1000;
             timer1.Enabled = false;
         }
-
         private void SetOriginalAngles()
         {
             mOriginalNeckToElbowRightAngle = mNeckToElbowRightAngle;
@@ -553,7 +544,6 @@ namespace Final_Kinect
 
             mOriginalAnglesSet = true;
         }
-
         private int GetMedian(int[] medianSmoothing)
         {
             int tmp;
@@ -580,7 +570,6 @@ namespace Final_Kinect
                 return medianSmoothing[(mSmoothingKernal + 1) / 2];
             }
         }
-
         private void UpdateMedianArrays()
         {
             int element = mMeanDataReadIteration - 1; // Perhaps using a parameter would be better than mMeanDataReadIteration.
@@ -592,7 +581,6 @@ namespace Final_Kinect
             mNeck1MedianArray[element] = mHeadToShoulderRightAngle;
             mSpineShoulderMedianArray[element] = mHeadToSpineShoulder;
         }
-
         private void UpdateMeanSums()
         {
             mShouderRightMeanSum += mNeckToElbowRightAngle;
@@ -602,7 +590,6 @@ namespace Final_Kinect
             mNeck1MeanSum += mHeadToShoulderRightAngle;
             mSpineShoulderMeanSum += mHeadToSpineShoulder;
         }
-
         private void ResetMeanSums()
         {
             mShouderRightMeanSum = 0;
@@ -612,7 +599,6 @@ namespace Final_Kinect
             mNeck1MeanSum = 0;
             mSpineShoulderMeanSum = 0;
         }
-
         private void SetMeans()
         {
             mShoulderRightMean = mShouderRightMeanSum / mSmoothingKernal;
@@ -622,7 +608,6 @@ namespace Final_Kinect
             mNeck1Mean = mNeck1MeanSum / mSmoothingKernal;
             mSpineShoulderMean = mSpineShoulderMeanSum / mSmoothingKernal;
         }
-
         private void SetMedians()
         {
             mShoulderRightMedian = GetMedian(mShoulderRightMedianArray);
@@ -632,50 +617,6 @@ namespace Final_Kinect
             mNeck1Median = GetMedian(mNeck1MedianArray);
             mSpineShoulderMedian = GetMedian(mSpineShoulderMedianArray);
         }
-
-        private void UpdateLabelColors()
-        {
-            if (mShoulderRightMean > (mStartedOriginalShoulderRight + mNotAllowed) || mShoulderRightMean < (mStartedOriginalShoulderRight - mNotAllowed))
-            {
-                shoulderRightLabel.ForeColor = Color.Red;
-            }
-
-            if (mShoulderLeftMean > (mStartedOriginalShoulderLeft + mNotAllowed) || mShoulderLeftMean < (mStartedOriginalShoulderLeft - mNotAllowed))
-            {
-                shoulderLeftLabel.ForeColor = Color.Red;
-            }
-
-            if (mSpineMidMean > (mStartedOriginalSpineMid + mNotAllowed) || mSpineMidMean < (mStartedOriginalSpineMid - mNotAllowed))
-            {
-                spineMidLabel.ForeColor = Color.Red;
-            }
-
-            if (mNeckMean > (mStartedOriginalNeck + mNotAllowed) || mNeckMean < (mStartedOriginalNeck - mNotAllowed))
-            {
-                neckLabel.ForeColor = Color.Red;
-            }
-
-            if (mNeck1Mean > (mStartedOriginalNeck1 + mNotAllowed) || mNeck1Mean < (mStartedOriginalNeck1 - mNotAllowed))
-            {
-                neck1Label.ForeColor = Color.Red;
-            }
-
-            if (mSpineShoulderMean > (mStartedOriginalSpineShoulder + mNotAllowed) || mSpineShoulderMean < (mStartedOriginalSpineShoulder - mNotAllowed))
-            {
-                spineShoulderLabel.ForeColor = Color.Red;
-            }
-        }
-
-        private void ResetLabelColors()
-        {
-            shoulderRightLabel.ForeColor = Color.Black;
-            shoulderLeftLabel.ForeColor = Color.Black;
-            spineMidLabel.ForeColor = Color.Black;
-            neckLabel.ForeColor = Color.Black;
-            neck1Label.ForeColor = Color.Black;
-            spineShoulderLabel.ForeColor = Color.Black;
-        }
-
         private void InitializeDataFiles()
         {
             rawCsvFile = new StreamWriter(GetCsvPath("raw"), true);
@@ -690,12 +631,8 @@ namespace Final_Kinect
             meanCsvFile.WriteLine("Date&Time" + "," + "Position" + "," + "ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "Movement");
             medianCsvFile.WriteLine("Date&Time" + "," + "ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "Movement");
         }
-
         private void MeanRedLightUpdate()
         {
-            // Check for and update any labels that need to be turned red.
-            UpdateLabelColors(); // diff
-
             double final_amplitude = GetAmplitude();
 
             if (mMeans == 1)
@@ -742,11 +679,8 @@ namespace Final_Kinect
 
             meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement" + "," + mShoulderRightMean + "," + mShoulderLeftMean + "," + mSpineMidMean + "," + mNeckMean + "," + mNeck1Mean + "," + mSpineShoulderMean + (mMarkTagged == 1 ? ",Tagged" : ""));            
         }
-
         private void MeanYellowLightUpdate()
         {
-            ResetLabelColors();
-
             double final_amplitude = GetAmplitude();
 
             if (mMeans == 1)
@@ -765,11 +699,8 @@ namespace Final_Kinect
             differenceCsvFile.WriteLine((mStartedOriginalShoulderRight - mNeckToElbowRightAngle).ToString() + "," + (mStartedOriginalShoulderLeft - mNeckToElbowLeftAngle).ToString() + "," + (mStartedOriginalSpineMid - mSpineBaseToHeadAngle).ToString() + "," + (mStartedOriginalNeck - mHeadToShoulderLeftAngle).ToString() + "," + (mStartedOriginalNeck1 - mHeadToShoulderRightAngle).ToString() + "," + (mStartedOriginalSpineShoulder - mHeadToSpineShoulder).ToString() + (mMarkTagged == 1 ? ",Tagged" : ""));
             amplitdueCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + final_amplitude);           
         }
-
         private void MeanGreenLightUpdate()
         {
-            ResetLabelColors();
-
             double final_amplitude = GetAmplitude();
 
             if (mMeans == 1)
@@ -788,7 +719,6 @@ namespace Final_Kinect
             differenceCsvFile.WriteLine((mStartedOriginalShoulderRight - mNeckToElbowRightAngle).ToString() + "," + (mStartedOriginalShoulderLeft - mNeckToElbowLeftAngle).ToString() + "," + (mStartedOriginalSpineMid - mSpineBaseToHeadAngle).ToString() + "," + (mStartedOriginalNeck - mHeadToShoulderLeftAngle).ToString() + "," + (mStartedOriginalNeck1 - mHeadToShoulderRightAngle).ToString() + "," + (mStartedOriginalSpineShoulder - mHeadToSpineShoulder).ToString() + (mMarkTagged == 1 ? ",Tagged" : ""));
             amplitdueCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + final_amplitude);            
         }
-
         private void MedianRedLightUpdate()
         {
             if (mMedians == 1)
@@ -828,7 +758,6 @@ namespace Final_Kinect
             medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + mShoulderRightMedian + "," + mShoulderLeftMedian + "," + mSpineMidMedian + "," + mNeckMedian + "," + mNeck1Median + "," + mSpineShoulderMedian + (mMarkTagged == 1 ? ",Tagged" : ""));
 
         }
-
         private void MedianYellowLightUpdate()
         {
             if (mMedians == 1)
@@ -853,7 +782,6 @@ namespace Final_Kinect
 
             medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + mShoulderRightMedian + "," + mShoulderLeftMedian + "," + mSpineMidMedian + "," + mNeckMedian + "," + mNeck1Median + "," + mSpineShoulderMedian + (mMarkTagged == 1 ? ",Tagged" : ""));
         }
-
         private void MedianGreenLightUpdate()
         {
             if (mMedians == 1)
@@ -879,7 +807,6 @@ namespace Final_Kinect
 
             medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + mShoulderRightMedian + "," + mShoulderLeftMedian + "," + mSpineMidMedian + "," + mNeckMedian + "," + mNeck1Median + "," + mSpineShoulderMedian + (mMarkTagged == 1 ? ",Tagged" : ""));
         }
-
         private void RawRedLightUpdate()
         {
             if (mRawMeasures == 1)
@@ -982,7 +909,6 @@ namespace Final_Kinect
                 }
             }
         }
-
         private void RawYellowLightUpdate()
         {
             if (mRawMeasures == 1)
@@ -1066,7 +992,6 @@ namespace Final_Kinect
                 }
             }
         }
-
         private void RawGreenLightUpdate()
         {
             if (mRawMeasures == 1)
@@ -1155,7 +1080,6 @@ namespace Final_Kinect
                 }
             }
         }
-
         private bool MeanOverNotAllowed()
         {
             return (
@@ -1173,7 +1097,6 @@ namespace Final_Kinect
                 mSpineShoulderMean < (mStartedOriginalSpineShoulder - mNotAllowed)
             );
         }
-
         private bool MeanOverWarning()
         {
             return (
@@ -1191,7 +1114,6 @@ namespace Final_Kinect
                 mSpineShoulderMean < (mStartedOriginalSpineShoulder - mWarning)
             );
         }
-
         private bool MedianOverNotAllowed()
         {
             return (
@@ -1209,7 +1131,6 @@ namespace Final_Kinect
                 mSpineShoulderMedian < (mStartedOriginalSpineShoulder - mNotAllowed)
             );
         }
-
         private bool MedianOverWarning()
         {
             return (
@@ -1227,7 +1148,6 @@ namespace Final_Kinect
                 mSpineShoulderMedian < (mStartedOriginalSpineShoulder - mWarning)
             );
         }
-
         private bool RawOverNotAllowed()
         {
             return (
@@ -1245,7 +1165,6 @@ namespace Final_Kinect
                 mHeadToSpineShoulder < (mStartedOriginalSpineShoulder - mNotAllowed)
             );
         }
-
         private bool RawOverWarning()
         {
             return (
@@ -1263,7 +1182,6 @@ namespace Final_Kinect
                 mHeadToSpineShoulder < (mStartedOriginalSpineShoulder - mWarning)
             );
         }
-
         private void MeansUpdates()
         {
             SetMeans();
@@ -1283,7 +1201,6 @@ namespace Final_Kinect
 
             ResetMeanSums();
         }
-
         private void MediansUpdates()
         {
             SetMedians();
@@ -1301,7 +1218,6 @@ namespace Final_Kinect
                 MedianGreenLightUpdate();
             }
         }
-
         private void RawUpdates()
         {
             if (RawOverNotAllowed())
@@ -1317,7 +1233,6 @@ namespace Final_Kinect
                 RawGreenLightUpdate();
             }
         }
-
         private double GetAmplitude()
         {
             // The Math.Pow function could probably usefully be used here.
@@ -1334,7 +1249,6 @@ namespace Final_Kinect
 
             return final_amplitude;
         }
-
         private void HideControls(int movieFrame, int progressFrame, int trafficFrame, int traffic)
         {
             if (movieFrame == 0)
@@ -1354,7 +1268,6 @@ namespace Final_Kinect
                 greenLightPictureBox.Hide();
             }
         }
-
         private void SetHeadOrTorso()
         {
             if (mJointTrackingType == 1)
@@ -1365,11 +1278,6 @@ namespace Final_Kinect
                 mHeadToShoulderRightAngle = 0;
                 mStartedOriginalSpineShoulder = 0;
                 mHeadToSpineShoulder = 0;
-
-                // Maybe add checks for whether or not they are already hidden? Or, move this outside of the loop.
-                neckLabel.Hide();
-                neck1Label.Hide();
-                spineShoulderLabel.Hide();
             }
             if (mJointTrackingType == 2)
             {
@@ -1379,13 +1287,8 @@ namespace Final_Kinect
                 mNeckToElbowLeftAngle = 0;
                 mStartedOriginalSpineMid = 0;
                 mSpineBaseToHeadAngle = 0;
-
-                shoulderRightLabel.Hide();
-                shoulderLeftLabel.Hide();
-                spineMidLabel.Hide();
             }
         }
-
         private void ResetTag()
         {
             if (mMarkTagged == 1)
@@ -1393,7 +1296,6 @@ namespace Final_Kinect
                 mMarkTagged = 0;
             }
         }
-
         private void MediaPlayersPlay()
         {
             axWindowsMediaPlayer1.Ctlcontrols.play();
@@ -1403,7 +1305,6 @@ namespace Final_Kinect
                 mSubjectMovieForm.MediaPlayerPlay();
             }
         }
-
         private void MediaPlayersPause()
         {
             axWindowsMediaPlayer1.Ctlcontrols.pause();
@@ -1413,7 +1314,6 @@ namespace Final_Kinect
                 mSubjectMovieForm.MediaPlayerPause();
             }
         }
-
         private void SetAllTrafficLights(bool redVisible, bool yellowVisible, bool greenVisible)
         {
             if (mTrafficSensitive == 1)
@@ -1439,7 +1339,6 @@ namespace Final_Kinect
                 }
             }
         }
-
         private void FinalForm_Load(object sender, EventArgs e)
         {            
             if (mSessionState == 22)
@@ -1447,10 +1346,11 @@ namespace Final_Kinect
                 this.BackColor = System.Drawing.Color.Black;
             }
         }
-
         private void FinalForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Close all data files when form closes
+
+            medianCsvFile.WriteLine("\r\nNotes:\r\n\r\n" + notesTextBox.Text);
 
             rawCsvFile.Close();
             videoCsvFile.Close();
@@ -1458,8 +1358,9 @@ namespace Final_Kinect
             medianCsvFile.Close();
             differenceCsvFile.Close();
             amplitdueCsvFile.Close();
-        }
 
+            mSubjectMovieForm.Close();
+        }
         private void FinalForm_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
         {
             // For small tagged movement press s key

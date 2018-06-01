@@ -30,24 +30,24 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FinalForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea31 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend31 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series31 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea32 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend32 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series32 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea33 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend33 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series33 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea34 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend34 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series34 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea35 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend35 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series35 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea36 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend36 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series36 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
             this.panel1 = new System.Windows.Forms.Panel();
             this.stopButton = new System.Windows.Forms.Button();
@@ -64,15 +64,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.spineMidLabel = new System.Windows.Forms.Label();
-            this.neckLabel = new System.Windows.Forms.Label();
-            this.shoulderLeftLabel = new System.Windows.Forms.Label();
-            this.neck1Label = new System.Windows.Forms.Label();
-            this.shoulderRightLabel = new System.Windows.Forms.Label();
-            this.spineShoulderLabel = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.lowerLimitSmallMovementTextBox = new System.Windows.Forms.TextBox();
             this.lowerLimitLargeMovementTextBox = new System.Windows.Forms.TextBox();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -80,6 +71,8 @@
             this.chart4 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart5 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart6 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.notesTextBox = new System.Windows.Forms.TextBox();
+            this.notesLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.greenLightPictureBox)).BeginInit();
@@ -88,7 +81,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
-            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart4)).BeginInit();
@@ -100,7 +92,7 @@
             // 
             this.axWindowsMediaPlayer1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.axWindowsMediaPlayer1.Enabled = true;
-            this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(693, 3);
+            this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(739, 3);
             this.axWindowsMediaPlayer1.Margin = new System.Windows.Forms.Padding(2);
             this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
             this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
@@ -223,18 +215,18 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Enabled = false;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea31.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea31);
+            legend31.Enabled = false;
+            legend31.Name = "Legend1";
+            this.chart1.Legends.Add(legend31);
             this.chart1.Location = new System.Drawing.Point(2, 2);
             this.chart1.Margin = new System.Windows.Forms.Padding(2);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series31.ChartArea = "ChartArea1";
+            series31.Legend = "Legend1";
+            series31.Name = "Series1";
+            this.chart1.Series.Add(series31);
             this.chart1.Size = new System.Drawing.Size(709, 158);
             this.chart1.TabIndex = 6;
             this.chart1.Text = "chart1";
@@ -254,7 +246,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(719, 725);
+            this.label10.Location = new System.Drawing.Point(719, 583);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(219, 17);
@@ -265,122 +257,17 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(719, 761);
+            this.label11.Location = new System.Drawing.Point(719, 619);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(220, 17);
             this.label11.TabIndex = 39;
             this.label11.Text = "Lower Limit for Large Movement:";
             // 
-            // spineMidLabel
-            // 
-            this.spineMidLabel.AutoSize = true;
-            this.spineMidLabel.Font = new System.Drawing.Font("Times New Roman", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.spineMidLabel.Location = new System.Drawing.Point(509, 18);
-            this.spineMidLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.spineMidLabel.Name = "spineMidLabel";
-            this.spineMidLabel.Size = new System.Drawing.Size(102, 25);
-            this.spineMidLabel.TabIndex = 32;
-            this.spineMidLabel.Text = "SpineMid";
-            // 
-            // neckLabel
-            // 
-            this.neckLabel.AutoSize = true;
-            this.neckLabel.Font = new System.Drawing.Font("Times New Roman", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.neckLabel.Location = new System.Drawing.Point(195, 70);
-            this.neckLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.neckLabel.Name = "neckLabel";
-            this.neckLabel.Size = new System.Drawing.Size(60, 25);
-            this.neckLabel.TabIndex = 33;
-            this.neckLabel.Text = "Neck";
-            // 
-            // shoulderLeftLabel
-            // 
-            this.shoulderLeftLabel.AutoSize = true;
-            this.shoulderLeftLabel.Font = new System.Drawing.Font("Times New Roman", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.shoulderLeftLabel.Location = new System.Drawing.Point(195, 18);
-            this.shoulderLeftLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.shoulderLeftLabel.Name = "shoulderLeftLabel";
-            this.shoulderLeftLabel.Size = new System.Drawing.Size(135, 25);
-            this.shoulderLeftLabel.TabIndex = 31;
-            this.shoulderLeftLabel.Text = "ShoulderLeft";
-            // 
-            // neck1Label
-            // 
-            this.neck1Label.AutoSize = true;
-            this.neck1Label.Font = new System.Drawing.Font("Times New Roman", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.neck1Label.Location = new System.Drawing.Point(342, 70);
-            this.neck1Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.neck1Label.Name = "neck1Label";
-            this.neck1Label.Size = new System.Drawing.Size(71, 25);
-            this.neck1Label.TabIndex = 34;
-            this.neck1Label.Text = "Neck1";
-            // 
-            // shoulderRightLabel
-            // 
-            this.shoulderRightLabel.AutoSize = true;
-            this.shoulderRightLabel.Font = new System.Drawing.Font("Times New Roman", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.shoulderRightLabel.Location = new System.Drawing.Point(342, 18);
-            this.shoulderRightLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.shoulderRightLabel.Name = "shoulderRightLabel";
-            this.shoulderRightLabel.Size = new System.Drawing.Size(147, 25);
-            this.shoulderRightLabel.TabIndex = 30;
-            this.shoulderRightLabel.Text = "ShoulderRight";
-            // 
-            // spineShoulderLabel
-            // 
-            this.spineShoulderLabel.AutoSize = true;
-            this.spineShoulderLabel.Font = new System.Drawing.Font("Times New Roman", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.spineShoulderLabel.Location = new System.Drawing.Point(480, 70);
-            this.spineShoulderLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.spineShoulderLabel.Name = "spineShoulderLabel";
-            this.spineShoulderLabel.Size = new System.Drawing.Size(145, 25);
-            this.spineShoulderLabel.TabIndex = 35;
-            this.spineShoulderLabel.Text = "Spineshoulder";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Times New Roman", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(2, 18);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(183, 25);
-            this.label2.TabIndex = 29;
-            this.label2.Text = "Angles ( TORSO )";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Times New Roman", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(2, 70);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(170, 25);
-            this.label1.TabIndex = 36;
-            this.label1.Text = "Angles ( HEAD )";
-            // 
-            // panel2
-            // 
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.spineShoulderLabel);
-            this.panel2.Controls.Add(this.shoulderRightLabel);
-            this.panel2.Controls.Add(this.neck1Label);
-            this.panel2.Controls.Add(this.shoulderLeftLabel);
-            this.panel2.Controls.Add(this.neckLabel);
-            this.panel2.Controls.Add(this.spineMidLabel);
-            this.panel2.Location = new System.Drawing.Point(722, 579);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(634, 113);
-            this.panel2.TabIndex = 36;
-            // 
             // lowerLimitSmallMovementTextBox
             // 
             this.lowerLimitSmallMovementTextBox.Font = new System.Drawing.Font("Times New Roman", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lowerLimitSmallMovementTextBox.Location = new System.Drawing.Point(932, 726);
+            this.lowerLimitSmallMovementTextBox.Location = new System.Drawing.Point(932, 584);
             this.lowerLimitSmallMovementTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.lowerLimitSmallMovementTextBox.Name = "lowerLimitSmallMovementTextBox";
             this.lowerLimitSmallMovementTextBox.Size = new System.Drawing.Size(66, 23);
@@ -389,7 +276,7 @@
             // lowerLimitLargeMovementTextBox
             // 
             this.lowerLimitLargeMovementTextBox.Font = new System.Drawing.Font("Times New Roman", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lowerLimitLargeMovementTextBox.Location = new System.Drawing.Point(932, 761);
+            this.lowerLimitLargeMovementTextBox.Location = new System.Drawing.Point(932, 619);
             this.lowerLimitLargeMovementTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.lowerLimitLargeMovementTextBox.Name = "lowerLimitLargeMovementTextBox";
             this.lowerLimitLargeMovementTextBox.Size = new System.Drawing.Size(67, 23);
@@ -398,93 +285,111 @@
             // 
             // chart2
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
-            legend2.Enabled = false;
-            legend2.Name = "Legend1";
-            this.chart2.Legends.Add(legend2);
+            chartArea32.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea32);
+            legend32.Enabled = false;
+            legend32.Name = "Legend1";
+            this.chart2.Legends.Add(legend32);
             this.chart2.Location = new System.Drawing.Point(2, 163);
             this.chart2.Margin = new System.Windows.Forms.Padding(2);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart2.Series.Add(series2);
+            series32.ChartArea = "ChartArea1";
+            series32.Legend = "Legend1";
+            series32.Name = "Series1";
+            this.chart2.Series.Add(series32);
             this.chart2.Size = new System.Drawing.Size(709, 158);
             this.chart2.TabIndex = 42;
             this.chart2.Text = "chart2";
             // 
             // chart3
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chart3.ChartAreas.Add(chartArea3);
-            legend3.Enabled = false;
-            legend3.Name = "Legend1";
-            this.chart3.Legends.Add(legend3);
+            chartArea33.Name = "ChartArea1";
+            this.chart3.ChartAreas.Add(chartArea33);
+            legend33.Enabled = false;
+            legend33.Name = "Legend1";
+            this.chart3.Legends.Add(legend33);
             this.chart3.Location = new System.Drawing.Point(2, 316);
             this.chart3.Margin = new System.Windows.Forms.Padding(2);
             this.chart3.Name = "chart3";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chart3.Series.Add(series3);
+            series33.ChartArea = "ChartArea1";
+            series33.Legend = "Legend1";
+            series33.Name = "Series1";
+            this.chart3.Series.Add(series33);
             this.chart3.Size = new System.Drawing.Size(709, 158);
             this.chart3.TabIndex = 43;
             this.chart3.Text = "chart3";
             // 
             // chart4
             // 
-            chartArea4.Name = "ChartArea1";
-            this.chart4.ChartAreas.Add(chartArea4);
-            legend4.Enabled = false;
-            legend4.Name = "Legend1";
-            this.chart4.Legends.Add(legend4);
+            chartArea34.Name = "ChartArea1";
+            this.chart4.ChartAreas.Add(chartArea34);
+            legend34.Enabled = false;
+            legend34.Name = "Legend1";
+            this.chart4.Legends.Add(legend34);
             this.chart4.Location = new System.Drawing.Point(2, 465);
             this.chart4.Margin = new System.Windows.Forms.Padding(2);
             this.chart4.Name = "chart4";
-            series4.ChartArea = "ChartArea1";
-            series4.Legend = "Legend1";
-            series4.Name = "Series1";
-            this.chart4.Series.Add(series4);
+            series34.ChartArea = "ChartArea1";
+            series34.Legend = "Legend1";
+            series34.Name = "Series1";
+            this.chart4.Series.Add(series34);
             this.chart4.Size = new System.Drawing.Size(709, 158);
             this.chart4.TabIndex = 44;
             this.chart4.Text = "chart4";
             // 
             // chart5
             // 
-            chartArea5.Name = "ChartArea1";
-            this.chart5.ChartAreas.Add(chartArea5);
-            legend5.Enabled = false;
-            legend5.Name = "Legend1";
-            this.chart5.Legends.Add(legend5);
+            chartArea35.Name = "ChartArea1";
+            this.chart5.ChartAreas.Add(chartArea35);
+            legend35.Enabled = false;
+            legend35.Name = "Legend1";
+            this.chart5.Legends.Add(legend35);
             this.chart5.Location = new System.Drawing.Point(2, 616);
             this.chart5.Margin = new System.Windows.Forms.Padding(2);
             this.chart5.Name = "chart5";
-            series5.ChartArea = "ChartArea1";
-            series5.Legend = "Legend1";
-            series5.Name = "Series1";
-            this.chart5.Series.Add(series5);
+            series35.ChartArea = "ChartArea1";
+            series35.Legend = "Legend1";
+            series35.Name = "Series1";
+            this.chart5.Series.Add(series35);
             this.chart5.Size = new System.Drawing.Size(709, 158);
             this.chart5.TabIndex = 45;
             this.chart5.Text = "chart5";
             // 
             // chart6
             // 
-            chartArea6.Name = "ChartArea1";
-            this.chart6.ChartAreas.Add(chartArea6);
-            legend6.Enabled = false;
-            legend6.Name = "Legend1";
-            this.chart6.Legends.Add(legend6);
+            chartArea36.Name = "ChartArea1";
+            this.chart6.ChartAreas.Add(chartArea36);
+            legend36.Enabled = false;
+            legend36.Name = "Legend1";
+            this.chart6.Legends.Add(legend36);
             this.chart6.Location = new System.Drawing.Point(2, 769);
             this.chart6.Margin = new System.Windows.Forms.Padding(2);
             this.chart6.Name = "chart6";
-            series6.ChartArea = "ChartArea1";
-            series6.Legend = "Legend1";
-            series6.Name = "Series1";
-            this.chart6.Series.Add(series6);
+            series36.ChartArea = "ChartArea1";
+            series36.Legend = "Legend1";
+            series36.Name = "Series1";
+            this.chart6.Series.Add(series36);
             this.chart6.Size = new System.Drawing.Size(709, 158);
             this.chart6.TabIndex = 46;
             this.chart6.Text = "chart6";
+            // 
+            // notesTextBox
+            // 
+            this.notesTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.notesTextBox.Location = new System.Drawing.Point(722, 694);
+            this.notesTextBox.Multiline = true;
+            this.notesTextBox.Name = "notesTextBox";
+            this.notesTextBox.Size = new System.Drawing.Size(634, 119);
+            this.notesTextBox.TabIndex = 47;
+            // 
+            // notesLabel
+            // 
+            this.notesLabel.AutoSize = true;
+            this.notesLabel.Location = new System.Drawing.Point(727, 678);
+            this.notesLabel.Name = "notesLabel";
+            this.notesLabel.Size = new System.Drawing.Size(35, 13);
+            this.notesLabel.TabIndex = 48;
+            this.notesLabel.Text = "Notes";
             // 
             // FinalForm
             // 
@@ -492,7 +397,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(1357, 552);
+            this.ClientSize = new System.Drawing.Size(1449, 945);
+            this.Controls.Add(this.notesLabel);
+            this.Controls.Add(this.notesTextBox);
             this.Controls.Add(this.chart6);
             this.Controls.Add(this.chart5);
             this.Controls.Add(this.chart4);
@@ -503,7 +410,6 @@
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.panel2);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.pictureBox4);
@@ -513,6 +419,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FinalForm";
             this.Text = "Version 3 (Final Version)";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FinalForm_FormClosing);
             this.Load += new System.EventHandler(this.FinalForm_Load);
             this.VisibleChanged += new System.EventHandler(this.FinalForm_Load);
@@ -527,8 +434,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart4)).EndInit();
@@ -556,15 +461,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label spineMidLabel;
-        private System.Windows.Forms.Label neckLabel;
-        private System.Windows.Forms.Label shoulderLeftLabel;
-        private System.Windows.Forms.Label neck1Label;
-        private System.Windows.Forms.Label shoulderRightLabel;
-        private System.Windows.Forms.Label spineShoulderLabel;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button stopButton;
         private System.Windows.Forms.TextBox lowerLimitSmallMovementTextBox;
         private System.Windows.Forms.TextBox lowerLimitLargeMovementTextBox;
@@ -573,5 +469,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chart4;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart5;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart6;
+        private System.Windows.Forms.TextBox notesTextBox;
+        private System.Windows.Forms.Label notesLabel;
     }
 }

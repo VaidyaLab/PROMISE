@@ -32,8 +32,6 @@ namespace Final_Kinect
 
             progressBar1.Maximum = progressBarMaximum;
         }
-
-        //Form load method
         private void SubjectMovieForm_Load(object sender, EventArgs e)
         {
             /*

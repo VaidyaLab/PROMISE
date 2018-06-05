@@ -5,29 +5,11 @@ namespace Final_Kinect
 {
     public partial class SubjectMovieForm : Form
     {        
-        public SubjectMovieForm(int movieFrame, int progressFrame, int trafficFrame, int traffic, string videoFile, int progressBarMaximum)
+        public SubjectMovieForm(string videoFile, int progressBarMaximum)
         {            
             InitializeComponent();
 
             axWindowsMediaPlayer1.URL = videoFile;
-           
-            if (movieFrame == 0)
-            {
-                axWindowsMediaPlayer1.Hide();
-            }
-
-            if (progressFrame == 0)
-            {
-                progressBar1.Hide();
-            }
-
-            if (trafficFrame == 0 || traffic == 0)
-            {
-                mRedLightPictureBox.Hide();
-                mYellowLightPictureBox.Hide();
-                mGreenLightPictureBox.Hide();
-            }
-
             axWindowsMediaPlayer1.Ctlcontrols.stop();
 
             progressBar1.Maximum = progressBarMaximum;

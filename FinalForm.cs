@@ -32,26 +32,23 @@ namespace Final_Kinect
             mSubjectInitials,
             mExperimentNumber;
 
-        StreamWriter rawCsvFile,
-            videoCsvFile,
-            meanCsvFile,
+        StreamWriter meanCsvFile,
             medianCsvFile,
-            differenceCsvFile,
-            amplitdueCsvFile;
+            differenceCsvFile;
 
-        int mStartedOriginalShoulderRight,
-            mStartedOriginalShoulderLeft,
-            mStartedOriginalSpineMid,
-            mStartedOriginalNeck,
-            mStartedOriginalNeck1,
-            mStartedOriginalSpineShoulder;
+        int mStartedOriginalShoulderRight = 0,
+            mStartedOriginalShoulderLeft = 0,
+            mStartedOriginalSpineMid = 0,
+            mStartedOriginalNeck = 0,
+            mStartedOriginalNeck1 = 0,
+            mStartedOriginalSpineShoulder = 0;
 
-        int mNeckToElbowRightAngle,
-            mNeckToElbowLeftAngle,
-            mSpineBaseToHeadAngle,
-            mHeadToShoulderLeftAngle,
-            mHeadToShoulderRightAngle,
-            mHeadToSpineShoulder;
+        int mNeckToElbowRightAngle = 0,
+            mNeckToElbowLeftAngle = 0,
+            mSpineBaseToHeadAngle = 0,
+            mHeadToShoulderLeftAngle = 0,
+            mHeadToShoulderRightAngle = 0,
+            mHeadToSpineShoulder = 0;
 
         int graph_counter = 0,
             graph_counter1 = 0,
@@ -77,11 +74,7 @@ namespace Final_Kinect
             mOriginalHeadToShoulderRightAngle = 0,
             mOriginalHeadToSpineShoulder = 0;
 
-        int mDepthFrameReference,
-            mJointTrackingType,
-            mMarkTagged = 0,
-            mTagType = 0,
-            mTempArrayElementIteration = 0,
+        int mMarkTagged = 0,
             mSmoothingKernal,
             mWarning,
             mNotAllowed;
@@ -95,15 +88,6 @@ namespace Final_Kinect
             mSessionTime = 0,
             mMovementLowerLimitAgainstOriginal;
 
-        int mMovie,
-            mMovieSensitive,
-            mProgress,
-            mProgressSensitive,
-            mTrafficSensitive,
-            mRawMeasures,
-            mMeans,
-            mMedians;
-
         // This should probably be set to zero and iterate earlier down below (if we ultimately need this at all).
         int mMeanDataReadIteration = 1;
 
@@ -114,6 +98,32 @@ namespace Final_Kinect
             mNeckMedianArray,
             mNeck1MedianArray,
             mSpineShoulderMedianArray;
+
+        private void instructionButton_Click(object sender, EventArgs e)
+        {
+            UpdateLimitsTextBox("1000", "1000");
+        }
+        private void noContingencyButton_Click(object sender, EventArgs e)
+        {
+            UpdateLimitsTextBox("1000", "1000");
+        }
+        private void movementProbeButton_Click(object sender, EventArgs e)
+        {
+            UpdateLimitsTextBox("1000", "1000");
+        }
+        private void threeFiveButton_Click(object sender, EventArgs e)
+        {
+            UpdateLimitsTextBox("3", "5");
+        }
+
+        private void scanButton_Click(object sender, EventArgs e)
+        {
+            mOriginalAnglesSet = false;
+        }
+        private void initializeButton_Click(object sender, EventArgs e)
+        {
+            InitializeKinect();
+        }
 
         // Will store the median, which will be obtained with the help of the MedianArrays.
         int mShoulderRightMedian,
@@ -134,51 +144,22 @@ namespace Final_Kinect
          */
         int mTickCount = 0;
 
-        // These two are only used in Raw measures updates.
-        int mOverWarning = 0;
-        int mOverNotAllowed = 0;
-
-        // These are also used in the Raw measures updates.
-        int[] temp1 = new int[2],
-            temp2 = new int[2],
-            temp3 = new int[2],
-            temp4 = new int[2],
-            temp5 = new int[2],
-            temp6 = new int[2],
-            temp7 = new int[2],
-            temp8 = new int[2];
-
         public FinalForm(
             string subjectInitials,
             string experimentNumber,
             string smoothingKernal,
             string smallMovementLowerLimit,
             string largeMovementLowerLimit,
-            int movieFrame,
-            int movie,
-            int movieSensitive,
-            int progressFrame,
-            int progress,
-            int progressSensitive,
-            int trafficFrame,
-            int traffic,
-            int trafficSensitive,
-            int rawMeasures,
-            int means,
-            int medians,
             string sessionTime,
             int lowerLimitLargeMovement,
             string videoFile,
-            string filePath,
-            int jointTrackingType,
-            int depthFrameReference
+            string filePath
             )
         {
             InitializeComponent();
 
             SetCharts();
 
-            mDepthFrameReference = depthFrameReference;
             mSubjectInitials = subjectInitials;
             mExperimentNumber = experimentNumber;
             mSmoothingKernal = Convert.ToInt32(smoothingKernal);
@@ -190,7 +171,6 @@ namespace Final_Kinect
             lowerLimitLargeMovementTextBox.Text = mNotAllowed.ToString();
 
             mSessionTime = Convert.ToInt32(sessionTime);
-            mJointTrackingType = jointTrackingType;
 
             // Creates int arrays based on the size of the smoothing kernal specified in the SettingsForm.
             mShoulderRightMedianArray = new int[mSmoothingKernal];
@@ -200,22 +180,10 @@ namespace Final_Kinect
             mNeck1MedianArray = new int[mSmoothingKernal];
             mSpineShoulderMedianArray = new int[mSmoothingKernal];
 
-            mMovie = movie;
-            mMovieSensitive = movieSensitive;
-            mProgress = progress;
-            mProgressSensitive = progressSensitive;
-            mTrafficSensitive = trafficSensitive;
-            mRawMeasures = rawMeasures;
-            mMeans = means;
-            mMedians = medians;
-
             progressBar.Maximum = (2 * mSessionTime);
             axWindowsMediaPlayer1.URL = videoFile;
 
             mMovementLowerLimitAgainstOriginal = lowerLimitLargeMovement == 1 ? mNotAllowed : mWarning;
-
-            // Hide controls if specified in SettingsForm to be hidden
-            HideControls(movieFrame, progressFrame, trafficFrame, traffic);
 
             mCurrentDate = DateTime.Now.ToString("yyyyMMdd");
             mFilePath = filePath;
@@ -227,18 +195,9 @@ namespace Final_Kinect
             startButton.BackColor = Color.Red;
             mStartTime = DateTime.Now;
 
-            SetTimer();
-
             InitializeDataFiles();
 
-            mSubjectMovieForm = new SubjectMovieForm(
-                movieFrame,
-                progressFrame,
-                trafficFrame,
-                traffic,
-                videoFile,
-                progressBar.Maximum
-                );
+            mSubjectMovieForm = new SubjectMovieForm(videoFile, progressBar.Maximum);
 
             InitializeKinect();
         }
@@ -247,8 +206,8 @@ namespace Final_Kinect
         private void startButton_Click(object sender, EventArgs e)
         {
             mSessionState = 22;
-            mWarning = Convert.ToInt32(lowerLimitSmallMovementTextBox.Text);
-            mNotAllowed = Convert.ToInt32(lowerLimitLargeMovementTextBox.Text);
+            UpdateCurrentLimits();
+
             startButton.BackColor = Color.DeepSkyBlue;
 
             if (mStarted == false)
@@ -260,11 +219,6 @@ namespace Final_Kinect
                 differenceCsvFile.WriteLine(" " + "," + " " + "," + " " + "," + " " + "," + " ");
                 differenceCsvFile.WriteLine("ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "Movement");
 
-                amplitdueCsvFile.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement");
-                amplitdueCsvFile.WriteLine(mSubjectInitials + "," + mExperimentNumber + "," + mSmoothingKernal + "," + mWarning + "," + mNotAllowed);
-                amplitdueCsvFile.WriteLine("Elapsed_Time" + "," + "Values");
-                amplitdueCsvFile.WriteLine(" " + "," + " ");
-
                 mStarted = true;
             }
         }
@@ -273,6 +227,10 @@ namespace Final_Kinect
             mSessionState = 21;
             startButton.BackColor = Color.Red;
             mStarted = false;
+        }
+        private void setLimitsButton_Click(object sender, EventArgs e)
+        {
+            UpdateCurrentLimits();
         }
 
         // Timer event for progress bar
@@ -283,7 +241,7 @@ namespace Final_Kinect
             mTickCount++;
 
             // Every second, increase progress
-            if (mTickCount % 60 == 0 && mProgress == 1)
+            if (mTickCount % 60 == 0)
             {
                 progressBar.Value++;
                 progressBar.Update();
@@ -293,7 +251,13 @@ namespace Final_Kinect
                     mSubjectMovieForm.UpdateProgressBar();
                 }              
             }
+
+            if (mKinectSensor.IsAvailable == false)
+            {
+                initializeButton.Enabled = true;
+            }
         }
+
         public void InitializeKinect()
         {
             mKinectSensor = KinectSensor.GetDefault();
@@ -302,18 +266,27 @@ namespace Final_Kinect
             {
                 // Turn on kinect
                 mKinectSensor.Open();
-            }
 
-            // We are using kinect camera as well as body detection so here we have used MultiSourceFrameReader
-            mBodyframeReader = mKinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Body);
+                // We are using kinect camera as well as body detection so here we have used MultiSourceFrameReader
+                mBodyframeReader = mKinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Body);
+            }
 
             if (mBodyframeReader != null)
             {
                 mBodyframeReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
-            }
+                initializeButton.Enabled = false;
+                Console.WriteLine("Kinect is connected: " + mBodyframeReader.KinectSensor.IsOpen);
+                Console.WriteLine("Why are you here?");
 
-            // What if already showing?
-            mSubjectMovieForm.Show();
+                if (mSubjectMovieForm == null)
+                {
+                    mSubjectMovieForm.Show();
+                }
+            }
+            else
+            {
+                initializeButton.Enabled = true;
+            }
         }
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
@@ -401,28 +374,18 @@ namespace Final_Kinect
                             mHeadToShoulderRightAngle = (int) headToShoulderRightAngle;
                             mHeadToSpineShoulder = (int) headToSpineShoulder;
 
-                            SetHeadOrTorso();
-
                             if (!mOriginalAnglesSet)
                             {
                                 SetOriginalAngles();
                             }
 
-                            UpdateMedianArrays();
+                            // UpdateMedianArrays();
                             UpdateMeanSums();
 
                             // Median and mean logic
                             if (mMeanDataReadIteration == mSmoothingKernal)
-                            {                     
-                                if (mMedians == 1)
-                                {
-                                    MediansUpdates();
-                                }
-                                else if (mMeans == 1)
-                                {
-                                    // TODO: Check to make sure Tag is set appropriately
-                                    MeansUpdates();
-                                }
+                            {   
+                                MeansUpdates();
 
                                 mMeanDataReadIteration = 0;                               
                                 UpdateAllCharts();
@@ -430,11 +393,6 @@ namespace Final_Kinect
 
                             // mMeanDataReadIteration was reset in the above conditional
                             mMeanDataReadIteration++;
-
-                            if (mRawMeasures == 1)
-                            {
-                                RawUpdates();
-                            }
 
                             ResetTag();
                         }
@@ -483,10 +441,12 @@ namespace Final_Kinect
                 }
             }
         }
+
         private String GetCsvPath(String fileType)
         {
             return Path.Combine(mFilePath + "\\" + mSubjectInitials + "-" + mExperimentNumber + "-" + mCurrentDate + "-" + fileType + ".csv");
         }
+
         private void SetCharts()
         {
             // Below code implements the representation on charts of angle data of the angles on all the charts
@@ -502,7 +462,7 @@ namespace Final_Kinect
                 chart.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
             }
         }
-        private void UpdateChart(Chart chart, int graphCounter, int x, int angle)
+        private void UpdateChart(Chart chart, ref int graphCounter, int x, int angle)
         {
             chart.Series[0].Points.AddXY(graphCounter, (x - angle));
 
@@ -520,19 +480,14 @@ namespace Final_Kinect
         }
         private void UpdateAllCharts()
         {
-            UpdateChart(chart1, graph_counter, mStartedOriginalShoulderRight, mNeckToElbowRightAngle);
-            UpdateChart(chart2, graph_counter1, mStartedOriginalShoulderLeft, mNeckToElbowLeftAngle);
-            UpdateChart(chart3, graph_counter2, mStartedOriginalSpineMid, mSpineBaseToHeadAngle);
-            UpdateChart(chart4, graph_counter3, mStartedOriginalNeck, mHeadToShoulderLeftAngle);
-            UpdateChart(chart5, graph_counter4, mStartedOriginalNeck1, mHeadToShoulderRightAngle);
-            UpdateChart(chart6, graph_counter5, mStartedOriginalSpineShoulder, mHeadToSpineShoulder);
+            UpdateChart(chart1, ref graph_counter, mStartedOriginalShoulderRight, mNeckToElbowRightAngle);
+            UpdateChart(chart2, ref graph_counter1, mStartedOriginalShoulderLeft, mNeckToElbowLeftAngle);
+            UpdateChart(chart3, ref graph_counter2, mStartedOriginalSpineMid, mSpineBaseToHeadAngle);
+            UpdateChart(chart4, ref graph_counter3, mStartedOriginalNeck, mHeadToShoulderLeftAngle);
+            UpdateChart(chart5, ref graph_counter4, mStartedOriginalNeck1, mHeadToShoulderRightAngle);
+            UpdateChart(chart6, ref graph_counter5, mStartedOriginalSpineShoulder, mHeadToSpineShoulder);
         }
-        private void SetTimer()
-        {
-            timer1.Tick += new EventHandler(timer1_Tick);
-            timer1.Interval = 1000;
-            timer1.Enabled = false;
-        }
+
         private void SetOriginalAngles()
         {
             mOriginalNeckToElbowRightAngle = mNeckToElbowRightAngle;
@@ -543,7 +498,19 @@ namespace Final_Kinect
             mOriginalHeadToSpineShoulder = mHeadToSpineShoulder;
 
             mOriginalAnglesSet = true;
+
+            meanCsvFile.WriteLine(
+                "SCAN," +
+                DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," +
+                mOriginalHeadToShoulderRightAngle + "," +
+                mOriginalHeadToShoulderLeftAngle + "," +
+                mOriginalSpineBaseToHeadAngle + "," +
+                mOriginalNeckToElbowRightAngle + "," +
+                mOriginalNeckToElbowLeftAngle + "," +
+                mOriginalHeadToSpineShoulder
+            );
         }
+
         private int GetMedian(int[] medianSmoothing)
         {
             int tmp;
@@ -581,6 +548,7 @@ namespace Final_Kinect
             mNeck1MedianArray[element] = mHeadToShoulderRightAngle;
             mSpineShoulderMedianArray[element] = mHeadToSpineShoulder;
         }
+
         private void UpdateMeanSums()
         {
             mShouderRightMeanSum += mNeckToElbowRightAngle;
@@ -599,6 +567,7 @@ namespace Final_Kinect
             mNeck1MeanSum = 0;
             mSpineShoulderMeanSum = 0;
         }
+
         private void SetMeans()
         {
             mShoulderRightMean = mShouderRightMeanSum / mSmoothingKernal;
@@ -617,65 +586,35 @@ namespace Final_Kinect
             mNeck1Median = GetMedian(mNeck1MedianArray);
             mSpineShoulderMedian = GetMedian(mSpineShoulderMedianArray);
         }
+
         private void InitializeDataFiles()
         {
-            rawCsvFile = new StreamWriter(GetCsvPath("raw"), true);
-            videoCsvFile = new StreamWriter(GetCsvPath("video"), true);
             meanCsvFile = new StreamWriter(GetCsvPath("mean"), true);
             medianCsvFile = new StreamWriter(GetCsvPath("median"), true);
             differenceCsvFile = new StreamWriter(GetCsvPath("difference"), true);
-            amplitdueCsvFile = new StreamWriter(GetCsvPath("amplitude"), true);
 
-            rawCsvFile.WriteLine("Date&Time" + "," + "Position" + "," + "ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "Movement");
-            videoCsvFile.WriteLine("ElapsedTime" + "," + "Position" + "," + "ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck");
             meanCsvFile.WriteLine("Date&Time" + "," + "Position" + "," + "ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "Movement");
             medianCsvFile.WriteLine("Date&Time" + "," + "ShoulderRight" + "," + "ShoulderLeft" + "," + "SpineMid" + "," + "Neck" + "," + "Neck" + "," + "Neck" + "," + "Movement");
         }
+
         private void MeanRedLightUpdate()
         {
             double final_amplitude = GetAmplitude();
 
-            if (mMeans == 1)
+            MediaPlayersPause();
+
+            if (timer1.Enabled == true)
             {
-                timer1.Enabled = false; // diff
-
-                if (mMovie == 1)
-                {
-                    if (mMovieSensitive == 1)
-                    {
-                        MediaPlayersPause();
-                    }
-                    else
-                    {
-                        // What if already playing?
-                        MediaPlayersPlay();
-                    }
-                }
-
-                if (mProgressSensitive == 1)
-                {
-                    timer1.Enabled = false;
-                }
-                else
-                {
-                    // What if already enabled?
-                    timer1.Enabled = true;
-                }
-
-                SetAllTrafficLights(true, false, false);
-
-                if (mTrafficSensitive == 1)
-                {
-                    mStopwatch.Stop(); // diff
-                    mSessionState = 21;
-                }
+                timer1.Enabled = false;
             }
+
+            SetAllTrafficLights(true, false, false);
+
+            mStopwatch.Stop();
+            mSessionState = 21;
 
             differenceCsvFile.WriteLine((mStartedOriginalShoulderRight - mNeckToElbowRightAngle).ToString() + "," + (mStartedOriginalShoulderLeft - mNeckToElbowLeftAngle).ToString() + "," + (mStartedOriginalSpineMid - mSpineBaseToHeadAngle).ToString() + "," + (mStartedOriginalNeck - mHeadToShoulderLeftAngle).ToString() + "," + (mStartedOriginalNeck1 - mHeadToShoulderRightAngle).ToString() + "," + (mStartedOriginalSpineShoulder - mHeadToSpineShoulder).ToString() + (mMarkTagged == 1 ? ",Tagged" : ""));
             differenceCsvFile.WriteLine(" " + "," + " " + "," + " " + "," + " " + "," + " " + "," + " ");
-
-            amplitdueCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + final_amplitude);
-            amplitdueCsvFile.WriteLine(" " + " ");
 
             meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement" + "," + mShoulderRightMean + "," + mShoulderLeftMean + "," + mSpineMidMean + "," + mNeckMean + "," + mNeck1Mean + "," + mSpineShoulderMean + (mMarkTagged == 1 ? ",Tagged" : ""));            
         }
@@ -683,403 +622,73 @@ namespace Final_Kinect
         {
             double final_amplitude = GetAmplitude();
 
-            if (mMeans == 1)
+            if (timer1.Enabled == false)
             {
                 timer1.Enabled = true;
-
-                if (mMovie == 1)
-                {
-                    MediaPlayersPlay();
-                }
-
-                SetAllTrafficLights(false, true, false);
             }
 
+            MediaPlayersPlay();
+
+            SetAllTrafficLights(false, true, false);
+
             meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Small Movement" + "," + mShoulderRightMean + "," + mShoulderLeftMean + "," + mSpineMidMean + "," + mNeckMean + "," + mNeck1Mean + "," + mSpineShoulderMean + (mMarkTagged == 1 ? ",Tagged" : ""));
-            differenceCsvFile.WriteLine((mStartedOriginalShoulderRight - mNeckToElbowRightAngle).ToString() + "," + (mStartedOriginalShoulderLeft - mNeckToElbowLeftAngle).ToString() + "," + (mStartedOriginalSpineMid - mSpineBaseToHeadAngle).ToString() + "," + (mStartedOriginalNeck - mHeadToShoulderLeftAngle).ToString() + "," + (mStartedOriginalNeck1 - mHeadToShoulderRightAngle).ToString() + "," + (mStartedOriginalSpineShoulder - mHeadToSpineShoulder).ToString() + (mMarkTagged == 1 ? ",Tagged" : ""));
-            amplitdueCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + final_amplitude);           
+            differenceCsvFile.WriteLine((mStartedOriginalShoulderRight - mNeckToElbowRightAngle).ToString() + "," + (mStartedOriginalShoulderLeft - mNeckToElbowLeftAngle).ToString() + "," + (mStartedOriginalSpineMid - mSpineBaseToHeadAngle).ToString() + "," + (mStartedOriginalNeck - mHeadToShoulderLeftAngle).ToString() + "," + (mStartedOriginalNeck1 - mHeadToShoulderRightAngle).ToString() + "," + (mStartedOriginalSpineShoulder - mHeadToSpineShoulder).ToString() + (mMarkTagged == 1 ? ",Tagged" : ""));       
         }
         private void MeanGreenLightUpdate()
         {
             double final_amplitude = GetAmplitude();
 
-            if (mMeans == 1)
+            if (timer1.Enabled == false)
             {
                 timer1.Enabled = true;
-
-                if (mMovie == 1)
-                {
-                    MediaPlayersPlay();
-                }
-                              
-                SetAllTrafficLights(false, false, true);
             }
+
+            MediaPlayersPlay();
+                              
+            SetAllTrafficLights(false, false, true);
 
             meanCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original" + "," + mShoulderRightMean + "," + mShoulderLeftMean + "," + mSpineMidMean + "," + mNeckMean + "," + mNeck1Mean + "," + mSpineShoulderMean + (mMarkTagged == 1 ? ",Tagged" : ""));
-            differenceCsvFile.WriteLine((mStartedOriginalShoulderRight - mNeckToElbowRightAngle).ToString() + "," + (mStartedOriginalShoulderLeft - mNeckToElbowLeftAngle).ToString() + "," + (mStartedOriginalSpineMid - mSpineBaseToHeadAngle).ToString() + "," + (mStartedOriginalNeck - mHeadToShoulderLeftAngle).ToString() + "," + (mStartedOriginalNeck1 - mHeadToShoulderRightAngle).ToString() + "," + (mStartedOriginalSpineShoulder - mHeadToSpineShoulder).ToString() + (mMarkTagged == 1 ? ",Tagged" : ""));
-            amplitdueCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + final_amplitude);            
+            differenceCsvFile.WriteLine((mStartedOriginalShoulderRight - mNeckToElbowRightAngle).ToString() + "," + (mStartedOriginalShoulderLeft - mNeckToElbowLeftAngle).ToString() + "," + (mStartedOriginalSpineMid - mSpineBaseToHeadAngle).ToString() + "," + (mStartedOriginalNeck - mHeadToShoulderLeftAngle).ToString() + "," + (mStartedOriginalNeck1 - mHeadToShoulderRightAngle).ToString() + "," + (mStartedOriginalSpineShoulder - mHeadToSpineShoulder).ToString() + (mMarkTagged == 1 ? ",Tagged" : ""));        
         }
+
         private void MedianRedLightUpdate()
         {
-            if (mMedians == 1)
-            {
-                if (mMovie == 1)
-                {
-                    if (mMovieSensitive == 1)
-                    {
-                        axWindowsMediaPlayer1.Ctlcontrols.pause();
-                    }
-                    else
-                    {
-                        axWindowsMediaPlayer1.Ctlcontrols.play();
-                    }
-                }
-                if (mProgressSensitive == 1)
-                {
-                    timer1.Enabled = false;
-                }
-                else
-                {
-                    timer1.Enabled = true;
-                }
-                if (mTrafficSensitive == 1)
-                {
-                    redLightPictureBox.Visible = true;
-                    yellowLightPictureBox.Visible = false;
-                    greenLightPictureBox.Visible = false;
-                    mSessionState = 21;
-                }
-                else
-                {
-                    greenLightPictureBox.Visible = true;
-                }
-            }
+            axWindowsMediaPlayer1.Ctlcontrols.pause();
+
+            timer1.Enabled = false;
+
+            redLightPictureBox.Visible = true;
+            yellowLightPictureBox.Visible = false;
+            greenLightPictureBox.Visible = false;
+            mSessionState = 21;
 
             medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + mShoulderRightMedian + "," + mShoulderLeftMedian + "," + mSpineMidMedian + "," + mNeckMedian + "," + mNeck1Median + "," + mSpineShoulderMedian + (mMarkTagged == 1 ? ",Tagged" : ""));
-
         }
         private void MedianYellowLightUpdate()
         {
-            if (mMedians == 1)
-            {
-                timer1.Enabled = true;
-                if (mMovie == 1)
-                {
-                    axWindowsMediaPlayer1.Ctlcontrols.play();
-                }
+            timer1.Enabled = true;
 
-                if (mTrafficSensitive == 1)
-                {
-                    redLightPictureBox.Visible = false;
-                    yellowLightPictureBox.Visible = true;
-                    greenLightPictureBox.Visible = false;
-                }
-                else
-                {
-                    greenLightPictureBox.Visible = true;
-                }
-            }
+            axWindowsMediaPlayer1.Ctlcontrols.play();
+
+            redLightPictureBox.Visible = false;
+            yellowLightPictureBox.Visible = true;
+            greenLightPictureBox.Visible = false;
 
             medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + mShoulderRightMedian + "," + mShoulderLeftMedian + "," + mSpineMidMedian + "," + mNeckMedian + "," + mNeck1Median + "," + mSpineShoulderMedian + (mMarkTagged == 1 ? ",Tagged" : ""));
         }
         private void MedianGreenLightUpdate()
         {
-            if (mMedians == 1)
-            {
-                timer1.Enabled = true;
+            timer1.Enabled = true;
 
-                if (mMovie == 1)
-                {
-                    axWindowsMediaPlayer1.Ctlcontrols.play();
-                }
+            axWindowsMediaPlayer1.Ctlcontrols.play();
 
-                if (mTrafficSensitive == 1)
-                {
-                    redLightPictureBox.Visible = false;
-                    yellowLightPictureBox.Visible = false;
-                    greenLightPictureBox.Visible = true;
-                }
-                else
-                {
-                    greenLightPictureBox.Visible = true;
-                }
-            }
+            redLightPictureBox.Visible = false;
+            yellowLightPictureBox.Visible = false;
+            greenLightPictureBox.Visible = true;
 
             medianCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + mShoulderRightMedian + "," + mShoulderLeftMedian + "," + mSpineMidMedian + "," + mNeckMedian + "," + mNeck1Median + "," + mSpineShoulderMedian + (mMarkTagged == 1 ? ",Tagged" : ""));
         }
-        private void RawRedLightUpdate()
-        {
-            if (mRawMeasures == 1)
-            {
-                if (mMovie == 1)
-                {
-                    if (mMovieSensitive == 1)
-                    {
-                        axWindowsMediaPlayer1.Ctlcontrols.pause();
-                    }
-                    else
-                    {
-                        axWindowsMediaPlayer1.Ctlcontrols.play();
-                    }
-                }
 
-                if (mProgressSensitive == 1)
-                {
-                    timer1.Enabled = false;
-                }
-                else
-                {
-                    timer1.Enabled = true;
-                }
-
-                if (mTrafficSensitive == 1)
-                {
-                    redLightPictureBox.Visible = true;
-                    yellowLightPictureBox.Visible = false;
-                    greenLightPictureBox.Visible = false;
-                    mSessionState = 21;
-                }
-                else
-                {
-                    greenLightPictureBox.Visible = true;
-                }
-            }
-
-            mOverNotAllowed++;
-
-            if (mOverWarning > 0)
-            {
-                videoCsvFile.WriteLine("--------");
-            }
-
-            // Not tagged
-            if (mTagType == 0)
-            {
-                if (mOverNotAllowed == 1)
-                {
-                    videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement" + "," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
-                    videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement" + "," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
-                }
-
-                rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement" + "," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder);
-                videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Large Movement" + "," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder);
-
-            }
-            // If tagged
-            else
-            {
-                // If there is a small tagged movement
-                if (mTagType == 1)
-                {
-                    if (mOverNotAllowed == 1)
-                    {
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
-                    }
-
-                    rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder + "," + "SmallMovement");
-                    mTagType = 0;
-
-                }
-
-                // If there is a medium tagged movement
-                if (mTagType == 2)
-                {
-                    if (mOverNotAllowed == 1)
-                    {
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
-                    }
-
-                    rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder + "," + "MediumMovement");
-                    mTagType = 0;
-                }
-
-                // If there is a large tagged movement
-                if (mTagType == 3)
-                {
-                    if (mOverNotAllowed == 1)
-                    {
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
-                    }
-
-                    rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Large Movement," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder + "," + "LargeMovement");
-                    mTagType = 0;
-                }
-            }
-        }
-        private void RawYellowLightUpdate()
-        {
-            if (mRawMeasures == 1)
-            {
-                timer1.Enabled = true;
-
-                if (mMovie == 1)
-                {
-                    axWindowsMediaPlayer1.Ctlcontrols.play();
-                }
-
-                if (mTrafficSensitive == 1)
-                {
-                    redLightPictureBox.Visible = false;
-                    yellowLightPictureBox.Visible = true;
-                    greenLightPictureBox.Visible = false;
-                }
-                else
-                {
-                    greenLightPictureBox.Visible = true;
-                }
-            }
-
-            mOverWarning++;
-
-            if (mOverNotAllowed > 0) // Should this be mOverWarning, or is it correct the way it is?
-            {
-                videoCsvFile.WriteLine("--------");
-            }
-
-            if (mTagType == 0)
-            {
-                if (mOverWarning == 1)
-                {
-                    videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
-                    videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
-                }
-
-                rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Small Movement," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder);
-                videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Small Movement," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder);
-            }
-            else
-            {
-                // If the tagged movement is small movement
-                if (mTagType == 1)
-                {
-                    if (mOverWarning == 1)
-                    {
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
-                    }
-
-                    rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Small Movement," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder + "," + "SmallMovement");
-                    mTagType = 0;
-                }
-
-                // If the tagged movement is medium movement
-                if (mTagType == 2)
-                {
-                    if (mOverWarning == 1)
-                    {
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
-                    }
-
-                    rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Small Movement," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder + "," + "MediumMovement");
-                    mTagType = 0;
-                }
-
-                // If the tagged movement is large movement
-                if (mTagType == 3)
-                {
-                    if (mOverWarning == 1)
-                    {
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[0] + "," + temp2[0] + "," + temp3[0] + "," + temp4[0] + "," + temp5[0] + "," + temp6[0]);
-                        videoCsvFile.WriteLine(mElapsedTime.ToString(@"hh\:mm\:ss") + "," + "Original Before Movement," + temp1[1] + "," + temp2[1] + "," + temp3[1] + "," + temp4[1] + "," + temp5[1] + "," + temp6[1]);
-                    }
-
-                    rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Small Movement," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder + "," + "LargeMovement");
-                    mTagType = 0;
-                }
-            }
-        }
-        private void RawGreenLightUpdate()
-        {
-            if (mRawMeasures == 1)
-            {
-                timer1.Enabled = true;
-
-                if (mMovie == 1)
-                {
-                    axWindowsMediaPlayer1.Ctlcontrols.play();
-                }
-
-                if (mTrafficSensitive == 1)
-                {
-                    redLightPictureBox.Visible = false;
-                    yellowLightPictureBox.Visible = false;
-                    greenLightPictureBox.Visible = true;
-                }
-                else
-                {
-                    greenLightPictureBox.Visible = true;
-                }
-            }
-
-            mTempArrayElementIteration++;
-
-            //here we are storing the values to temp array
-            //here we are storing to temp original values
-            if (mTempArrayElementIteration == 1)
-            {
-                temp1[0] = mNeckToElbowRightAngle;
-                temp2[0] = mNeckToElbowLeftAngle;
-                temp3[0] = mSpineBaseToHeadAngle;
-                temp4[0] = mHeadToShoulderLeftAngle;
-                temp5[0] = mHeadToShoulderRightAngle;
-                temp6[0] = mHeadToSpineShoulder;
-            }
-
-            if (mTempArrayElementIteration == 2)
-            {
-                temp1[1] = mNeckToElbowRightAngle;
-                temp2[1] = mNeckToElbowLeftAngle;
-                temp3[1] = mSpineBaseToHeadAngle;
-                temp4[1] = mHeadToShoulderLeftAngle;
-                temp5[1] = mHeadToShoulderRightAngle;
-                temp6[1] = mHeadToSpineShoulder;
-
-                mTempArrayElementIteration = 0;
-            }
-
-            if (mOverNotAllowed > 0)
-            {
-                videoCsvFile.WriteLine("--------");
-            }
-
-            if (mOverWarning > 0)
-            {
-                videoCsvFile.WriteLine("--------");
-            }
-
-            mOverNotAllowed = 0;
-            mOverWarning = 0;
-
-            if (mTagType == 0)
-            {
-                rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder);
-            }
-            else
-            {
-                // Small tagged movement
-                if (mTagType == 1)
-                {
-                    rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder + "," + "SmallMovement");
-                    mTagType = 0;
-                }
-                // Medium tagged movement
-                if (mTagType == 2)
-                {
-                    rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder + "," + "MediumMovement");
-                    mTagType = 0;
-                }
-                // Large tagged movement
-                if (mTagType == 3)
-                {
-                    rawCsvFile.WriteLine(DateTime.Now.ToString("yyyy//MM//dd hh:mm:ss.fff") + "," + "Original," + mNeckToElbowRightAngle + "," + mNeckToElbowLeftAngle + "," + mSpineBaseToHeadAngle + "," + mHeadToShoulderLeftAngle + "," + mHeadToShoulderRightAngle + "," + mHeadToSpineShoulder + "," + "LargeMovement");
-                    mTagType = 0;
-                }
-            }
-        }
         private bool MeanOverNotAllowed()
         {
             return (
@@ -1114,6 +723,7 @@ namespace Final_Kinect
                 mSpineShoulderMean < (mStartedOriginalSpineShoulder - mWarning)
             );
         }
+
         private bool MedianOverNotAllowed()
         {
             return (
@@ -1148,40 +758,7 @@ namespace Final_Kinect
                 mSpineShoulderMedian < (mStartedOriginalSpineShoulder - mWarning)
             );
         }
-        private bool RawOverNotAllowed()
-        {
-            return (
-                mNeckToElbowRightAngle > (mStartedOriginalShoulderRight + mNotAllowed) ||
-                mNeckToElbowRightAngle < (mStartedOriginalShoulderRight - mNotAllowed) ||
-                mNeckToElbowLeftAngle > (mStartedOriginalShoulderLeft + mNotAllowed) ||
-                mNeckToElbowLeftAngle < (mStartedOriginalShoulderLeft - mNotAllowed) ||
-                mSpineBaseToHeadAngle > (mStartedOriginalSpineMid + mNotAllowed) ||
-                mSpineBaseToHeadAngle < (mStartedOriginalSpineMid - mNotAllowed) ||
-                mHeadToShoulderLeftAngle > (mStartedOriginalNeck + mNotAllowed) ||
-                mHeadToShoulderLeftAngle < (mStartedOriginalNeck - mNotAllowed) ||
-                mHeadToShoulderRightAngle > (mStartedOriginalNeck1 + mNotAllowed) ||
-                mHeadToShoulderRightAngle < (mStartedOriginalNeck1 - mNotAllowed) ||
-                mHeadToSpineShoulder > (mStartedOriginalSpineShoulder + mNotAllowed) ||
-                mHeadToSpineShoulder < (mStartedOriginalSpineShoulder - mNotAllowed)
-            );
-        }
-        private bool RawOverWarning()
-        {
-            return (
-                mNeckToElbowRightAngle > (mStartedOriginalShoulderRight + mWarning) ||
-                mNeckToElbowRightAngle < (mStartedOriginalShoulderRight - mWarning) ||
-                mNeckToElbowLeftAngle > (mStartedOriginalShoulderLeft + mWarning) ||
-                mNeckToElbowLeftAngle < (mStartedOriginalShoulderLeft - mWarning) ||
-                mSpineBaseToHeadAngle > (mStartedOriginalSpineMid + mWarning) ||
-                mSpineBaseToHeadAngle < (mStartedOriginalSpineMid - mWarning) ||
-                mHeadToShoulderLeftAngle > (mStartedOriginalNeck + mWarning) ||
-                mHeadToShoulderLeftAngle < (mStartedOriginalNeck - mWarning) ||
-                mHeadToShoulderRightAngle > (mStartedOriginalNeck1 + mWarning) ||
-                mHeadToShoulderRightAngle < (mStartedOriginalNeck1 - mWarning) ||
-                mHeadToSpineShoulder > (mStartedOriginalSpineShoulder + mWarning) ||
-                mHeadToSpineShoulder < (mStartedOriginalSpineShoulder - mWarning)
-            );
-        }
+
         private void MeansUpdates()
         {
             SetMeans();
@@ -1218,21 +795,7 @@ namespace Final_Kinect
                 MedianGreenLightUpdate();
             }
         }
-        private void RawUpdates()
-        {
-            if (RawOverNotAllowed())
-            {
-                RawRedLightUpdate();
-            }
-            else if (RawOverWarning())
-            {
-                RawYellowLightUpdate();
-            }
-            else
-            {
-                RawGreenLightUpdate();
-            }
-        }
+
         private double GetAmplitude()
         {
             // The Math.Pow function could probably usefully be used here.
@@ -1249,46 +812,7 @@ namespace Final_Kinect
 
             return final_amplitude;
         }
-        private void HideControls(int movieFrame, int progressFrame, int trafficFrame, int traffic)
-        {
-            if (movieFrame == 0)
-            {
-                axWindowsMediaPlayer1.Hide();
-            }
 
-            if (progressFrame == 0)
-            {
-                progressBar.Hide();
-            }
-
-            if (trafficFrame == 0 || traffic == 0)
-            {
-                redLightPictureBox.Hide();
-                yellowLightPictureBox.Hide();
-                greenLightPictureBox.Hide();
-            }
-        }
-        private void SetHeadOrTorso()
-        {
-            if (mJointTrackingType == 1)
-            {
-                mStartedOriginalNeck = 0;
-                mHeadToShoulderLeftAngle = 0;
-                mStartedOriginalNeck1 = 0;
-                mHeadToShoulderRightAngle = 0;
-                mStartedOriginalSpineShoulder = 0;
-                mHeadToSpineShoulder = 0;
-            }
-            if (mJointTrackingType == 2)
-            {
-                mStartedOriginalShoulderRight = 0;
-                mNeckToElbowRightAngle = 0;
-                mStartedOriginalShoulderLeft = 0;
-                mNeckToElbowLeftAngle = 0;
-                mStartedOriginalSpineMid = 0;
-                mSpineBaseToHeadAngle = 0;
-            }
-        }
         private void ResetTag()
         {
             if (mMarkTagged == 1)
@@ -1296,10 +820,32 @@ namespace Final_Kinect
                 mMarkTagged = 0;
             }
         }
+
+        private void UpdateLimitsTextBox(String warning, String notAllowed)
+        {
+            lowerLimitSmallMovementTextBox.Text = warning;
+            lowerLimitLargeMovementTextBox.Text = notAllowed;
+        }
+        private void UpdateCurrentLimits()
+        {
+            meanCsvFile.WriteLine("\r\n------ Contingency Change ------\r\n");
+            medianCsvFile.WriteLine("\r\n------ Contingency Change ------\r\n");
+
+            mWarning = Convert.ToInt32(lowerLimitSmallMovementTextBox.Text);
+            mNotAllowed = Convert.ToInt32(lowerLimitLargeMovementTextBox.Text);
+
+            UpdateCurrentLimitsLabel();
+        }
+        private void UpdateCurrentLimitsLabel()
+        {
+            currentLimitsLabel.Text = "Current Limits: Warning - " + mWarning.ToString() + "  Not Allowed - " + mNotAllowed.ToString();
+        }
+
         private void MediaPlayersPlay()
         {
             axWindowsMediaPlayer1.Ctlcontrols.play();
 
+            // Play the participant's movie as well
             if (mSubjectMovieForm != null)
             {
                 mSubjectMovieForm.MediaPlayerPlay();
@@ -1309,36 +855,28 @@ namespace Final_Kinect
         {
             axWindowsMediaPlayer1.Ctlcontrols.pause();
 
+            // Pause participant's movie as well.
             if (mSubjectMovieForm != null)
             {
                 mSubjectMovieForm.MediaPlayerPause();
             }
         }
+
         private void SetAllTrafficLights(bool redVisible, bool yellowVisible, bool greenVisible)
         {
-            if (mTrafficSensitive == 1)
-            {
-                redLightPictureBox.Visible = redVisible;
-                yellowLightPictureBox.Visible = yellowVisible;
-                greenLightPictureBox.Visible = greenVisible;
+            redLightPictureBox.Visible = redVisible;
+            yellowLightPictureBox.Visible = yellowVisible;
+            greenLightPictureBox.Visible = greenVisible;
 
-                if (mSubjectMovieForm != null)
-                {
-                    mSubjectMovieForm.SetRedLightVisible(redVisible);
-                    mSubjectMovieForm.SetYellowLightVisible(yellowVisible);
-                    mSubjectMovieForm.SetGreenLightVisible(greenVisible);
-                }
-            }
-            else
+            // Change the participant's lights as well
+            if (mSubjectMovieForm != null)
             {
-                greenLightPictureBox.Visible = true;
-
-                if (mSubjectMovieForm != null)
-                {
-                    mSubjectMovieForm.SetGreenLightVisible(true);
-                }
+                mSubjectMovieForm.SetRedLightVisible(redVisible);
+                mSubjectMovieForm.SetYellowLightVisible(yellowVisible);
+                mSubjectMovieForm.SetGreenLightVisible(greenVisible);
             }
         }
+
         private void FinalForm_Load(object sender, EventArgs e)
         {            
             if (mSessionState == 22)
@@ -1347,52 +885,16 @@ namespace Final_Kinect
             }
         }
         private void FinalForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            // Close all data files when form closes
-
+        {            
+            // Write notes to the end of the median file
             medianCsvFile.WriteLine("\r\nNotes:\r\n\r\n" + notesTextBox.Text);
 
-            rawCsvFile.Close();
-            videoCsvFile.Close();
+            // Close all data files when form closes
             meanCsvFile.Close();
             medianCsvFile.Close();
             differenceCsvFile.Close();
-            amplitdueCsvFile.Close();
 
             mSubjectMovieForm.Close();
-        }
-        private void FinalForm_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
-        {
-            // For small tagged movement press s key
-            if (e.KeyChar == 's')
-            {
-                e.Handled = true;
-                mTagType = 1;
-                mMarkTagged = 1;
-            }
-
-            // For medium tagged movement press m
-            if (e.KeyChar == 'm')
-            {
-                e.Handled = true;
-                mTagType = 2;
-                mMarkTagged = 1;
-            }
-
-            // For large tagged movement press l
-            if (e.KeyChar == 'l')
-            {
-                mTagType = 3;
-                mMarkTagged = 1;
-            }
-
-            // To start the process press r
-            if (e.KeyChar == 'r')
-            {
-                mSessionState = 22;
-
-                startButton.BackColor = Color.DeepSkyBlue;
-            }
         }
     }
 }

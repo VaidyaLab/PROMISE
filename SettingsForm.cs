@@ -28,7 +28,8 @@ namespace Final_Kinect
                 filePathTextBox.Text
             );
 
-            finalForm.Show();           
+            finalForm.Show();
+            this.Hide();
         }
         private void videoFileBrowseButton_Click(object sender, EventArgs e)
         {

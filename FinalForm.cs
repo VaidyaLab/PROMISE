@@ -22,7 +22,8 @@ namespace Final_Kinect
         // This is the form on which the participant will view the movie.
         SubjectMovieForm mSubjectMovieForm;
 
-        Stopwatch mStopwatch = new Stopwatch();
+        Stopwatch mSessionStopwatch = new Stopwatch();
+        Stopwatch mConditionStopwatch = new Stopwatch();
 
         // This is being used to determine if session is started or stopped, but in some ways that I need to look further into.
         int mSessionState = 0;
@@ -133,9 +134,13 @@ namespace Final_Kinect
             mNeck1Median,
             mSpineShoulderMedian;
 
-        // These are used to determine the elapsed time of the session.
-        DateTime mStartTime = new DateTime();
-        TimeSpan mElapsedTime = new TimeSpan();
+        private void FinalForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
+
+        DateTime mSessionStartTime = new DateTime();
+        TimeSpan mSessionElapsedTime = new TimeSpan();
 
         /* This will be incremented on every tick. When the tick interval
          * is set for 1000, then mTickCount % 60 will be 0 and thus allow
@@ -193,7 +198,7 @@ namespace Final_Kinect
             this.KeyPreview = true;
 
             startButton.BackColor = Color.Red;
-            mStartTime = DateTime.Now;
+            mSessionStartTime = DateTime.Now;
 
             InitializeDataFiles();
 
@@ -236,7 +241,7 @@ namespace Final_Kinect
         // Timer event for progress bar
         private void timer1_Tick(object sender, EventArgs e)
         {
-            mElapsedTime = DateTime.Now - mStartTime;
+            mSessionElapsedTime = DateTime.Now - mSessionStartTime;
 
             mTickCount++;
 
@@ -278,7 +283,7 @@ namespace Final_Kinect
                 Console.WriteLine("Kinect is connected: " + mBodyframeReader.KinectSensor.IsOpen);
                 Console.WriteLine("Why are you here?");
 
-                if (mSubjectMovieForm == null)
+                if (mSubjectMovieForm != null)
                 {
                     mSubjectMovieForm.Show();
                 }
@@ -363,9 +368,23 @@ namespace Final_Kinect
                         if (mSessionState == 22) // and deep sky blue button
                         {
                             startButton.BackColor = Color.DeepSkyBlue;
-                            mStopwatch.Start(); // May need to add if (stopWatch.Started == false) check or something
-                            elapsedTimeTextBox.Text = mStopwatch.Elapsed.ToString();
                             timer1.Enabled = true; // May need to add if (timer1.Enabled == false) check or something.
+
+                            // Session stopwatch 
+                            if (mSessionStopwatch.IsRunning == false)
+                            {
+                                mSessionStopwatch.Start();
+                            }
+
+                            sessionElapsedTimeTextBox.Text = mSessionStopwatch.Elapsed.ToString();
+
+                            // Condition stopwatch
+                            if (mConditionStopwatch.IsRunning == false)
+                            {
+                                mConditionStopwatch.Start();
+                            }
+
+                            conditionElapsedTimeTextBox.Text = mConditionStopwatch.Elapsed.ToString();
 
                             mNeckToElbowRightAngle = (int) neckToElbowRightAngle;
                             mNeckToElbowLeftAngle = (int) neckToElbowLeftAngle;
@@ -610,7 +629,7 @@ namespace Final_Kinect
 
             SetAllTrafficLights(true, false, false);
 
-            mStopwatch.Stop();
+            mSessionStopwatch.Stop();
             mSessionState = 21;
 
             differenceCsvFile.WriteLine((mStartedOriginalShoulderRight - mNeckToElbowRightAngle).ToString() + "," + (mStartedOriginalShoulderLeft - mNeckToElbowLeftAngle).ToString() + "," + (mStartedOriginalSpineMid - mSpineBaseToHeadAngle).ToString() + "," + (mStartedOriginalNeck - mHeadToShoulderLeftAngle).ToString() + "," + (mStartedOriginalNeck1 - mHeadToShoulderRightAngle).ToString() + "," + (mStartedOriginalSpineShoulder - mHeadToSpineShoulder).ToString() + (mMarkTagged == 1 ? ",Tagged" : ""));
@@ -834,6 +853,8 @@ namespace Final_Kinect
             mWarning = Convert.ToInt32(lowerLimitSmallMovementTextBox.Text);
             mNotAllowed = Convert.ToInt32(lowerLimitLargeMovementTextBox.Text);
 
+            mConditionStopwatch.Restart();
+
             UpdateCurrentLimitsLabel();
         }
         private void UpdateCurrentLimitsLabel()
@@ -887,13 +908,10 @@ namespace Final_Kinect
         private void FinalForm_FormClosing(object sender, FormClosingEventArgs e)
         {            
             // Write notes to the end of the median file
-            medianCsvFile.WriteLine("\r\nNotes:\r\n\r\n" + notesTextBox.Text);
+            meanCsvFile.WriteLine("\r\nNotes:\r\n\r\n" + notesTextBox.Text);
 
             // Close all data files when form closes
             meanCsvFile.Close();
-            medianCsvFile.Close();
-            differenceCsvFile.Close();
-
             mSubjectMovieForm.Close();
         }
     }

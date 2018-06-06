@@ -55,7 +55,7 @@
             this.greenLightPictureBox = new System.Windows.Forms.PictureBox();
             this.yellowLightPictureBox = new System.Windows.Forms.PictureBox();
             this.redLightPictureBox = new System.Windows.Forms.PictureBox();
-            this.elapsedTimeTextBox = new System.Windows.Forms.TextBox();
+            this.sessionElapsedTimeTextBox = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
@@ -77,13 +77,15 @@
             this.movementProbeButton = new System.Windows.Forms.Button();
             this.noContingencyButton = new System.Windows.Forms.Button();
             this.instructionButton = new System.Windows.Forms.Button();
-            this.threeFiveButton = new System.Windows.Forms.Button();
+            this.shapeButton = new System.Windows.Forms.Button();
             this.currentLimitsLabel = new System.Windows.Forms.Label();
             this.sessionTimeLabel = new System.Windows.Forms.Label();
             this.conditionTimeLabel = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.conditionElapsedTimeTextBox = new System.Windows.Forms.TextBox();
             this.scanButton = new System.Windows.Forms.Button();
             this.initializeButton = new System.Windows.Forms.Button();
+            this.stepUpButton = new System.Windows.Forms.Button();
+            this.stepDownButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.greenLightPictureBox)).BeginInit();
@@ -179,14 +181,14 @@
             this.redLightPictureBox.TabIndex = 0;
             this.redLightPictureBox.TabStop = false;
             // 
-            // elapsedTimeTextBox
+            // sessionElapsedTimeTextBox
             // 
-            this.elapsedTimeTextBox.Font = new System.Drawing.Font("Times New Roman", 10.125F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.elapsedTimeTextBox.Location = new System.Drawing.Point(813, 754);
-            this.elapsedTimeTextBox.Margin = new System.Windows.Forms.Padding(2);
-            this.elapsedTimeTextBox.Name = "elapsedTimeTextBox";
-            this.elapsedTimeTextBox.Size = new System.Drawing.Size(76, 23);
-            this.elapsedTimeTextBox.TabIndex = 4;
+            this.sessionElapsedTimeTextBox.Font = new System.Drawing.Font("Times New Roman", 10.125F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sessionElapsedTimeTextBox.Location = new System.Drawing.Point(813, 754);
+            this.sessionElapsedTimeTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.sessionElapsedTimeTextBox.Name = "sessionElapsedTimeTextBox";
+            this.sessionElapsedTimeTextBox.Size = new System.Drawing.Size(76, 23);
+            this.sessionElapsedTimeTextBox.TabIndex = 4;
             // 
             // timer1
             // 
@@ -441,15 +443,15 @@
             this.instructionButton.UseVisualStyleBackColor = true;
             this.instructionButton.Click += new System.EventHandler(this.instructionButton_Click);
             // 
-            // threeFiveButton
+            // shapeButton
             // 
-            this.threeFiveButton.Location = new System.Drawing.Point(1028, 613);
-            this.threeFiveButton.Name = "threeFiveButton";
-            this.threeFiveButton.Size = new System.Drawing.Size(96, 23);
-            this.threeFiveButton.TabIndex = 53;
-            this.threeFiveButton.Text = "3.5";
-            this.threeFiveButton.UseVisualStyleBackColor = true;
-            this.threeFiveButton.Click += new System.EventHandler(this.threeFiveButton_Click);
+            this.shapeButton.Location = new System.Drawing.Point(1028, 613);
+            this.shapeButton.Name = "shapeButton";
+            this.shapeButton.Size = new System.Drawing.Size(96, 23);
+            this.shapeButton.TabIndex = 53;
+            this.shapeButton.Text = "Shape";
+            this.shapeButton.UseVisualStyleBackColor = true;
+            this.shapeButton.Click += new System.EventHandler(this.threeFiveButton_Click);
             // 
             // currentLimitsLabel
             // 
@@ -482,14 +484,14 @@
             this.conditionTimeLabel.TabIndex = 57;
             this.conditionTimeLabel.Text = "Condition Time:";
             // 
-            // textBox1
+            // conditionElapsedTimeTextBox
             // 
-            this.textBox1.Font = new System.Drawing.Font("Times New Roman", 10.125F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(1035, 754);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(76, 23);
-            this.textBox1.TabIndex = 56;
+            this.conditionElapsedTimeTextBox.Font = new System.Drawing.Font("Times New Roman", 10.125F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.conditionElapsedTimeTextBox.Location = new System.Drawing.Point(1035, 754);
+            this.conditionElapsedTimeTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.conditionElapsedTimeTextBox.Name = "conditionElapsedTimeTextBox";
+            this.conditionElapsedTimeTextBox.Size = new System.Drawing.Size(76, 23);
+            this.conditionElapsedTimeTextBox.TabIndex = 56;
             // 
             // scanButton
             // 
@@ -513,6 +515,24 @@
             this.initializeButton.UseVisualStyleBackColor = true;
             this.initializeButton.Click += new System.EventHandler(this.initializeButton_Click);
             // 
+            // stepUpButton
+            // 
+            this.stepUpButton.Location = new System.Drawing.Point(1151, 580);
+            this.stepUpButton.Name = "stepUpButton";
+            this.stepUpButton.Size = new System.Drawing.Size(96, 23);
+            this.stepUpButton.TabIndex = 59;
+            this.stepUpButton.Text = "Step Up";
+            this.stepUpButton.UseVisualStyleBackColor = true;
+            // 
+            // stepDownButton
+            // 
+            this.stepDownButton.Location = new System.Drawing.Point(1151, 614);
+            this.stepDownButton.Name = "stepDownButton";
+            this.stepDownButton.Size = new System.Drawing.Size(96, 23);
+            this.stepDownButton.TabIndex = 60;
+            this.stepDownButton.Text = "Step Down";
+            this.stepDownButton.UseVisualStyleBackColor = true;
+            // 
             // FinalForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -520,14 +540,16 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(1449, 945);
+            this.Controls.Add(this.stepDownButton);
+            this.Controls.Add(this.stepUpButton);
             this.Controls.Add(this.initializeButton);
             this.Controls.Add(this.scanButton);
             this.Controls.Add(this.conditionTimeLabel);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.conditionElapsedTimeTextBox);
             this.Controls.Add(this.sessionTimeLabel);
             this.Controls.Add(this.currentLimitsLabel);
-            this.Controls.Add(this.elapsedTimeTextBox);
-            this.Controls.Add(this.threeFiveButton);
+            this.Controls.Add(this.sessionElapsedTimeTextBox);
+            this.Controls.Add(this.shapeButton);
             this.Controls.Add(this.instructionButton);
             this.Controls.Add(this.noContingencyButton);
             this.Controls.Add(this.movementProbeButton);
@@ -555,6 +577,7 @@
             this.Text = "Version 3 (Final Version)";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FinalForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FinalForm_FormClosed);
             this.Load += new System.EventHandler(this.FinalForm_Load);
             this.VisibleChanged += new System.EventHandler(this.FinalForm_Load);
             this.ParentChanged += new System.EventHandler(this.FinalForm_Load);
@@ -588,7 +611,7 @@
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.Button startButton;
-        private System.Windows.Forms.TextBox elapsedTimeTextBox;
+        private System.Windows.Forms.TextBox sessionElapsedTimeTextBox;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         public System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.Label label9;
@@ -608,12 +631,14 @@
         private System.Windows.Forms.Button movementProbeButton;
         private System.Windows.Forms.Button noContingencyButton;
         private System.Windows.Forms.Button instructionButton;
-        private System.Windows.Forms.Button threeFiveButton;
+        private System.Windows.Forms.Button shapeButton;
         private System.Windows.Forms.Label currentLimitsLabel;
         private System.Windows.Forms.Label sessionTimeLabel;
         private System.Windows.Forms.Label conditionTimeLabel;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox conditionElapsedTimeTextBox;
         private System.Windows.Forms.Button scanButton;
         private System.Windows.Forms.Button initializeButton;
+        private System.Windows.Forms.Button stepUpButton;
+        private System.Windows.Forms.Button stepDownButton;
     }
 }

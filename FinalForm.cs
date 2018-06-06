@@ -112,9 +112,20 @@ namespace Final_Kinect
         {
             UpdateLimitsTextBox("1000", "1000");
         }
-        private void threeFiveButton_Click(object sender, EventArgs e)
+        private void shapeButton_Click(object sender, EventArgs e)
         {
-            UpdateLimitsTextBox("3", "5");
+            UpdateLimitsTextBox("11", "13");
+        }
+        private void stepUpButton_Click(object sender, EventArgs e)
+        {
+            lowerLimitSmallMovementTextBox.Text = (mWarning + 2).ToString();
+            lowerLimitLargeMovementTextBox.Text = (mNotAllowed + 2).ToString();
+        }
+
+        private void stepDownButton_Click(object sender, EventArgs e)
+        {
+            lowerLimitSmallMovementTextBox.Text = (mWarning - 2).ToString();
+            lowerLimitLargeMovementTextBox.Text = (mNotAllowed - 2).ToString();
         }
 
         private void scanButton_Click(object sender, EventArgs e)
@@ -133,11 +144,6 @@ namespace Final_Kinect
             mNeckMedian,
             mNeck1Median,
             mSpineShoulderMedian;
-
-        private void FinalForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Application.Exit();
-        }
 
         DateTime mSessionStartTime = new DateTime();
         TimeSpan mSessionElapsedTime = new TimeSpan();
@@ -630,6 +636,7 @@ namespace Final_Kinect
             SetAllTrafficLights(true, false, false);
 
             mSessionStopwatch.Stop();
+            mConditionStopwatch.Stop();
             mSessionState = 21;
 
             differenceCsvFile.WriteLine((mStartedOriginalShoulderRight - mNeckToElbowRightAngle).ToString() + "," + (mStartedOriginalShoulderLeft - mNeckToElbowLeftAngle).ToString() + "," + (mStartedOriginalSpineMid - mSpineBaseToHeadAngle).ToString() + "," + (mStartedOriginalNeck - mHeadToShoulderLeftAngle).ToString() + "," + (mStartedOriginalNeck1 - mHeadToShoulderRightAngle).ToString() + "," + (mStartedOriginalSpineShoulder - mHeadToSpineShoulder).ToString() + (mMarkTagged == 1 ? ",Tagged" : ""));
@@ -913,6 +920,10 @@ namespace Final_Kinect
             // Close all data files when form closes
             meanCsvFile.Close();
             mSubjectMovieForm.Close();
+        }
+        private void FinalForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

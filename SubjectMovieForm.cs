@@ -54,10 +54,14 @@ namespace Final_Kinect
         {
             Screen[] screens = Screen.AllScreens;
 
-            System.Drawing.Rectangle bounds = screens[1].Bounds;
-            this.SetBounds(bounds.X, bounds.Y, bounds.Width, bounds.Height);
+            if (screens.Length > 1)
+            {
+                System.Drawing.Rectangle bounds = screens[1].Bounds;
+                this.SetBounds(bounds.X, bounds.Y, bounds.Width, bounds.Height);
+            }
 
             WindowState = FormWindowState.Maximized;
+
         }
     }
 }

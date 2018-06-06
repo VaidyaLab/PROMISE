@@ -124,8 +124,8 @@ namespace Final_Kinect
 
         private void stepDownButton_Click(object sender, EventArgs e)
         {
-            lowerLimitSmallMovementTextBox.Text = (mWarning - 2).ToString();
-            lowerLimitLargeMovementTextBox.Text = (mNotAllowed - 2).ToString();
+            lowerLimitSmallMovementTextBox.Text = (Convert.ToInt32(lowerLimitSmallMovementTextBox.Text) - 2).ToString();
+            lowerLimitLargeMovementTextBox.Text = (Convert.ToInt32(lowerLimitLargeMovementTextBox.Text) - 2).ToString();
         }
 
         private void scanButton_Click(object sender, EventArgs e)

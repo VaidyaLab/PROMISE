@@ -135,7 +135,7 @@ namespace Final_Kinect
         private void startButton_Click(object sender, EventArgs e)
         {
             mSessionState = 22;
-            UpdateCurrentLimits();
+            UpdateCurrentLimits(false);
 
             startButton.BackColor = Color.DeepSkyBlue;
         }
@@ -146,7 +146,7 @@ namespace Final_Kinect
         }
         private void setLimitsButton_Click(object sender, EventArgs e)
         {
-            UpdateCurrentLimits();
+            UpdateCurrentLimits(true);
         }
 
         public FinalForm(
@@ -326,7 +326,6 @@ namespace Final_Kinect
                         mHeadToShoulderLeftAngle = (int) headToShoulderLeftAngle;
                         mHeadToShoulderRightAngle = (int) headToShoulderRightAngle;
                         mHeadToSpineShoulder = (int) headToSpineShoulder;
-
 
                         // Once the user has pressed the start button                       
                         if (mSessionState == 22) // and deep sky blue button
@@ -641,9 +640,12 @@ namespace Final_Kinect
             lowerLimitSmallMovementTextBox.Text = warning;
             lowerLimitLargeMovementTextBox.Text = notAllowed;
         }
-        private void UpdateCurrentLimits()
+        private void UpdateCurrentLimits(bool updateDateFile)
         {
-            mDataFile.WriteLine("Contingency Change," + mSessionStopwatch.Elapsed.ToString() + "," + lowerLimitSmallMovementTextBox.Text + "," + lowerLimitLargeMovementTextBox.Text);
+            if (updateDateFile == true)
+            {
+                mDataFile.WriteLine("Contingency Change," + mSessionStopwatch.Elapsed.ToString() + "," + lowerLimitSmallMovementTextBox.Text + "," + lowerLimitLargeMovementTextBox.Text);
+            }
 
             mWarning = Convert.ToInt32(lowerLimitSmallMovementTextBox.Text);
             mNotAllowed = Convert.ToInt32(lowerLimitLargeMovementTextBox.Text);
@@ -664,16 +666,16 @@ namespace Final_Kinect
                 true
             );
 
-            mDataFile.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement\r\n");
-            mDataFile.WriteLine(subjectInitials + "," + experimentNumber + "," + mSmoothingKernal + "," + mWarning + "," + mNotAllowed);
+            mDataFile.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement");
+            mDataFile.WriteLine(subjectInitials + "," + experimentNumber + "," + mSmoothingKernal + "," + mWarning + "," + mNotAllowed + "\r\n");
 
             mDataFile.WriteLine(
                 "Event," +
                 "Timestamp," +
                 "MeanShoulderRight,MeanShoulderLeft,MeanSpineMid,MeanNeckLeft,MeanNeckRight,MeanSpineShoulder,," +
-                "MeanDiff,,,,,,,," +
+                "MeanDiff,,,,,,," +
                 "MedianShoulderRight,MedianShoulderLeft,MedianSpineMid,MedianNeckLeft,MedianNeckRight,MedianSpineShoulder,," +
-                "MedianDiff,,,,,,,," +
+                "MedianDiff,,,,,,," +
                 "RawShoulderRight,RawShoulderLeft,RawSpineMid,RawNeckLeft,RawNeckRight,RawSpineShoulder,," +
                 "RawDiff"
             );
@@ -717,7 +719,7 @@ namespace Final_Kinect
                 mSpineBaseToHeadAngle + "," +
                 mHeadToShoulderLeftAngle + "," +
                 mHeadToShoulderRightAngle + "," +
-                mHeadToSpineShoulder + "," +
+                mHeadToSpineShoulder + ",," +
                 // Raw Diff
                 (mOriginalHeadToShoulderRightAngle - mNeckToElbowRightAngle).ToString() + "," +
                 (mOriginalHeadToShoulderLeftAngle - mNeckToElbowLeftAngle).ToString() + "," +

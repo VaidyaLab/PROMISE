@@ -643,7 +643,7 @@ namespace Final_Kinect
         }
         private void UpdateCurrentLimits()
         {
-            mDataFile.WriteLine("\r\n------ Contingency Change ------\r\n");
+            mDataFile.WriteLine("Contingency Change," + mSessionStopwatch.Elapsed.ToString() + "," + lowerLimitSmallMovementTextBox.Text + "," + lowerLimitLargeMovementTextBox.Text);
 
             mWarning = Convert.ToInt32(lowerLimitSmallMovementTextBox.Text);
             mNotAllowed = Convert.ToInt32(lowerLimitLargeMovementTextBox.Text);
@@ -664,7 +664,7 @@ namespace Final_Kinect
                 true
             );
 
-            mDataFile.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement");
+            mDataFile.WriteLine("Subject Initials" + "," + "Experiment No" + "," + "Smoothing Kernel" + "," + "Small Movement" + "," + "Large Movement\r\n");
             mDataFile.WriteLine(subjectInitials + "," + experimentNumber + "," + mSmoothingKernal + "," + mWarning + "," + mNotAllowed);
 
             mDataFile.WriteLine(
@@ -681,7 +681,7 @@ namespace Final_Kinect
         private void UpdateDataFile(String sessionEvent)
         {
             mDataFile.WriteLine(
-                sessionEvent +
+                sessionEvent + "," +
                 // Mean
                 mSessionStopwatch.Elapsed.ToString() + "," +
                 mShoulderRightMean + "," +

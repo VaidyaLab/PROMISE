@@ -387,7 +387,6 @@ namespace Final_Kinect
                                 mSpineShoulder < (mOriginalSpineShoulder + mMovementLowerLimitAgainstOriginal))
                             {
                                 mSessionState = 20;
-                                mOriginalAnglesSet = false;
                             }
                         }
                     }
@@ -450,11 +449,11 @@ namespace Final_Kinect
             mDataFile.WriteLine(
                 "SCAN," +
                 mSessionStopwatch.Elapsed.ToString() + "," +
+                mOriginalShoulderLeft + "," +
+                mOriginalShoulderRight + "," +
+                mOriginalSpineMid + "," +
                 mOriginalNeckLeft + "," +
                 mOriginalNeckRight + "," +
-                mOriginalSpineMid + "," +
-                mOriginalShoulderRight + "," +
-                mOriginalShoulderLeft + "," +
                 mOriginalSpineShoulder
             );
         }

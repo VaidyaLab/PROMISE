@@ -30,12 +30,12 @@ namespace Final_Kinect
 
         StreamWriter mDataFile;
 
-        int mNeckToElbowRightAngle = 0,
-            mNeckToElbowLeftAngle = 0,
-            mSpineBaseToHeadAngle = 0,
-            mHeadToShoulderLeftAngle = 0,
-            mHeadToShoulderRightAngle = 0,
-            mHeadToSpineShoulder = 0;
+        int mShoulderRight = 0,
+            mShoulderLeft = 0,
+            mSpineMid = 0,
+            mNeckLeft = 0,
+            mNeckRight = 0,
+            mSpineShoulder = 0;
 
         int graph_counter = 0,
             graph_counter1 = 0,
@@ -53,12 +53,12 @@ namespace Final_Kinect
             mNeck1MeanSum = 0,
             mSpineShoulderMeanSum = 0;
 
-        int mOriginalNeckToElbowRightAngle = 0,
-            mOriginalNeckToElbowLeftAngle = 0,
-            mOriginalSpineBaseToHeadAngle = 0,
-            mOriginalHeadToShoulderLeftAngle = 0,
-            mOriginalHeadToShoulderRightAngle = 0,
-            mOriginalHeadToSpineShoulder = 0;
+        int mOriginalShoulderRight = 0,
+            mOriginalShoulderLeft = 0,
+            mOriginalSpineMid = 0,
+            mOriginalNeckLeft = 0,
+            mOriginalNeckRight = 0,
+            mOriginalSpineShoulder = 0;
 
         int mSmoothingKernal,
             mWarning,
@@ -67,8 +67,8 @@ namespace Final_Kinect
         int mShoulderRightMean,
             mShoulderLeftMean,
             mSpineMidMean,
-            mNeckMean,
-            mNeck1Mean,
+            mNeckLeftMean,
+            mNeckRightMean,
             mSpineShoulderMean,
             mMovementLowerLimitAgainstOriginal;
 
@@ -87,8 +87,8 @@ namespace Final_Kinect
         int mShoulderRightMedian,
             mShoulderLeftMedian,
             mSpineMidMedian,
-            mNeckMedian,
-            mNeck1Median,
+            mNeckLeftMedian,
+            mNeckRightMedian,
             mSpineShoulderMedian;
 
         /* This will be incremented on every tick. When the tick interval
@@ -320,12 +320,12 @@ namespace Final_Kinect
                         var headToShoulderRightAngle = neck.Angle(head, shoulderRight);
                         var headToSpineShoulder = neck.Angle(head, spineShoulder);
 
-                        mNeckToElbowRightAngle = (int) neckToElbowRightAngle;
-                        mNeckToElbowLeftAngle = (int) neckToElbowLeftAngle;
-                        mSpineBaseToHeadAngle = (int) spineBaseToHeadAngle;
-                        mHeadToShoulderLeftAngle = (int) headToShoulderLeftAngle;
-                        mHeadToShoulderRightAngle = (int) headToShoulderRightAngle;
-                        mHeadToSpineShoulder = (int) headToSpineShoulder;
+                        mShoulderRight = (int) neckToElbowRightAngle;
+                        mShoulderLeft = (int) neckToElbowLeftAngle;
+                        mSpineMid = (int) spineBaseToHeadAngle;
+                        mNeckLeft = (int) headToShoulderLeftAngle;
+                        mNeckRight = (int) headToShoulderRightAngle;
+                        mSpineShoulder = (int) headToSpineShoulder;
 
                         // Once the user has pressed the start button                       
                         if (mSessionState == 22) // and deep sky blue button
@@ -373,18 +373,18 @@ namespace Final_Kinect
                         // If not started
                         else if (mSessionState == 21)
                         {
-                            if (mNeckToElbowRightAngle > (mOriginalNeckToElbowRightAngle - mMovementLowerLimitAgainstOriginal) &&
-                                mNeckToElbowRightAngle < (mOriginalNeckToElbowRightAngle + mMovementLowerLimitAgainstOriginal) &&
-                                mNeckToElbowLeftAngle > (mOriginalNeckToElbowLeftAngle - mMovementLowerLimitAgainstOriginal) &&
-                                mNeckToElbowLeftAngle < (mOriginalNeckToElbowLeftAngle + mMovementLowerLimitAgainstOriginal) &&
-                                mSpineBaseToHeadAngle > (mOriginalSpineBaseToHeadAngle - mMovementLowerLimitAgainstOriginal) &&
-                                mSpineBaseToHeadAngle < (mOriginalSpineBaseToHeadAngle + mMovementLowerLimitAgainstOriginal) &&
-                                mHeadToShoulderLeftAngle > (mOriginalHeadToShoulderLeftAngle - mMovementLowerLimitAgainstOriginal) &&
-                                mHeadToShoulderLeftAngle < (mOriginalHeadToShoulderLeftAngle + mMovementLowerLimitAgainstOriginal) &&
-                                mHeadToShoulderRightAngle > (mOriginalHeadToShoulderRightAngle - mMovementLowerLimitAgainstOriginal) &&
-                                mHeadToShoulderRightAngle < (mOriginalHeadToShoulderRightAngle + mMovementLowerLimitAgainstOriginal) &&
-                                mHeadToSpineShoulder > (mOriginalHeadToSpineShoulder - mMovementLowerLimitAgainstOriginal) &&
-                                mHeadToSpineShoulder < (mOriginalHeadToSpineShoulder + mMovementLowerLimitAgainstOriginal))
+                            if (mShoulderRight > (mOriginalShoulderRight - mMovementLowerLimitAgainstOriginal) &&
+                                mShoulderRight < (mOriginalShoulderRight + mMovementLowerLimitAgainstOriginal) &&
+                                mShoulderLeft > (mOriginalShoulderLeft - mMovementLowerLimitAgainstOriginal) &&
+                                mShoulderLeft < (mOriginalShoulderLeft + mMovementLowerLimitAgainstOriginal) &&
+                                mSpineMid > (mOriginalSpineMid - mMovementLowerLimitAgainstOriginal) &&
+                                mSpineMid < (mOriginalSpineMid + mMovementLowerLimitAgainstOriginal) &&
+                                mNeckLeft > (mOriginalNeckLeft - mMovementLowerLimitAgainstOriginal) &&
+                                mNeckLeft < (mOriginalNeckLeft + mMovementLowerLimitAgainstOriginal) &&
+                                mNeckRight > (mOriginalNeckRight - mMovementLowerLimitAgainstOriginal) &&
+                                mNeckRight < (mOriginalNeckRight + mMovementLowerLimitAgainstOriginal) &&
+                                mSpineShoulder > (mOriginalSpineShoulder - mMovementLowerLimitAgainstOriginal) &&
+                                mSpineShoulder < (mOriginalSpineShoulder + mMovementLowerLimitAgainstOriginal))
                             {
                                 mSessionState = 20;
                                 mOriginalAnglesSet = false;
@@ -428,34 +428,34 @@ namespace Final_Kinect
         }
         private void UpdateAllCharts()
         {
-            UpdateChart(chart1, ref graph_counter, mOriginalNeckToElbowRightAngle, mNeckToElbowRightAngle);
-            UpdateChart(chart2, ref graph_counter1, mOriginalNeckToElbowLeftAngle, mNeckToElbowLeftAngle);
-            UpdateChart(chart3, ref graph_counter2, mOriginalSpineBaseToHeadAngle, mSpineBaseToHeadAngle);
-            UpdateChart(chart4, ref graph_counter3, mOriginalHeadToShoulderLeftAngle, mHeadToShoulderLeftAngle);
-            UpdateChart(chart5, ref graph_counter4, mOriginalHeadToShoulderRightAngle, mHeadToShoulderRightAngle);
-            UpdateChart(chart6, ref graph_counter5, mOriginalHeadToSpineShoulder, mHeadToSpineShoulder);
+            UpdateChart(chart1, ref graph_counter, mOriginalShoulderRight, mShoulderRight);
+            UpdateChart(chart2, ref graph_counter1, mOriginalShoulderLeft, mShoulderLeft);
+            UpdateChart(chart3, ref graph_counter2, mOriginalSpineMid, mSpineMid);
+            UpdateChart(chart4, ref graph_counter3, mOriginalNeckLeft, mNeckLeft);
+            UpdateChart(chart5, ref graph_counter4, mOriginalNeckRight, mNeckRight);
+            UpdateChart(chart6, ref graph_counter5, mOriginalSpineShoulder, mSpineShoulder);
         }
 
         private void SetOriginalAngles()
         {
-            mOriginalNeckToElbowRightAngle = mNeckToElbowRightAngle;
-            mOriginalNeckToElbowLeftAngle = mNeckToElbowLeftAngle;
-            mOriginalSpineBaseToHeadAngle = mSpineBaseToHeadAngle;
-            mOriginalHeadToShoulderLeftAngle = mHeadToShoulderLeftAngle;
-            mOriginalHeadToShoulderRightAngle = mHeadToShoulderRightAngle;
-            mOriginalHeadToSpineShoulder = mHeadToSpineShoulder;
+            mOriginalShoulderLeft = mShoulderLeft;
+            mOriginalShoulderRight = mShoulderRight;
+            mOriginalSpineMid = mSpineMid;
+            mOriginalNeckLeft = mNeckLeft;
+            mOriginalNeckRight = mNeckRight;
+            mOriginalSpineShoulder = mSpineShoulder;
 
             mOriginalAnglesSet = true;
 
             mDataFile.WriteLine(
                 "SCAN," +
                 mSessionStopwatch.Elapsed.ToString() + "," +
-                mOriginalHeadToShoulderRightAngle + "," +
-                mOriginalHeadToShoulderLeftAngle + "," +
-                mOriginalSpineBaseToHeadAngle + "," +
-                mOriginalNeckToElbowRightAngle + "," +
-                mOriginalNeckToElbowLeftAngle + "," +
-                mOriginalHeadToSpineShoulder
+                mOriginalNeckLeft + "," +
+                mOriginalNeckRight + "," +
+                mOriginalSpineMid + "," +
+                mOriginalShoulderRight + "," +
+                mOriginalShoulderLeft + "," +
+                mOriginalSpineShoulder
             );
         }
 
@@ -489,22 +489,22 @@ namespace Final_Kinect
         {
             int element = mMeanDataReadIteration - 1; // Perhaps using a parameter would be better than mMeanDataReadIteration.
 
-            mShoulderRightMedianArray[element] = mNeckToElbowRightAngle;
-            mShoulderLeftMedianArray[element] = mNeckToElbowLeftAngle;
-            mSpineMidMedianArray[element] = mSpineBaseToHeadAngle;
-            mNeckMedianArray[element] = mHeadToShoulderLeftAngle;
-            mNeck1MedianArray[element] = mHeadToShoulderRightAngle;
-            mSpineShoulderMedianArray[element] = mHeadToSpineShoulder;
+            mShoulderRightMedianArray[element] = mShoulderRight;
+            mShoulderLeftMedianArray[element] = mShoulderLeft;
+            mSpineMidMedianArray[element] = mSpineMid;
+            mNeckMedianArray[element] = mNeckLeft;
+            mNeck1MedianArray[element] = mNeckRight;
+            mSpineShoulderMedianArray[element] = mSpineShoulder;
         }
 
         private void UpdateMeanSums()
         {
-            mShouderRightMeanSum += mNeckToElbowRightAngle;
-            mShoulderLeftMeanSum += mNeckToElbowLeftAngle;
-            mSpineMidMeanSum += mSpineBaseToHeadAngle;
-            mNeckMeanSum += mHeadToShoulderLeftAngle;
-            mNeck1MeanSum += mHeadToShoulderRightAngle;
-            mSpineShoulderMeanSum += mHeadToSpineShoulder;
+            mShouderRightMeanSum += mShoulderRight;
+            mShoulderLeftMeanSum += mShoulderLeft;
+            mSpineMidMeanSum += mSpineMid;
+            mNeckMeanSum += mNeckLeft;
+            mNeck1MeanSum += mNeckRight;
+            mSpineShoulderMeanSum += mSpineShoulder;
         }
         private void ResetMeanSums()
         {
@@ -521,8 +521,8 @@ namespace Final_Kinect
             mShoulderRightMean = mShouderRightMeanSum / mSmoothingKernal;
             mShoulderLeftMean = mShoulderLeftMeanSum / mSmoothingKernal;
             mSpineMidMean = mSpineMidMeanSum / mSmoothingKernal;
-            mNeckMean = mNeckMeanSum / mSmoothingKernal;
-            mNeck1Mean = mNeck1MeanSum / mSmoothingKernal;
+            mNeckLeftMean = mNeckMeanSum / mSmoothingKernal;
+            mNeckRightMean = mNeck1MeanSum / mSmoothingKernal;
             mSpineShoulderMean = mSpineShoulderMeanSum / mSmoothingKernal;
         }
         private void SetMedians()
@@ -530,8 +530,8 @@ namespace Final_Kinect
             mShoulderRightMedian = GetMedian(mShoulderRightMedianArray);
             mShoulderLeftMedian = GetMedian(mShoulderLeftMedianArray);
             mSpineMidMedian = GetMedian(mSpineMidMedianArray);
-            mNeckMedian = GetMedian(mNeckMedianArray);
-            mNeck1Median = GetMedian(mNeck1MedianArray);
+            mNeckLeftMedian = GetMedian(mNeckMedianArray);
+            mNeckRightMedian = GetMedian(mNeck1MedianArray);
             mSpineShoulderMedian = GetMedian(mSpineShoulderMedianArray);
         }
 
@@ -582,35 +582,35 @@ namespace Final_Kinect
         private bool MeanOverNotAllowed()
         {
             return (
-                mShoulderRightMean > (mOriginalHeadToShoulderRightAngle + mNotAllowed) ||
-                mShoulderRightMean < (mOriginalHeadToShoulderRightAngle - mNotAllowed) ||
-                mShoulderLeftMean > (mOriginalHeadToShoulderLeftAngle + mNotAllowed) ||
-                mShoulderLeftMean < (mOriginalHeadToShoulderLeftAngle - mNotAllowed) ||
-                mSpineMidMean > (mOriginalSpineBaseToHeadAngle + mNotAllowed) ||
-                mSpineMidMean < (mOriginalSpineBaseToHeadAngle - mNotAllowed) ||
-                mNeckMean > (mOriginalNeckToElbowLeftAngle + mNotAllowed) ||
-                mNeckMean < (mOriginalNeckToElbowLeftAngle - mNotAllowed) ||
-                mNeck1Mean > (mOriginalNeckToElbowRightAngle + mNotAllowed) ||
-                mNeck1Mean < (mOriginalNeckToElbowRightAngle - mNotAllowed) ||
-                mSpineShoulderMean > (mOriginalHeadToSpineShoulder + mNotAllowed) ||
-                mSpineShoulderMean < (mOriginalHeadToSpineShoulder - mNotAllowed)
+                mShoulderRightMean > (mOriginalShoulderRight + mNotAllowed) ||
+                mShoulderRightMean < (mOriginalShoulderRight - mNotAllowed) ||
+                mShoulderLeftMean > (mOriginalShoulderLeft + mNotAllowed) ||
+                mShoulderLeftMean < (mOriginalShoulderLeft - mNotAllowed) ||
+                mSpineMidMean > (mOriginalSpineMid + mNotAllowed) ||
+                mSpineMidMean < (mOriginalSpineMid - mNotAllowed) ||
+                mNeckLeftMean > (mOriginalNeckLeft + mNotAllowed) ||
+                mNeckLeftMean < (mOriginalNeckLeft - mNotAllowed) ||
+                mNeckRightMean > (mOriginalNeckRight + mNotAllowed) ||
+                mNeckRightMean < (mOriginalNeckRight - mNotAllowed) ||
+                mSpineShoulderMean > (mOriginalSpineShoulder + mNotAllowed) ||
+                mSpineShoulderMean < (mOriginalSpineShoulder - mNotAllowed)
             );
         }
         private bool MeanOverWarning()
         {
             return (
-                mShoulderRightMean > (mOriginalHeadToShoulderRightAngle + mWarning) ||
-                mShoulderRightMean < (mOriginalHeadToShoulderRightAngle - mWarning) ||
-                mShoulderLeftMean > (mOriginalHeadToShoulderLeftAngle + mWarning) ||
-                mShoulderLeftMean < (mOriginalHeadToShoulderLeftAngle - mWarning) ||
-                mSpineMidMean > (mOriginalSpineBaseToHeadAngle + mWarning) ||
-                mSpineMidMean < (mOriginalSpineBaseToHeadAngle - mWarning) ||
-                mNeckMean > (mOriginalNeckToElbowLeftAngle + mWarning) ||
-                mNeckMean < (mOriginalNeckToElbowLeftAngle - mWarning) ||
-                mNeck1Mean > (mOriginalNeckToElbowRightAngle + mWarning) ||
-                mNeck1Mean < (mOriginalNeckToElbowRightAngle - mWarning) ||
-                mSpineShoulderMean > (mOriginalHeadToSpineShoulder + mWarning) ||
-                mSpineShoulderMean < (mOriginalHeadToSpineShoulder - mWarning)
+                mShoulderRightMean > (mOriginalShoulderRight + mWarning) ||
+                mShoulderRightMean < (mOriginalShoulderRight - mWarning) ||
+                mShoulderLeftMean > (mOriginalShoulderLeft + mWarning) ||
+                mShoulderLeftMean < (mOriginalShoulderLeft - mWarning) ||
+                mSpineMidMean > (mOriginalSpineMid + mWarning) ||
+                mSpineMidMean < (mOriginalSpineMid - mWarning) ||
+                mNeckLeftMean > (mOriginalNeckLeft + mWarning) ||
+                mNeckLeftMean < (mOriginalNeckLeft - mWarning) ||
+                mNeckRightMean > (mOriginalNeckRight + mWarning) ||
+                mNeckRightMean < (mOriginalNeckRight - mWarning) ||
+                mSpineShoulderMean > (mOriginalSpineShoulder + mWarning) ||
+                mSpineShoulderMean < (mOriginalSpineShoulder - mWarning)
             );
         }
 
@@ -672,11 +672,11 @@ namespace Final_Kinect
             mDataFile.WriteLine(
                 "Event," +
                 "Timestamp," +
-                "MeanShoulderRight,MeanShoulderLeft,MeanSpineMid,MeanNeckLeft,MeanNeckRight,MeanSpineShoulder,," +
+                "MeanShoulderLeft,MeanShoulderRight,MeanSpineMid,MeanNeckLeft,MeanNeckRight,MeanSpineShoulder,," +
                 "MeanDiff,,,,,,," +
-                "MedianShoulderRight,MedianShoulderLeft,MedianSpineMid,MedianNeckLeft,MedianNeckRight,MedianSpineShoulder,," +
+                "MedianShoulderLeft,MedianShoulderRight,MedianSpineMid,MedianNeckLeft,MedianNeckRight,MedianSpineShoulder,," +
                 "MedianDiff,,,,,,," +
-                "RawShoulderRight,RawShoulderLeft,RawSpineMid,RawNeckLeft,RawNeckRight,RawSpineShoulder,," +
+                "RawShoulderLeft,RawShoulderRight,RawSpineMid,RawNeckLeft,RawNeckRight,RawSpineShoulder,," +
                 "RawDiff"
             );
         }
@@ -686,47 +686,47 @@ namespace Final_Kinect
                 sessionEvent + "," +
                 // Mean
                 mSessionStopwatch.Elapsed.ToString() + "," +
-                mShoulderRightMean + "," +
                 mShoulderLeftMean + "," +
+                mShoulderRightMean + "," +
                 mSpineMidMean + "," +
-                mNeckMean + "," +
-                mNeck1Mean + "," +
+                mNeckLeftMean + "," +
+                mNeckRightMean + "," +
                 mSpineShoulderMean + ",," +
                 // Mean Diff
-                (mOriginalHeadToShoulderRightAngle - mShoulderRightMean).ToString() + "," +
-                (mOriginalHeadToShoulderLeftAngle - mShoulderLeftMean).ToString() + "," +
-                (mOriginalSpineBaseToHeadAngle - mSpineMidMean).ToString() + "," +
-                (mOriginalNeckToElbowLeftAngle - mNeckMean).ToString() + "," +
-                (mOriginalNeckToElbowRightAngle - mNeck1Mean).ToString() + "," +
-                (mOriginalHeadToSpineShoulder - mSpineShoulderMean).ToString() + ",," +
+                (mOriginalShoulderLeft - mShoulderLeftMean).ToString() + "," +
+                (mOriginalShoulderRight - mShoulderRightMean).ToString() + "," +
+                (mOriginalSpineMid - mSpineMidMean).ToString() + "," +
+                (mOriginalNeckLeft - mNeckLeftMean).ToString() + "," +
+                (mOriginalNeckRight - mNeckRightMean).ToString() + "," +
+                (mOriginalSpineShoulder - mSpineShoulderMean).ToString() + ",," +
                 // Median
-                mShoulderRightMedian + "," +
                 mShoulderLeftMedian + "," +
+                mShoulderRightMedian + "," +
                 mSpineMidMedian + "," +
-                mNeckMedian + "," +
-                mNeck1Median + "," +
+                mNeckLeftMedian + "," +
+                mNeckRightMedian + "," +
                 mSpineShoulderMedian + ",," +
                 // Median Diff
-                (mOriginalHeadToShoulderRightAngle - mShoulderRightMedian).ToString() + "," +
-                (mOriginalHeadToShoulderLeftAngle - mShoulderLeftMedian).ToString() + "," +
-                (mOriginalSpineBaseToHeadAngle - mSpineMidMedian).ToString() + "," +
-                (mOriginalNeckToElbowLeftAngle - mNeckMedian).ToString() + "," +
-                (mOriginalNeckToElbowRightAngle - mNeck1Median).ToString() + "," +
-                (mOriginalHeadToSpineShoulder - mSpineShoulderMedian).ToString() + ",," +
+                (mOriginalShoulderLeft - mShoulderLeftMedian).ToString() + "," +
+                (mOriginalShoulderRight - mShoulderRightMedian).ToString() + "," +
+                (mOriginalSpineMid - mSpineMidMedian).ToString() + "," +
+                (mOriginalNeckLeft - mNeckLeftMedian).ToString() + "," +
+                (mOriginalNeckRight - mNeckRightMedian).ToString() + "," +
+                (mOriginalSpineShoulder - mSpineShoulderMedian).ToString() + ",," +
                 // Raw
-                mNeckToElbowRightAngle + "," +
-                mNeckToElbowLeftAngle + "," +
-                mSpineBaseToHeadAngle + "," +
-                mHeadToShoulderLeftAngle + "," +
-                mHeadToShoulderRightAngle + "," +
-                mHeadToSpineShoulder + ",," +
+                mShoulderLeft + "," +
+                mShoulderRight + "," +
+                mSpineMid + "," +
+                mNeckLeft + "," +
+                mNeckRight + "," +
+                mSpineShoulder + ",," +
                 // Raw Diff
-                (mOriginalHeadToShoulderRightAngle - mNeckToElbowRightAngle).ToString() + "," +
-                (mOriginalHeadToShoulderLeftAngle - mNeckToElbowLeftAngle).ToString() + "," +
-                (mOriginalSpineBaseToHeadAngle - mSpineBaseToHeadAngle).ToString() + "," +
-                (mOriginalNeckToElbowLeftAngle - mHeadToShoulderLeftAngle).ToString() + "," +
-                (mOriginalNeckToElbowRightAngle - mHeadToShoulderRightAngle).ToString() + "," +
-                (mOriginalHeadToSpineShoulder - mHeadToSpineShoulder).ToString()
+                (mOriginalShoulderLeft - mShoulderLeft).ToString() + "," +
+                (mOriginalShoulderRight - mShoulderRight).ToString() + "," +
+                (mOriginalSpineMid - mSpineMid).ToString() + "," +
+                (mOriginalNeckLeft - mNeckLeft).ToString() + "," +
+                (mOriginalNeckRight - mNeckRight).ToString() + "," +
+                (mOriginalSpineShoulder - mSpineShoulder).ToString()
             );
         }
 

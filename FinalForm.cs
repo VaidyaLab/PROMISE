@@ -195,8 +195,6 @@ namespace Final_Kinect
             InitializeDataFiles(filePath, subjectInitials, experimentNumber);
 
             mSubjectMovieForm = new SubjectMovieForm(videoFile, progressBar.Maximum);
-
-            //InitializeKinect();
         }
 
         // Timer event for progress bar

@@ -196,7 +196,7 @@ namespace Final_Kinect
 
             mSubjectMovieForm = new SubjectMovieForm(videoFile, progressBar.Maximum);
 
-            InitializeKinect();
+            //InitializeKinect();
         }
 
         // Timer event for progress bar
@@ -237,16 +237,20 @@ namespace Final_Kinect
             if (mBodyframeReader != null)
             {
                 mBodyframeReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
-                initializeButton.Enabled = false;
 
                 if (mSubjectMovieForm != null)
                 {
                     mSubjectMovieForm.Show();
                 }
             }
-            else
+
+            if (startButton.Enabled == false)
             {
-                initializeButton.Enabled = true;
+                startButton.Enabled = true;
+            }
+            if (stopButton.Enabled == false)
+            {
+                stopButton.Enabled = true;
             }
         }
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)

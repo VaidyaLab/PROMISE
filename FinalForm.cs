@@ -213,11 +213,6 @@ namespace Final_Kinect
                     mSubjectMovieForm.UpdateProgressBar();
                 }              
             }
-
-            if (mKinectSensor.IsAvailable == false)
-            {
-                initializeButton.Enabled = true;
-            }
         }
         public void InitializeKinect()
         {

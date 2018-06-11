@@ -67,6 +67,13 @@ namespace Final_Kinect
             mOriginalNeckRight = 0,
             mOriginalSpineShoulder = 0;
 
+        double mOriginalShoulderRightLength,
+            mOriginalShoulderLeftLength,
+            mOriginalSpineMidLength,
+            mOriginalNeckLeftLength,
+            mOriginalNeckRightLength,
+            mOriginalSpineShoulderLength;
+
         int mSmoothingKernal,
             mWarning,
             mNotAllowed;
@@ -456,6 +463,13 @@ namespace Final_Kinect
             mOriginalNeckRight = mNeckRight;
             mOriginalSpineShoulder = mSpineShoulder;
 
+            mOriginalShoulderRightLength = mShoulderLeftLength;
+            mOriginalShoulderLeftLength = mShoulderRightLength;
+            mOriginalSpineMidLength = mSpineMidLength;
+            mOriginalNeckLeftLength = mNeckLeftLength;
+            mOriginalNeckRightLength = mNeckRightLength;
+            mOriginalSpineShoulderLength = mSpineShoulderLength;
+
             mOriginalAnglesSet = true;
 
             mDataFile.WriteLine(
@@ -744,7 +758,15 @@ namespace Final_Kinect
                 mSpineMidLength + "," +
                 mNeckLeftLength + "," +
                 mNeckRightLength + "," +
-                mSpineShoulderLength
+                mSpineShoulderLength + ",," +
+                // mm Diff
+                (mOriginalShoulderLeftLength - mShoulderLeftLength).ToString() + "," +
+                (mOriginalShoulderRightLength - mShoulderRightLength).ToString() + "," +
+                (mOriginalSpineMidLength - mSpineMidLength).ToString() + "," +
+                (mOriginalNeckLeftLength - mNeckLeftLength).ToString() + "," +
+                (mOriginalNeckRightLength - mNeckRightLength).ToString() + "," +
+                (mOriginalSpineShoulderLength - mSpineShoulderLength).ToString()
+
             );
         }
 

@@ -37,6 +37,13 @@ namespace Final_Kinect
             mNeckRight = 0,
             mSpineShoulder = 0;
 
+        double mShoulderRightLength,
+            mShoulderLeftLength,
+            mSpineMidLength,
+            mNeckLeftLength,
+            mNeckRightLength,
+            mSpineShoulderLength;
+
         int graph_counter = 0,
             graph_counter1 = 0,
             graph_counter2 = 0,
@@ -308,6 +315,14 @@ namespace Final_Kinect
                         var shoulderRight = body.Joints[JointType.ShoulderRight];
                         var elbowLeft = body.Joints[JointType.ElbowLeft];
                         var elbowRight = body.Joints[JointType.ElbowRight];
+
+                        // Calculate distance in millimeters between joints. Multiplication is to convert return value of meters
+                        mShoulderRightLength = MathExtensions.Length(neck.Position, elbowRight.Position) * 1000;
+                        mShoulderLeftLength = MathExtensions.Length(neck.Position, elbowLeft.Position) * 1000;
+                        mSpineMidLength = MathExtensions.Length(spineBase.Position, head.Position) * 1000;
+                        mNeckLeftLength = MathExtensions.Length(head.Position, shoulderLeft.Position) * 1000;
+                        mNeckRightLength = MathExtensions.Length(head.Position, shoulderRight.Position) * 1000;
+                        mSpineShoulderLength = MathExtensions.Length(head.Position, spineShoulder.Position) * 1000;
 
                         // Angles - doubles are returned by Angle(). Yet, later they are cast to int. Is this an issue?
                         var neckToElbowRightAngle = shoulderRight.Angle(neck, elbowRight);
@@ -722,7 +737,14 @@ namespace Final_Kinect
                 (mOriginalSpineMid - mSpineMid).ToString() + "," +
                 (mOriginalNeckLeft - mNeckLeft).ToString() + "," +
                 (mOriginalNeckRight - mNeckRight).ToString() + "," +
-                (mOriginalSpineShoulder - mSpineShoulder).ToString()
+                (mOriginalSpineShoulder - mSpineShoulder).ToString() + ",," +
+                // Millimeters
+                mShoulderLeftLength + "," +
+                mShoulderRightLength + "," +
+                mSpineMidLength + "," +
+                mNeckLeftLength + "," +
+                mNeckRightLength + "," +
+                mSpineShoulderLength
             );
         }
 

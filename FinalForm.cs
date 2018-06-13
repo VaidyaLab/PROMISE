@@ -112,6 +112,9 @@ namespace Final_Kinect
          */
         int mTickCount = 0;
 
+        Graphics mPanelGraphics;
+
+
         private void instructionButton_Click(object sender, EventArgs e)
         {
             UpdateLimitsTextBox("1000", "1000");
@@ -177,7 +180,8 @@ namespace Final_Kinect
         {
             InitializeComponent();
 
-            SetCharts();
+            // Obtaining reference to bodyPanel graphics object to use for drawing the body.
+            mPanelGraphics = bodyPanel.CreateGraphics();
 
             mSmoothingKernal = Convert.ToInt32(smoothingKernal);
 
@@ -292,6 +296,8 @@ namespace Final_Kinect
                     // Process if the body has been detected
                     if (body.IsTracked)
                     {
+                        Helpers.DrawSkeleton(bodyPanel, body);
+
                         if (mSessionState == 22)
                         {
                             startButton.BackColor = Color.DeepSkyBlue;
@@ -345,6 +351,8 @@ namespace Final_Kinect
                         mNeckLeft = (int) headToShoulderLeftAngle;
                         mNeckRight = (int) headToShoulderRightAngle;
                         mSpineShoulder = (int) headToSpineShoulder;
+
+                        DrawBody(body);
 
                         // Once the user has pressed the start button                       
                         if (mSessionState == 22) // and deep sky blue button
@@ -413,21 +421,6 @@ namespace Final_Kinect
             }
         }
 
-        private void SetCharts()
-        {
-            // Below code implements the representation on charts of angle data of the angles on all the charts
-            Chart[] chartsArray = new Chart[] { chart1, chart2, chart3, chart4, chart5, chart6 };
-
-            foreach (Chart chart in chartsArray)
-            {
-                chart.ChartAreas[0].AxisY.ScaleView.Zoom(-20, 20);
-                chart.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
-                chart.ChartAreas[0].CursorX.IsUserEnabled = true;
-                chart.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
-                chart.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
-                chart.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
-            }
-        }
         private void UpdateChart(Chart chart, ref int graphCounter, int x, int angle)
         {
             chart.Series[0].Points.AddXY(graphCounter, (x - angle));
@@ -482,6 +475,23 @@ namespace Final_Kinect
                 mOriginalNeckRight + "," +
                 mOriginalSpineShoulder
             );
+        }
+
+        private void DrawBody(Body body)
+        {
+            var head = body.Joints[JointType.Head];
+            var neck = body.Joints[JointType.Neck];
+            var spineBase = body.Joints[JointType.SpineBase];
+            var spineMid = body.Joints[JointType.SpineMid];
+            var spineShoulder = body.Joints[JointType.SpineShoulder];
+            var shoulderLeft = body.Joints[JointType.ShoulderLeft];
+            var shoulderRight = body.Joints[JointType.ShoulderRight];
+            var elbowLeft = body.Joints[JointType.ElbowLeft];
+            var elbowRight = body.Joints[JointType.ElbowRight];
+
+            head.ScaleTo(bodyPanel.Width, bodyPanel.Height);
+
+
         }
 
         private int GetMedian(int[] medianSmoothing)
@@ -821,6 +831,8 @@ namespace Final_Kinect
             // Close all data files when form closes
             mDataFile.Close();
             mSubjectMovieForm.Close();
+
+            mPanelGraphics.Dispose();
         }
         private void FinalForm_FormClosed(object sender, FormClosedEventArgs e)
         {

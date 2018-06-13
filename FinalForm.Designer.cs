@@ -409,6 +409,7 @@
             this.bodyPictureBox.Size = new System.Drawing.Size(613, 657);
             this.bodyPictureBox.TabIndex = 61;
             this.bodyPictureBox.TabStop = false;
+            this.bodyPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.bodyPictureBox_Paint);
             // 
             // FinalForm
             // 

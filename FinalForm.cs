@@ -97,6 +97,19 @@ namespace Final_Kinect
             mNeckRightMedian,
             mSpineShoulderMedian;
 
+        private void bodyPictureBox_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics graphics = e.Graphics;
+
+            foreach (Body body in mBody)
+            {
+                if (body.IsTracked)
+                {
+                    Helpers.DrawSkeleton(bodyPictureBox, body, graphics);
+                }
+            }
+        }
+
         /* This will be incremented on every tick. When the tick interval
          * is set for 1000, then mTickCount % 60 will be 0 and thus allow
          * us to perform an action every 1 second - specifically, increment
@@ -288,8 +301,6 @@ namespace Final_Kinect
                     // Process if the body has been detected
                     if (body.IsTracked)
                     {
-                        Helpers.DrawSkeleton(bodyPictureBox, body);
-
                         if (mSessionState == 22)
                         {
                             startButton.BackColor = Color.DeepSkyBlue;

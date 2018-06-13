@@ -5,7 +5,6 @@ using Microsoft.Kinect;
 using LightBuzz.Vitruvius;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Final_Kinect
 {
@@ -43,13 +42,6 @@ namespace Final_Kinect
             mNeckLeftLength,
             mNeckRightLength,
             mSpineShoulderLength;
-
-        int graph_counter = 0,
-            graph_counter1 = 0,
-            graph_counter2 = 0,
-            graph_counter3 = 0,
-            graph_counter4 = 0,
-            graph_counter5 = 0;
 
         bool mOriginalAnglesSet = false;
 
@@ -112,7 +104,7 @@ namespace Final_Kinect
          */
         int mTickCount = 0;
 
-        Graphics mPanelGraphics;
+        Graphics mPictureBoxGraphics;
 
 
         private void instructionButton_Click(object sender, EventArgs e)
@@ -180,8 +172,8 @@ namespace Final_Kinect
         {
             InitializeComponent();
 
-            // Obtaining reference to bodyPanel graphics object to use for drawing the body.
-            mPanelGraphics = bodyPanel.CreateGraphics();
+            // Obtaining reference to bodyPictureBox graphics object to use for drawing the body.
+            mPictureBoxGraphics = bodyPictureBox.CreateGraphics();
 
             mSmoothingKernal = Convert.ToInt32(smoothingKernal);
 
@@ -296,7 +288,7 @@ namespace Final_Kinect
                     // Process if the body has been detected
                     if (body.IsTracked)
                     {
-                        Helpers.DrawSkeleton(bodyPanel, body);
+                        Helpers.DrawSkeleton(bodyPictureBox, body);
 
                         if (mSessionState == 22)
                         {
@@ -352,8 +344,6 @@ namespace Final_Kinect
                         mNeckRight = (int) headToShoulderRightAngle;
                         mSpineShoulder = (int) headToSpineShoulder;
 
-                        DrawBody(body);
-
                         // Once the user has pressed the start button                       
                         if (mSessionState == 22) // and deep sky blue button
                         {
@@ -391,7 +381,6 @@ namespace Final_Kinect
                                 MeansUpdates();
 
                                 mMeanDataReadIteration = 0;                               
-                                UpdateAllCharts();
                             }
 
                             // mMeanDataReadIteration was reset in the above conditional
@@ -419,32 +408,6 @@ namespace Final_Kinect
                     }
                 }
             }
-        }
-
-        private void UpdateChart(Chart chart, ref int graphCounter, int x, int angle)
-        {
-            chart.Series[0].Points.AddXY(graphCounter, (x - angle));
-
-            // TODO: Pretty sure the ChartType can be moved to SetCharts()
-            chart.Series[0].ChartType = SeriesChartType.Line;
-
-            chart.ChartAreas[0].AxisX.ScaleView.Position = chart.Series[0].Points.Count - chart.ChartAreas[0].AxisX.ScaleView.Size;
-
-            if (graphCounter % 100 == 0)
-            {
-                chart.ChartAreas[0].AxisX.ScaleView.Zoom(0, 100);
-            }
-
-            graphCounter++;
-        }
-        private void UpdateAllCharts()
-        {
-            UpdateChart(chart1, ref graph_counter, mOriginalShoulderRight, mShoulderRight);
-            UpdateChart(chart2, ref graph_counter1, mOriginalShoulderLeft, mShoulderLeft);
-            UpdateChart(chart3, ref graph_counter2, mOriginalSpineMid, mSpineMid);
-            UpdateChart(chart4, ref graph_counter3, mOriginalNeckLeft, mNeckLeft);
-            UpdateChart(chart5, ref graph_counter4, mOriginalNeckRight, mNeckRight);
-            UpdateChart(chart6, ref graph_counter5, mOriginalSpineShoulder, mSpineShoulder);
         }
 
         private void SetOriginalAngles()
@@ -475,23 +438,6 @@ namespace Final_Kinect
                 mOriginalNeckRight + "," +
                 mOriginalSpineShoulder
             );
-        }
-
-        private void DrawBody(Body body)
-        {
-            var head = body.Joints[JointType.Head];
-            var neck = body.Joints[JointType.Neck];
-            var spineBase = body.Joints[JointType.SpineBase];
-            var spineMid = body.Joints[JointType.SpineMid];
-            var spineShoulder = body.Joints[JointType.SpineShoulder];
-            var shoulderLeft = body.Joints[JointType.ShoulderLeft];
-            var shoulderRight = body.Joints[JointType.ShoulderRight];
-            var elbowLeft = body.Joints[JointType.ElbowLeft];
-            var elbowRight = body.Joints[JointType.ElbowRight];
-
-            head.ScaleTo(bodyPanel.Width, bodyPanel.Height);
-
-
         }
 
         private int GetMedian(int[] medianSmoothing)
@@ -832,7 +778,7 @@ namespace Final_Kinect
             mDataFile.Close();
             mSubjectMovieForm.Close();
 
-            mPanelGraphics.Dispose();
+            mPictureBoxGraphics.Dispose();
         }
         private void FinalForm_FormClosed(object sender, FormClosedEventArgs e)
         {

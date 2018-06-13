@@ -62,7 +62,7 @@
             this.scanButton = new System.Windows.Forms.Button();
             this.stepUpButton = new System.Windows.Forms.Button();
             this.stepDownButton = new System.Windows.Forms.Button();
-            this.bodyPanel = new System.Windows.Forms.Panel();
+            this.bodyPictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.greenLightPictureBox)).BeginInit();
@@ -70,6 +70,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.redLightPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bodyPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // axWindowsMediaPlayer1
@@ -401,12 +402,13 @@
             this.stepDownButton.UseVisualStyleBackColor = true;
             this.stepDownButton.Click += new System.EventHandler(this.stepDownButton_Click);
             // 
-            // bodyPanel
+            // bodyPictureBox
             // 
-            this.bodyPanel.Location = new System.Drawing.Point(37, 27);
-            this.bodyPanel.Name = "bodyPanel";
-            this.bodyPanel.Size = new System.Drawing.Size(651, 644);
-            this.bodyPanel.TabIndex = 61;
+            this.bodyPictureBox.Location = new System.Drawing.Point(55, 27);
+            this.bodyPictureBox.Name = "bodyPictureBox";
+            this.bodyPictureBox.Size = new System.Drawing.Size(613, 657);
+            this.bodyPictureBox.TabIndex = 61;
+            this.bodyPictureBox.TabStop = false;
             // 
             // FinalForm
             // 
@@ -415,7 +417,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(1449, 945);
-            this.Controls.Add(this.bodyPanel);
+            this.Controls.Add(this.bodyPictureBox);
             this.Controls.Add(this.stepDownButton);
             this.Controls.Add(this.stepUpButton);
             this.Controls.Add(this.scanButton);
@@ -458,6 +460,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.redLightPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bodyPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -497,6 +500,6 @@
         private System.Windows.Forms.Button initializeButton;
         private System.Windows.Forms.Button stepUpButton;
         private System.Windows.Forms.Button stepDownButton;
-        private System.Windows.Forms.Panel bodyPanel;
+        private System.Windows.Forms.PictureBox bodyPictureBox;
     }
 }

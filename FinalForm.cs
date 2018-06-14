@@ -18,6 +18,9 @@ namespace Final_Kinect
 
         Body[] mBody = null;
 
+        // TO be used as basis for visual comparison
+        Body[] mBodyOriginal = null;
+
         // This is the form on which the participant will view the movie.
         SubjectMovieForm mSubjectMovieForm;
 
@@ -100,6 +103,15 @@ namespace Final_Kinect
         private void bodyPictureBox_Paint(object sender, PaintEventArgs e)
         {
             Graphics graphics = e.Graphics;
+
+            // Draw original body (bodies)
+            foreach (Body body in mBodyOriginal)
+            {
+                if (body.IsTracked)
+                {
+                    Helpers.DrawSkeleton(bodyPictureBox, body, graphics);
+                }
+            }
 
             foreach (Body body in mBody)
             {
@@ -449,6 +461,8 @@ namespace Final_Kinect
                 mOriginalNeckRight + "," +
                 mOriginalSpineShoulder
             );
+
+            mBodyOriginal = mBody;
         }
 
         private int GetMedian(int[] medianSmoothing)

@@ -105,19 +105,25 @@ namespace Final_Kinect
             Graphics graphics = e.Graphics;
 
             // Draw original body (bodies)
-            foreach (Body body in mBodyOriginal)
+            if (mBodyOriginal != null)
             {
-                if (body.IsTracked)
+                foreach (Body body in mBodyOriginal)
                 {
-                    Helpers.DrawSkeleton(bodyPictureBox, body, graphics);
+                    if (body.IsTracked)
+                    {
+                        Helpers.DrawSkeleton(bodyPictureBox, body, graphics);
+                    }
                 }
             }
 
-            foreach (Body body in mBody)
+            if (mBody != null)
             {
-                if (body.IsTracked)
+                foreach (Body body in mBody)
                 {
-                    Helpers.DrawSkeleton(bodyPictureBox, body, graphics);
+                    if (body.IsTracked)
+                    {
+                        Helpers.DrawSkeleton(bodyPictureBox, body, graphics);
+                    }
                 }
             }
         }
@@ -308,6 +314,8 @@ namespace Final_Kinect
 
             if (dataReceived)
             {
+                bodyPictureBox.Refresh();
+
                 foreach (Body body in mBody)
                 {
                     // Process if the body has been detected

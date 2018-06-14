@@ -92,10 +92,9 @@ namespace Final_Kinect
             Graphics pictureBoxGraphics = pictureBox.CreateGraphics();
             SolidBrush solidBrush = new SolidBrush(Color.LightBlue);
 
-            pictureBoxGraphics.FillEllipse(solidBrush, new Rectangle((int) joint.Position.X - 20 / 2, (int) joint.Position.Y - 20 / 2, 20, 20));
+            graphics.FillEllipse(solidBrush, new Rectangle((int) joint.Position.X - 20 / 2, (int) joint.Position.Y - 20 / 2, 20, 20));
 
             solidBrush.Dispose();
-            pictureBoxGraphics.Dispose();
         }
 
         public static void DrawLine(this PictureBox pictureBox, Joint first, Joint second, Graphics graphics)
@@ -111,7 +110,7 @@ namespace Final_Kinect
             };
 
             Graphics pictureBoxGraphics = pictureBox.CreateGraphics();
-            pictureBoxGraphics.DrawLine(pen, first.Position.X, first.Position.Y, second.Position.X, second.Position.Y);
+            graphics.DrawLine(pen, first.Position.X, first.Position.Y, second.Position.X, second.Position.Y);
         }
 
         #endregion

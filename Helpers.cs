@@ -89,7 +89,6 @@ namespace Final_Kinect
 
             joint = joint.ScaleTo(pictureBox.Width, pictureBox.Height);
 
-            Graphics pictureBoxGraphics = pictureBox.CreateGraphics();
             SolidBrush solidBrush = new SolidBrush(Color.LightBlue);
 
             graphics.FillEllipse(solidBrush, new Rectangle((int) joint.Position.X - 20 / 2, (int) joint.Position.Y - 20 / 2, 20, 20));
@@ -109,7 +108,6 @@ namespace Final_Kinect
                 Width = 8
             };
 
-            Graphics pictureBoxGraphics = pictureBox.CreateGraphics();
             graphics.DrawLine(pen, first.Position.X, first.Position.Y, second.Position.X, second.Position.Y);
         }
 

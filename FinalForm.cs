@@ -786,7 +786,7 @@ namespace Final_Kinect
             mDataFile.WriteLine(
                 "Event," +
                 "Timestamp," +
-                "MeanHeadDiff,MeanNeckDiff,MeanSpineMid,MeanSpineBaseDiff,MeanSpineMidDiff,MeanSpineShoulderDiff,MeanShoulderLeftDiff,MeanShoulderRightDiff,MeanElbowLeftDiff,MeanElbowRightDIff,," +
+                "MeanHeadDiff,MeanNeckDiff,MeanSpineBaseDiff,MeanSpineMidDiff,MeanSpineShoulderDiff,MeanShoulderLeftDiff,MeanShoulderRightDiff,MeanElbowLeftDiff,MeanElbowRightDIff,," +
                 "MedianShoulderLeft,MedianShoulderRight,MedianSpineMid,MedianNeckLeft,MedianNeckRight,MedianSpineShoulder,," +
                 "MedianDiff,,,,,,," +
                 "RawShoulderLeft,RawShoulderRight,RawSpineMid,RawNeckLeft,RawNeckRight,RawSpineShoulder,," +
@@ -797,6 +797,7 @@ namespace Final_Kinect
         {
             mDataFile.WriteLine(
                 sessionEvent + "," +
+                mSessionStopwatch.Elapsed.ToString() + "," +
                 // Mean Diff
                 mHeadPositionDiff.ToString() + "," +
                 mNeckPositionDiff.ToString() + "," +

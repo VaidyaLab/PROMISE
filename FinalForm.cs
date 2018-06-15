@@ -10,6 +10,12 @@ namespace Final_Kinect
 {
     public partial class FinalForm : Form
     {
+        #region Fields
+        // Session state constants
+        private const int STARTED = 22;
+        private const int STOPPED = 21;
+        private const int RETURNED = 20; // Returned to original position
+
         // Initializing Kinect Sensor
         KinectSensor mKinectSensor = null;
 
@@ -18,21 +24,37 @@ namespace Final_Kinect
 
         Body[] mBody = null;
 
-        // TO be used as basis for visual comparison
-        Body[] mBodyOriginal = null;
-
         // This is the form on which the participant will view the movie.
         SubjectMovieForm mSubjectMovieForm;
 
         Stopwatch mSessionStopwatch = new Stopwatch();
         Stopwatch mConditionStopwatch = new Stopwatch();
 
-        // This is being used to determine if session is started or stopped, but in some ways that I need to look further into.
         int mSessionState = 0;
 
         StreamWriter mDataFile;
 
         bool mOriginalJointPositionsSet = false;
+
+        CameraSpacePoint mCurrentHeadPosition,
+            mCurrentNeckPosition,
+            mCurrentSpineBasePosition,
+            mCurrentSpineMidPosition,
+            mCurrentSpineShoulderPosition,
+            mCurrentShoulderLeftPosition,
+            mCurrentShoulderRightPosition,
+            mCurrentElbowLeftPosition,
+            mCurrentElbowRightPosition;
+
+        CameraSpacePoint mOriginalHeadPosition,
+            mOriginalNeckPosition,
+            mOriginalSpineBasePosition,
+            mOriginalSpineMidPosition,
+            mOriginalSpineShoulderPosition,
+            mOriginalShoulderLeftPosition,
+            mOriginalShoulderRightPosition,
+            mOriginalElbowLeftPosition,
+            mOriginalElbowRightPosition;
 
         double mHeadPositionDiff = 0,
             mNeckPositionDiff = 0,
@@ -64,26 +86,6 @@ namespace Final_Kinect
             mElbowLeftPositionDiffMean = 0,
             mElbowRightPositionDiffMean = 0;
 
-        CameraSpacePoint mCurrentHeadPosition,
-            mCurrentNeckPosition,
-            mCurrentSpineBasePosition,
-            mCurrentSpineMidPosition,
-            mCurrentSpineShoulderPosition,
-            mCurrentShoulderLeftPosition,
-            mCurrentShoulderRightPosition,
-            mCurrentElbowLeftPosition,
-            mCurrentElbowRightPosition;
-
-        CameraSpacePoint mOriginalHeadPosition,
-            mOriginalNeckPosition,
-            mOriginalSpineBasePosition,
-            mOriginalSpineMidPosition,
-            mOriginalSpineShoulderPosition,
-            mOriginalShoulderLeftPosition,
-            mOriginalShoulderRightPosition,
-            mOriginalElbowLeftPosition,
-            mOriginalElbowRightPosition;
-
         int mSmoothingKernal,
             mWarning,
             mNotAllowed;
@@ -91,49 +93,26 @@ namespace Final_Kinect
         // This should probably be set to zero and iterate earlier down below (if we ultimately need this at all).
         int mMeanDataReadIteration = 1;
 
-        // Will store values in array, and then will find median of the array.
-        int[] mShoulderRightMedianArray,
-            mShoulderLeftMedianArray,
-            mSpineMidMedianArray,
-            mNeckMedianArray,
-            mNeck1MedianArray,
-            mSpineShoulderMedianArray;
+        // These store particular differences in order to determine median
+        double[] mHeadPositionDiffMedianArray,
+            mNeckPositionDiffMedianArray,
+            mSpineBasePositionDiffMedianArray,
+            mSpineMidPositionDiffMedianArray,
+            mSpineShoulderPositionDiffMedianArray,
+            mShoulderLeftPositionDiffMedianArray,
+            mShoulderRightPositionDiffMedianArray,
+            mElbowLeftPositionDiffMedianArray,
+            mElbowRightPositionDiffMedianArray;
 
-        // Will store the median, which will be obtained with the help of the MedianArrays.
-        int mShoulderRightMedian,
-            mShoulderLeftMedian,
-            mSpineMidMedian,
-            mNeckLeftMedian,
-            mNeckRightMedian,
-            mSpineShoulderMedian;
-
-        private void bodyPictureBox_Paint(object sender, PaintEventArgs e)
-        {
-            Graphics graphics = e.Graphics;
-
-            // Draw original body (bodies)
-            if (mBodyOriginal != null)
-            {
-                foreach (Body body in mBodyOriginal)
-                {
-                    if (body.IsTracked)
-                    {
-                        Helpers.DrawSkeleton(bodyPictureBox, body, graphics);
-                    }
-                }
-            }
-
-            if (mBody != null)
-            {
-                foreach (Body body in mBody)
-                {
-                    if (body.IsTracked)
-                    {
-                        Helpers.DrawSkeleton(bodyPictureBox, body, graphics);
-                    }
-                }
-            }
-        }
+        double mHeadPositionDiffMedian,
+            mNeckPositionDiffMedian,
+            mSpineBasePositionDiffMedian,
+            mSpineMidPositionDiffMedian,
+            mSpineShoulderPositionDiffMedian,
+            mShoulderLeftPositionDiffMedian,
+            mShoulderRightPositionDiffMedian,
+            mElbowLeftPositionDiffMedian,
+            mElbowRightPositionDiffMedian;
 
         /* This will be incremented on every tick. When the tick interval
          * is set for 1000, then mTickCount % 60 will be 0 and thus allow
@@ -141,60 +120,7 @@ namespace Final_Kinect
          * the progress bar.
          */
         int mTickCount = 0;
-
-        Graphics mPictureBoxGraphics;
-
-
-        private void instructionButton_Click(object sender, EventArgs e)
-        {
-            UpdateLimitsTextBox("1000", "1000");
-        }
-        private void noContingencyButton_Click(object sender, EventArgs e)
-        {
-            UpdateLimitsTextBox("1000", "1000");
-        }
-        private void movementProbeButton_Click(object sender, EventArgs e)
-        {
-            UpdateLimitsTextBox("1000", "1000");
-        }
-        private void shapeButton_Click(object sender, EventArgs e)
-        {
-            UpdateLimitsTextBox("11", "13");
-        }
-        private void stepUpButton_Click(object sender, EventArgs e)
-        {
-            lowerLimitSmallMovementTextBox.Text = (Convert.ToInt32(lowerLimitSmallMovementTextBox.Text) + 2).ToString();
-            lowerLimitLargeMovementTextBox.Text = (Convert.ToInt32(lowerLimitLargeMovementTextBox.Text) + 2).ToString();
-        }
-        private void stepDownButton_Click(object sender, EventArgs e)
-        {
-            lowerLimitSmallMovementTextBox.Text = (Convert.ToInt32(lowerLimitSmallMovementTextBox.Text) - 2).ToString();
-            lowerLimitLargeMovementTextBox.Text = (Convert.ToInt32(lowerLimitLargeMovementTextBox.Text) - 2).ToString();
-        }
-        private void scanButton_Click(object sender, EventArgs e)
-        {
-            mOriginalJointPositionsSet = false;
-        }
-        private void initializeButton_Click(object sender, EventArgs e)
-        {
-            InitializeKinect();
-        }
-        private void startButton_Click(object sender, EventArgs e)
-        {
-            mSessionState = 22;
-            UpdateCurrentLimits(false);
-
-            startButton.BackColor = Color.DeepSkyBlue;
-        }
-        private void stopButton_Click(object sender, EventArgs e)
-        {
-            mSessionState = 21;
-            startButton.BackColor = Color.Red;
-        }
-        private void setLimitsButton_Click(object sender, EventArgs e)
-        {
-            UpdateCurrentLimits(true);
-        }
+        #endregion
 
         public FinalForm(
             string subjectInitials,
@@ -210,9 +136,6 @@ namespace Final_Kinect
         {
             InitializeComponent();
 
-            // Obtaining reference to bodyPictureBox graphics object to use for drawing the body.
-            mPictureBoxGraphics = bodyPictureBox.CreateGraphics();
-
             mSmoothingKernal = Convert.ToInt32(smoothingKernal);
 
             mWarning = Convert.ToInt32(smallMovementLowerLimit);
@@ -221,20 +144,21 @@ namespace Final_Kinect
             lowerLimitSmallMovementTextBox.Text = mWarning.ToString();
             lowerLimitLargeMovementTextBox.Text = mNotAllowed.ToString();
 
-            // Creates int arrays based on the size of the smoothing kernal specified in the SettingsForm.
-            mShoulderRightMedianArray = new int[mSmoothingKernal];
-            mShoulderLeftMedianArray = new int[mSmoothingKernal];
-            mSpineMidMedianArray = new int[mSmoothingKernal];
-            mNeckMedianArray = new int[mSmoothingKernal];
-            mNeck1MedianArray = new int[mSmoothingKernal];
-            mSpineShoulderMedianArray = new int[mSmoothingKernal];
+            // Creates double arrays based on the size of the smoothing kernal specified in the SettingsForm.
+            mHeadPositionDiffMedianArray = new double[mSmoothingKernal];
+            mNeckPositionDiffMedianArray = new double[mSmoothingKernal];
+            mSpineBasePositionDiffMedianArray = new double[mSmoothingKernal];
+            mSpineMidPositionDiffMedianArray = new double[mSmoothingKernal];
+            mSpineShoulderPositionDiffMedianArray = new double[mSmoothingKernal];
+            mShoulderLeftPositionDiffMedianArray = new double[mSmoothingKernal];
+            mShoulderRightPositionDiffMedianArray = new double[mSmoothingKernal];
+            mElbowLeftPositionDiffMedianArray = new double[mSmoothingKernal];
+            mElbowRightPositionDiffMedianArray = new double[mSmoothingKernal];
 
             progressBar.Maximum = (2 * Convert.ToInt32(sessionTime));
             axWindowsMediaPlayer1.URL = videoFile;
 
             axWindowsMediaPlayer1.Ctlcontrols.stop();
-
-            this.KeyPreview = true;
 
             startButton.BackColor = Color.Red;
 
@@ -243,23 +167,6 @@ namespace Final_Kinect
             mSubjectMovieForm = new SubjectMovieForm(videoFile, progressBar.Maximum);
         }
 
-        // Timer event for progress bar
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            mTickCount++;
-
-            // Every second, increase progress
-            if (mTickCount % 60 == 0)
-            {
-                progressBar.Value++;
-                progressBar.Update();
-
-                if (mSubjectMovieForm != null)
-                {
-                    mSubjectMovieForm.UpdateProgressBar();
-                }              
-            }
-        }
         public void InitializeKinect()
         {
             mKinectSensor = KinectSensor.GetDefault();
@@ -326,60 +233,18 @@ namespace Final_Kinect
                     // Process if the body has been detected
                     if (body.IsTracked)
                     {
-                        if (mSessionState == 22)
+                        SetCurrentJointPoisitions(body);
+
+                        if (mSessionState == STARTED)
                         {
                             startButton.BackColor = Color.DeepSkyBlue;
-                        }
-                        else if (mSessionState == 21)
-                        {
-                            startButton.BackColor = Color.Red; // Start button normally starts as red, fyi.
-                            MediaPlayersPause();
 
-                            timer1.Enabled = false;
-                        }
-                        else if (mSessionState == 20) // This is when state was not 22, and then there was too much movement, I believe.
-                        {
-                            startButton.BackColor = Color.Blue;
-                        }
-                        else
-                        {
-                            startButton.BackColor = Color.Green;
-                        }
+                            UpdateStopwatches();
 
-                        // Setting current CameraSpacePoints
-                        mCurrentHeadPosition = body.Joints[JointType.Head].Position;
-                        mCurrentNeckPosition = body.Joints[JointType.Neck].Position;
-                        mCurrentSpineBasePosition = body.Joints[JointType.SpineBase].Position;
-                        mCurrentSpineMidPosition = body.Joints[JointType.SpineMid].Position;
-                        mCurrentSpineShoulderPosition = body.Joints[JointType.SpineShoulder].Position;
-                        mCurrentShoulderLeftPosition = body.Joints[JointType.ShoulderLeft].Position;
-                        mCurrentShoulderRightPosition = body.Joints[JointType.ShoulderRight].Position;
-                        mCurrentElbowLeftPosition = body.Joints[JointType.ElbowLeft].Position;
-                        mCurrentElbowRightPosition = body.Joints[JointType.ElbowRight].Position;
-
-                        // Once the user has pressed the start button                       
-                        if (mSessionState == 22) // and deep sky blue button
-                        {
                             if (timer1.Enabled == false)
                             {
                                 timer1.Enabled = true;
                             }
-
-                            // Session stopwatch 
-                            if (mSessionStopwatch.IsRunning == false)
-                            {
-                                mSessionStopwatch.Start();
-                            }
-
-                            sessionElapsedTimeTextBox.Text = mSessionStopwatch.Elapsed.ToString();
-
-                            // Condition stopwatch
-                            if (mConditionStopwatch.IsRunning == false)
-                            {
-                                mConditionStopwatch.Start();
-                            }
-
-                            conditionElapsedTimeTextBox.Text = mConditionStopwatch.Elapsed.ToString();
 
                             if (!mOriginalJointPositionsSet)
                             {
@@ -391,28 +256,44 @@ namespace Final_Kinect
                             UpdateMeanSums();
 
                             if (mMeanDataReadIteration == mSmoothingKernal)
-                            {   
+                            {
                                 MeansUpdates();
 
-                                mMeanDataReadIteration = 0;                               
+                                mMeanDataReadIteration = 0;
                             }
 
                             // mMeanDataReadIteration was reset in the above conditional
                             mMeanDataReadIteration++;
                         }
-                        // If not started
-                        else if (mSessionState == 21)
+                        else if (mSessionState == STOPPED)
                         {
+                            startButton.BackColor = Color.Red;
+                            MediaPlayersPause();
+
+                            if (timer1.Enabled)
+                            {
+                                timer1.Enabled = false;
+                            }
+
                             if (!MeanOver(mNotAllowed))
                             {
                                 mSessionState = 20;
                             }
+                        }
+                        else if (mSessionState == RETURNED)
+                        {
+                            startButton.BackColor = Color.Blue;
+                        }
+                        else
+                        {
+                            startButton.BackColor = Color.Green;
                         }
                     }
                 }
             }
         }
 
+        #region Joint positions and diffs
         private void SetOriginalJointPositions()
         {
             mOriginalHeadPosition = mCurrentHeadPosition;
@@ -425,12 +306,25 @@ namespace Final_Kinect
             mOriginalElbowLeftPosition = mCurrentElbowLeftPosition;
             mOriginalElbowRightPosition = mCurrentElbowRightPosition;
 
-            if (mOriginalJointPositionsSet == false)
+            if (!mOriginalJointPositionsSet)
             {
                 mOriginalJointPositionsSet = true;
             }
 
             mDataFile.WriteLine("SCAN," + mSessionStopwatch.Elapsed.ToString());
+        }
+        private void SetCurrentJointPoisitions(Body body)
+        {
+            // Setting current CameraSpacePoints
+            mCurrentHeadPosition = body.Joints[JointType.Head].Position;
+            mCurrentNeckPosition = body.Joints[JointType.Neck].Position;
+            mCurrentSpineBasePosition = body.Joints[JointType.SpineBase].Position;
+            mCurrentSpineMidPosition = body.Joints[JointType.SpineMid].Position;
+            mCurrentSpineShoulderPosition = body.Joints[JointType.SpineShoulder].Position;
+            mCurrentShoulderLeftPosition = body.Joints[JointType.ShoulderLeft].Position;
+            mCurrentShoulderRightPosition = body.Joints[JointType.ShoulderRight].Position;
+            mCurrentElbowLeftPosition = body.Joints[JointType.ElbowLeft].Position;
+            mCurrentElbowRightPosition = body.Joints[JointType.ElbowRight].Position;
         }
         private void SetPositionDiff()
         {
@@ -444,20 +338,24 @@ namespace Final_Kinect
             mElbowLeftPositionDiff = MathExtensions.Length(mCurrentElbowLeftPosition, mOriginalElbowLeftPosition) * 1000;
             mElbowRightPositionDiff = MathExtensions.Length(mCurrentElbowRightPosition, mOriginalElbowRightPosition) * 1000;
         }
+        #endregion
 
         #region Median functions
         private void SetMedians()
         {
-            mShoulderRightMedian = GetMedian(mShoulderRightMedianArray);
-            mShoulderLeftMedian = GetMedian(mShoulderLeftMedianArray);
-            mSpineMidMedian = GetMedian(mSpineMidMedianArray);
-            mNeckLeftMedian = GetMedian(mNeckMedianArray);
-            mNeckRightMedian = GetMedian(mNeck1MedianArray);
-            mSpineShoulderMedian = GetMedian(mSpineShoulderMedianArray);
+            mHeadPositionDiffMedian = GetMedian(mHeadPositionDiffMedianArray);
+            mNeckPositionDiffMedian = GetMedian(mNeckPositionDiffMedianArray);
+            mSpineBasePositionDiffMedian = GetMedian(mSpineBasePositionDiffMedianArray);
+            mSpineMidPositionDiffMedian = GetMedian(mSpineMidPositionDiffMedianArray);
+            mSpineShoulderPositionDiffMedian = GetMedian(mSpineShoulderPositionDiffMedianArray);
+            mShoulderLeftPositionDiffMedian = GetMedian(mShoulderLeftPositionDiffMedianArray);
+            mShoulderRightPositionDiffMedian = GetMedian(mShoulderRightPositionDiffMedianArray);
+            mElbowLeftPositionDiffMedian = GetMedian(mElbowLeftPositionDiffMedianArray);
+            mElbowRightPositionDiffMedian = GetMedian(mElbowRightPositionDiffMedianArray);
         }
-        private int GetMedian(int[] medianSmoothing)
+        private double GetMedian(double[] medianSmoothing)
         {
-            int tmp;
+            double tmp;
 
             for (int i = 0; i < mSmoothingKernal; i++)
             {
@@ -484,14 +382,16 @@ namespace Final_Kinect
         private void UpdateMedianArrays()
         {
             int element = mMeanDataReadIteration - 1; // Perhaps using a parameter would be better than mMeanDataReadIteration.
-            /*
-            mShoulderRightMedianArray[element] = mShoulderRight;
-            mShoulderLeftMedianArray[element] = mShoulderLeft;
-            mSpineMidMedianArray[element] = mSpineMid;
-            mNeckMedianArray[element] = mNeckLeft;
-            mNeck1MedianArray[element] = mNeckRight;
-            mSpineShoulderMedianArray[element] = mSpineShoulder;
-            */
+
+            mHeadPositionDiffMedianArray[element] = mHeadPositionDiff;
+            mNeckPositionDiffMedianArray[element] = mNeckPositionDiff;
+            mSpineBasePositionDiffMedianArray[element] = mSpineBasePositionDiff;
+            mSpineMidPositionDiffMedianArray[element] = mSpineMidPositionDiff;
+            mSpineShoulderPositionDiffMedianArray[element] = mSpineShoulderPositionDiff;
+            mShoulderLeftPositionDiffMedianArray[element] = mShoulderLeftPositionDiff;
+            mShoulderRightPositionDiffMedianArray[element] = mShoulderRightPositionDiff;
+            mElbowLeftPositionDiffMedianArray[element] = mElbowLeftPositionDiff;
+            mElbowRightPositionDiffMedianArray[element] = mElbowRightPositionDiff;
         }
         #endregion
 
@@ -667,11 +567,9 @@ namespace Final_Kinect
             mDataFile.WriteLine(
                 "Event," +
                 "Timestamp," +
-                "MeanHeadDiff,MeanNeckDiff,MeanSpineBaseDiff,MeanSpineMidDiff,MeanSpineShoulderDiff,MeanShoulderLeftDiff,MeanShoulderRightDiff,MeanElbowLeftDiff,MeanElbowRightDIff,," +
-                "MedianShoulderLeft,MedianShoulderRight,MedianSpineMid,MedianNeckLeft,MedianNeckRight,MedianSpineShoulder,," +
-                "MedianDiff,,,,,,," +
-                "RawShoulderLeft,RawShoulderRight,RawSpineMid,RawNeckLeft,RawNeckRight,RawSpineShoulder,," +
-                "RawDiff"
+                "MeanHeadDiff,MeanNeckDiff,MeanSpineBaseDiff,MeanSpineMidDiff,MeanSpineShoulderDiff,MeanShoulderLeftDiff,MeanShoulderRightDiff,MeanElbowLeftDiff,MeanElbowRightDiff,," +
+                "MedianHeadDiff,MedianNeckDiff,MedianSpineBaseDiff,MedianSpineMidDiff,MedianSpineShoulderDiff,MedianShoulderLeftDiff,MedianShoulderRightDiff,MedianElbowLeftDiff,MedianElbowRightDiff,," +
+                "RawHeadDiff,RawNeckDiff,RawSpineBaseDiff,RawSpineMidDiff,RawSpineShoulderDiff,RawShoulderLeftDiff,RawShoulderRightDiff,RawElbowLeftDiff,RawElbowRightDiff"
             );
         }
         private void UpdateDataFile(String sessionEvent)
@@ -689,50 +587,46 @@ namespace Final_Kinect
                 mShoulderRightPositionDiffMean.ToString() + "," +
                 mElbowLeftPositionDiffMean.ToString() + "," +
                 mElbowRightPositionDiffMean.ToString() + ",," +
-                /*
-                mShoulderLeftMedian + "," +
-                mShoulderRightMedian + "," +
-                mSpineMidMedian + "," +
-                mNeckLeftMedian + "," +
-                mNeckRightMedian + "," +
-                mSpineShoulderMedian + ",," +
                 // Median Diff
-                (mOriginalShoulderLeft - mShoulderLeftMedian).ToString() + "," +
-                (mOriginalShoulderRight - mShoulderRightMedian).ToString() + "," +
-                (mOriginalSpineMid - mSpineMidMedian).ToString() + "," +
-                (mOriginalNeckLeft - mNeckLeftMedian).ToString() + "," +
-                (mOriginalNeckRight - mNeckRightMedian).ToString() + "," +
-                (mOriginalSpineShoulder - mSpineShoulderMedian).ToString() + ",," +
-                // Raw
-                mShoulderLeft + "," +
-                mShoulderRight + "," +
-                mSpineMid + "," +
-                mNeckLeft + "," +
-                mNeckRight + "," +
-                mSpineShoulder + ",," +
+                mHeadPositionDiffMedian.ToString() + "," +
+                mNeckPositionDiffMedian.ToString() + "," +
+                mSpineBasePositionDiffMedian.ToString() + "," +
+                mSpineMidPositionDiffMedian.ToString() + "," +
+                mSpineShoulderPositionDiffMedian.ToString() + "," +
+                mShoulderLeftPositionDiffMedian.ToString() + "," +
+                mShoulderRightPositionDiffMedian.ToString() + "," +
+                mElbowLeftPositionDiffMedian.ToString() + "," +
+                mElbowRightPositionDiffMedian.ToString() + ",," +
                 // Raw Diff
-                (mOriginalShoulderLeft - mShoulderLeft).ToString() + "," +
-                (mOriginalShoulderRight - mShoulderRight).ToString() + "," +
-                (mOriginalSpineMid - mSpineMid).ToString() + "," +
-                (mOriginalNeckLeft - mNeckLeft).ToString() + "," +
-                (mOriginalNeckRight - mNeckRight).ToString() + "," +
-                (mOriginalSpineShoulder - mSpineShoulder).ToString() + ",," +
-                // Millimeters
-                mShoulderLeftLength + "," +
-                mShoulderRightLength + "," +
-                mSpineMidLength + "," +
-                mNeckLeftLength + "," +
-                mNeckRightLength + "," +
-                mSpineShoulderLength + ",," +
-                // mm Diff
-                (mOriginalShoulderLeftLength - mShoulderLeftLength).ToString() + "," +
-                (mOriginalShoulderRightLength - mShoulderRightLength).ToString() + "," +
-                (mOriginalSpineMidLength - mSpineMidLength).ToString() + "," +
-                (mOriginalNeckLeftLength - mNeckLeftLength).ToString() + "," +
-                (mOriginalNeckRightLength - mNeckRightLength).ToString() + "," +
-                (mOriginalSpineShoulderLength - mSpineShoulderLength).ToString()
-                */
+                mHeadPositionDiff.ToString() + "," +
+                mNeckPositionDiff.ToString() + "," +
+                mSpineBasePositionDiff.ToString() + "," +
+                mSpineMidPositionDiff.ToString() + "," +
+                mSpineShoulderPositionDiff.ToString() + "," +
+                mShoulderLeftPositionDiff.ToString() + "," +
+                mShoulderRightPositionDiff.ToString() + "," +
+                mElbowLeftPositionDiff.ToString() + "," +
+                mElbowRightPositionDiff.ToString()
             );
+        }
+
+        private void UpdateStopwatches()
+        {
+            // Session stopwatch 
+            if (mSessionStopwatch.IsRunning == false)
+            {
+                mSessionStopwatch.Start();
+            }
+
+            sessionElapsedTimeTextBox.Text = mSessionStopwatch.Elapsed.ToString();
+
+            // Condition stopwatch
+            if (mConditionStopwatch.IsRunning == false)
+            {
+                mConditionStopwatch.Start();
+            }
+
+            conditionElapsedTimeTextBox.Text = mConditionStopwatch.Elapsed.ToString();
         }
 
         private void MediaPlayersPlay()
@@ -756,7 +650,89 @@ namespace Final_Kinect
             }
         }
 
-        #region Form Events
+        #region Events (except Kinect's FrameArrived event)
+        // Timer event for progress bar
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            mTickCount++;
+
+            // Every second, increase progress
+            if (mTickCount % 60 == 0)
+            {
+                progressBar.Value++;
+                progressBar.Update();
+
+                if (mSubjectMovieForm != null)
+                {
+                    mSubjectMovieForm.UpdateProgressBar();
+                }
+            }
+        }
+        private void bodyPictureBox_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics graphics = e.Graphics;
+
+            if (mBody != null)
+            {
+                foreach (Body body in mBody)
+                {
+                    if (body.IsTracked)
+                    {
+                        Helpers.DrawSkeleton(bodyPictureBox, body, graphics);
+                    }
+                }
+            }
+        }
+        private void instructionButton_Click(object sender, EventArgs e)
+        {
+            UpdateLimitsTextBox("1000", "1000");
+        }
+        private void noContingencyButton_Click(object sender, EventArgs e)
+        {
+            UpdateLimitsTextBox("1000", "1000");
+        }
+        private void movementProbeButton_Click(object sender, EventArgs e)
+        {
+            UpdateLimitsTextBox("1000", "1000");
+        }
+        private void shapeButton_Click(object sender, EventArgs e)
+        {
+            UpdateLimitsTextBox("11", "13");
+        }
+        private void stepUpButton_Click(object sender, EventArgs e)
+        {
+            lowerLimitSmallMovementTextBox.Text = (Convert.ToInt32(lowerLimitSmallMovementTextBox.Text) + 2).ToString();
+            lowerLimitLargeMovementTextBox.Text = (Convert.ToInt32(lowerLimitLargeMovementTextBox.Text) + 2).ToString();
+        }
+        private void stepDownButton_Click(object sender, EventArgs e)
+        {
+            lowerLimitSmallMovementTextBox.Text = (Convert.ToInt32(lowerLimitSmallMovementTextBox.Text) - 2).ToString();
+            lowerLimitLargeMovementTextBox.Text = (Convert.ToInt32(lowerLimitLargeMovementTextBox.Text) - 2).ToString();
+        }
+        private void scanButton_Click(object sender, EventArgs e)
+        {
+            mOriginalJointPositionsSet = false;
+        }
+        private void initializeButton_Click(object sender, EventArgs e)
+        {
+            InitializeKinect();
+        }
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            mSessionState = 22;
+            UpdateCurrentLimits(false);
+
+            startButton.BackColor = Color.DeepSkyBlue;
+        }
+        private void stopButton_Click(object sender, EventArgs e)
+        {
+            mSessionState = 21;
+            startButton.BackColor = Color.Red;
+        }
+        private void setLimitsButton_Click(object sender, EventArgs e)
+        {
+            UpdateCurrentLimits(true);
+        }
         private void FinalForm_Load(object sender, EventArgs e)
         {            
             if (mSessionState == 22)
@@ -772,8 +748,6 @@ namespace Final_Kinect
             // Close all data files when form closes
             mDataFile.Close();
             mSubjectMovieForm.Close();
-
-            mPictureBoxGraphics.Dispose();
         }
         private void FinalForm_FormClosed(object sender, FormClosedEventArgs e)
         {

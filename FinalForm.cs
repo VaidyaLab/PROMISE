@@ -23,6 +23,7 @@ namespace Final_Kinect
         MultiSourceFrameReader mBodyframeReader = null;
 
         Body[] mBody = null;
+        Body[] mOriginalBody = null;
 
         // This is the form on which the participant will view the movie.
         SubjectMovieForm mSubjectMovieForm;
@@ -219,7 +220,18 @@ namespace Final_Kinect
                          */
                         mBody = new Body[bodyFrame.BodyFrameSource.BodyCount];
                     }
+                    if (mOriginalBody == null)
+                    {
+                        mOriginalBody = new Body[bodyFrame.BodyFrameSource.BodyCount];
+                    }
+
                     bodyFrame.GetAndRefreshBodyData(mBody);
+
+                    if (mOriginalJointPositionsSet == false)
+                    {
+                        bodyFrame.GetAndRefreshBodyData(mOriginalBody);
+                    }
+
                     dataReceived = true;
                 }
             }
@@ -275,7 +287,7 @@ namespace Final_Kinect
                                 timer1.Enabled = false;
                             }
 
-                            if (!MeanOver(mNotAllowed))
+                            if (!MedianOver(mNotAllowed))
                             {
                                 mSessionState = 20;
                             }
@@ -393,6 +405,20 @@ namespace Final_Kinect
             mElbowLeftPositionDiffMedianArray[element] = mElbowLeftPositionDiff;
             mElbowRightPositionDiffMedianArray[element] = mElbowRightPositionDiff;
         }
+        private bool MedianOver(int limit)
+        {
+            return (
+                Math.Abs(mHeadPositionDiffMedian) > limit ||
+                Math.Abs(mNeckPositionDiffMedian) > limit ||
+                Math.Abs(mSpineBasePositionDiffMedian) > limit ||
+                Math.Abs(mSpineMidPositionDiffMedian) > limit ||
+                Math.Abs(mSpineShoulderPositionDiffMedian) > limit ||
+                Math.Abs(mShoulderLeftPositionDiffMedian) > limit ||
+                Math.Abs(mShoulderRightPositionDiffMedian) > limit ||
+                Math.Abs(mElbowLeftPositionDiffMedian) > limit ||
+                Math.Abs(mElbowLeftPositionDiffMedian) > limit
+            );
+        }
         #endregion
 
         #region Mean functions
@@ -432,30 +458,16 @@ namespace Final_Kinect
             mElbowLeftPositionDiffMeanSum = 0;
             mElbowRightPositionDiffMeanSum = 0;
         }
-        private bool MeanOver(int limit)
-        {
-            return (
-                Math.Abs(mHeadPositionDiffMean) > limit ||
-                Math.Abs(mNeckPositionDiffMean) > limit ||
-                Math.Abs(mSpineBasePositionDiffMean) > limit ||
-                Math.Abs(mSpineMidPositionDiffMean) > limit ||
-                Math.Abs(mSpineShoulderPositionDiffMean) > limit ||
-                Math.Abs(mShoulderLeftPositionDiffMean) > limit ||
-                Math.Abs(mShoulderRightPositionDiffMean) > limit ||
-                Math.Abs(mElbowLeftPositionDiffMean) > limit ||
-                Math.Abs(mElbowLeftPositionDiffMean) > limit
-            );
-        }
         private void MeansUpdates()
         {
             SetMeans();
             SetMedians();
 
-            if (MeanOver(mNotAllowed))
+            if (MedianOver(mNotAllowed))
             {
                 MeanRedLightUpdate();
             }
-            else if (MeanOver(mWarning))
+            else if (MedianOver(mWarning))
             {
                 MeanYellowLightUpdate();
             }
@@ -672,13 +684,26 @@ namespace Final_Kinect
         {
             Graphics graphics = e.Graphics;
 
+            // Draw original skeleton
+            if (mOriginalBody != null)
+            {
+                foreach (Body body in mOriginalBody)
+                {
+                    if (body.IsTracked)
+                    {
+                        Helpers.DrawSkeleton(bodyPictureBox, body, graphics, true);
+                    }
+                }
+            }
+
+            // Draw current skeleton
             if (mBody != null)
             {
                 foreach (Body body in mBody)
                 {
                     if (body.IsTracked)
                     {
-                        Helpers.DrawSkeleton(bodyPictureBox, body, graphics);
+                        Helpers.DrawSkeleton(bodyPictureBox, body, graphics, false);
                     }
                 }
             }

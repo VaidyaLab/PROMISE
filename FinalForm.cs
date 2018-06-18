@@ -35,6 +35,7 @@ namespace Final_Kinect
 
         StreamWriter mDataFile;
 
+        bool mCurrentJointPositionsSet = false;
         bool mOriginalJointPositionsSet = false;
 
         CameraSpacePoint mCurrentHeadPosition,
@@ -246,6 +247,7 @@ namespace Final_Kinect
                     if (body.IsTracked)
                     {
                         SetCurrentJointPoisitions(body);
+                        SetPositionDiff();
 
                         if (mSessionState == STARTED)
                         {
@@ -263,7 +265,6 @@ namespace Final_Kinect
                                 SetOriginalJointPositions();
                             }
 
-                            SetPositionDiff();
                             UpdateMedianArrays();
                             UpdateMeanSums();
 
@@ -287,14 +288,19 @@ namespace Final_Kinect
                                 timer1.Enabled = false;
                             }
 
-                            if (!MedianOver(mNotAllowed))
+                            if (!RawDiffOver(mNotAllowed))
                             {
-                                mSessionState = 20;
+                                mSessionState = RETURNED;
                             }
                         }
                         else if (mSessionState == RETURNED)
                         {
                             startButton.BackColor = Color.Blue;
+
+                            if (RawDiffOver(mNotAllowed))
+                            {
+                                mSessionState = STOPPED;
+                            }
                         }
                         else
                         {
@@ -308,22 +314,25 @@ namespace Final_Kinect
         #region Joint positions and diffs
         private void SetOriginalJointPositions()
         {
-            mOriginalHeadPosition = mCurrentHeadPosition;
-            mOriginalNeckPosition = mCurrentNeckPosition;
-            mOriginalSpineBasePosition = mCurrentSpineBasePosition;
-            mOriginalSpineMidPosition = mCurrentSpineMidPosition;
-            mOriginalSpineShoulderPosition = mCurrentSpineShoulderPosition;
-            mOriginalShoulderLeftPosition = mCurrentShoulderLeftPosition;
-            mOriginalShoulderRightPosition = mCurrentShoulderRightPosition;
-            mOriginalElbowLeftPosition = mCurrentElbowLeftPosition;
-            mOriginalElbowRightPosition = mCurrentElbowRightPosition;
-
-            if (!mOriginalJointPositionsSet)
+            if (mCurrentJointPositionsSet)
             {
-                mOriginalJointPositionsSet = true;
-            }
+                mOriginalHeadPosition = mCurrentHeadPosition;
+                mOriginalNeckPosition = mCurrentNeckPosition;
+                mOriginalSpineBasePosition = mCurrentSpineBasePosition;
+                mOriginalSpineMidPosition = mCurrentSpineMidPosition;
+                mOriginalSpineShoulderPosition = mCurrentSpineShoulderPosition;
+                mOriginalShoulderLeftPosition = mCurrentShoulderLeftPosition;
+                mOriginalShoulderRightPosition = mCurrentShoulderRightPosition;
+                mOriginalElbowLeftPosition = mCurrentElbowLeftPosition;
+                mOriginalElbowRightPosition = mCurrentElbowRightPosition;
 
-            mDataFile.WriteLine("SCAN," + mSessionStopwatch.Elapsed.ToString());
+                if (!mOriginalJointPositionsSet)
+                {
+                    mOriginalJointPositionsSet = true;
+                }
+
+                mDataFile.WriteLine("SCAN," + mSessionStopwatch.Elapsed.ToString());
+            }
         }
         private void SetCurrentJointPoisitions(Body body)
         {
@@ -337,20 +346,54 @@ namespace Final_Kinect
             mCurrentShoulderRightPosition = body.Joints[JointType.ShoulderRight].Position;
             mCurrentElbowLeftPosition = body.Joints[JointType.ElbowLeft].Position;
             mCurrentElbowRightPosition = body.Joints[JointType.ElbowRight].Position;
+
+            if (!mCurrentJointPositionsSet)
+            {
+                mCurrentJointPositionsSet = true;
+            }
         }
         private void SetPositionDiff()
         {
-            mHeadPositionDiff = MathExtensions.Length(mCurrentHeadPosition, mOriginalHeadPosition) * 1000;
-            mNeckPositionDiff = MathExtensions.Length(mCurrentNeckPosition, mOriginalNeckPosition) * 1000;
-            mSpineBasePositionDiff = MathExtensions.Length(mCurrentSpineBasePosition, mOriginalSpineBasePosition) * 1000;
-            mSpineMidPositionDiff = MathExtensions.Length(mCurrentSpineMidPosition, mOriginalSpineMidPosition) * 1000;
-            mSpineShoulderPositionDiff = MathExtensions.Length(mCurrentSpineShoulderPosition, mOriginalSpineShoulderPosition) * 1000;
-            mShoulderLeftPositionDiff = MathExtensions.Length(mCurrentShoulderLeftPosition, mOriginalShoulderLeftPosition) * 1000;
-            mShoulderRightPositionDiff = MathExtensions.Length(mCurrentShoulderRightPosition, mOriginalShoulderRightPosition) * 1000;
-            mElbowLeftPositionDiff = MathExtensions.Length(mCurrentElbowLeftPosition, mOriginalElbowLeftPosition) * 1000;
-            mElbowRightPositionDiff = MathExtensions.Length(mCurrentElbowRightPosition, mOriginalElbowRightPosition) * 1000;
+            if (mOriginalJointPositionsSet)
+            {
+                mHeadPositionDiff = MathExtensions.Length(mCurrentHeadPosition, mOriginalHeadPosition) * 1000;
+                mNeckPositionDiff = MathExtensions.Length(mCurrentNeckPosition, mOriginalNeckPosition) * 1000;
+                mSpineBasePositionDiff = MathExtensions.Length(mCurrentSpineBasePosition, mOriginalSpineBasePosition) * 1000;
+                mSpineMidPositionDiff = MathExtensions.Length(mCurrentSpineMidPosition, mOriginalSpineMidPosition) * 1000;
+                mSpineShoulderPositionDiff = MathExtensions.Length(mCurrentSpineShoulderPosition, mOriginalSpineShoulderPosition) * 1000;
+                mShoulderLeftPositionDiff = MathExtensions.Length(mCurrentShoulderLeftPosition, mOriginalShoulderLeftPosition) * 1000;
+                mShoulderRightPositionDiff = MathExtensions.Length(mCurrentShoulderRightPosition, mOriginalShoulderRightPosition) * 1000;
+                mElbowLeftPositionDiff = MathExtensions.Length(mCurrentElbowLeftPosition, mOriginalElbowLeftPosition) * 1000;
+                mElbowRightPositionDiff = MathExtensions.Length(mCurrentElbowRightPosition, mOriginalElbowRightPosition) * 1000;
+
+                headTextBox.Text = ((int)mHeadPositionDiff).ToString();
+                neckTextBox.Text = ((int)mNeckPositionDiff).ToString();
+                spineBaseTextBox.Text = ((int)mSpineBasePositionDiff).ToString();
+                spineMidTextBox.Text = ((int)mSpineMidPositionDiff).ToString();
+                spineShoulderTextBox.Text = ((int)mSpineShoulderPositionDiff).ToString();
+                shoulderLeftTextBox.Text = ((int)mShoulderLeftPositionDiff).ToString();
+                shoulderRightTextBox.Text = ((int)mShoulderRightPositionDiff).ToString();
+                elbowLeftTextBox.Text = ((int)mElbowLeftPositionDiff).ToString();
+                elbowRightTextBox.Text = ((int)mElbowRightPositionDiff).ToString();
+            }
+
         }
         #endregion
+
+        private bool RawDiffOver(int limit)
+        {
+            return (
+                Math.Abs(mHeadPositionDiff) > limit ||
+                Math.Abs(mNeckPositionDiff) > limit ||
+                Math.Abs(mSpineBasePositionDiff) > limit ||
+                Math.Abs(mSpineMidPositionDiff) > limit ||
+                Math.Abs(mSpineShoulderPositionDiff) > limit ||
+                Math.Abs(mShoulderLeftPositionDiff) > limit ||
+                Math.Abs(mShoulderRightPositionDiff) > limit ||
+                Math.Abs(mElbowLeftPositionDiff) > limit ||
+                Math.Abs(mElbowLeftPositionDiff) > limit
+            );
+        }
 
         #region Median functions
         private void SetMedians()
@@ -630,7 +673,7 @@ namespace Final_Kinect
                 mSessionStopwatch.Start();
             }
 
-            sessionElapsedTimeTextBox.Text = mSessionStopwatch.Elapsed.ToString();
+            sessionElapsedTimeTextBox.Text = mSessionStopwatch.Elapsed.ToString("mm\\:ss\\.ff");
 
             // Condition stopwatch
             if (mConditionStopwatch.IsRunning == false)
@@ -638,7 +681,7 @@ namespace Final_Kinect
                 mConditionStopwatch.Start();
             }
 
-            conditionElapsedTimeTextBox.Text = mConditionStopwatch.Elapsed.ToString();
+            conditionElapsedTimeTextBox.Text = mConditionStopwatch.Elapsed.ToString("mm\\:ss\\.ff");
         }
 
         private void MediaPlayersPlay()
@@ -653,7 +696,10 @@ namespace Final_Kinect
         }
         private void MediaPlayersPause()
         {
-            axWindowsMediaPlayer1.Ctlcontrols.pause();
+            if (axWindowsMediaPlayer1 != null)
+            {
+                axWindowsMediaPlayer1.Ctlcontrols.pause();
+            }
 
             // Pause participant's movie as well.
             if (mSubjectMovieForm != null)

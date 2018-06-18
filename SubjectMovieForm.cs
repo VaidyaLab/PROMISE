@@ -36,7 +36,10 @@ namespace Final_Kinect
         }
         public void MediaPlayerPause()
         {
-            axWindowsMediaPlayer1.Ctlcontrols.pause();
+            if (axWindowsMediaPlayer1 != null)
+            {
+                axWindowsMediaPlayer1.Ctlcontrols.pause();
+            }
         }
         public void SetRedLightVisible(bool visible)
         {

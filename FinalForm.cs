@@ -841,6 +841,7 @@ namespace Final_Kinect
             mDataFile.Close();
             mSubjectMovieForm.Close();
             timer1.Dispose();
+            fpsTimer.Dispose();
             mKinectSensor.Close();
             mBodyframeReader.Dispose();
         }

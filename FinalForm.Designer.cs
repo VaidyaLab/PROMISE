@@ -70,17 +70,13 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.neckTextBox = new System.Windows.Forms.TextBox();
             this.spineMidTextBox = new System.Windows.Forms.TextBox();
             this.spineShoulderTextBox = new System.Windows.Forms.TextBox();
             this.spineBaseTextBox = new System.Windows.Forms.TextBox();
             this.shoulderLeftTextBox = new System.Windows.Forms.TextBox();
             this.shoulderRightTextBox = new System.Windows.Forms.TextBox();
-            this.elbowLeftTextBox = new System.Windows.Forms.TextBox();
-            this.elbowRightTextBox = new System.Windows.Forms.TextBox();
             this.FPSTextBox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.fpsTimer = new System.Windows.Forms.Timer(this.components);
@@ -500,16 +496,6 @@
             this.label6.TabIndex = 68;
             this.label6.Text = "SpineShoulder";
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(452, 815);
-            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(61, 13);
-            this.label7.TabIndex = 69;
-            this.label7.Text = "ElbowRight";
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -519,16 +505,6 @@
             this.label8.Size = new System.Drawing.Size(74, 13);
             this.label8.TabIndex = 70;
             this.label8.Text = "ShoulderRight";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(458, 779);
-            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(54, 13);
-            this.label10.TabIndex = 71;
-            this.label10.Text = "ElbowLeft";
             // 
             // neckTextBox
             // 
@@ -578,22 +554,6 @@
             this.shoulderRightTextBox.Size = new System.Drawing.Size(104, 20);
             this.shoulderRightTextBox.TabIndex = 77;
             // 
-            // elbowLeftTextBox
-            // 
-            this.elbowLeftTextBox.Location = new System.Drawing.Point(514, 777);
-            this.elbowLeftTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.elbowLeftTextBox.Name = "elbowLeftTextBox";
-            this.elbowLeftTextBox.Size = new System.Drawing.Size(104, 20);
-            this.elbowLeftTextBox.TabIndex = 78;
-            // 
-            // elbowRightTextBox
-            // 
-            this.elbowRightTextBox.Location = new System.Drawing.Point(514, 813);
-            this.elbowRightTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.elbowRightTextBox.Name = "elbowRightTextBox";
-            this.elbowRightTextBox.Size = new System.Drawing.Size(104, 20);
-            this.elbowRightTextBox.TabIndex = 79;
-            // 
             // FPSTextBox
             // 
             this.FPSTextBox.Location = new System.Drawing.Point(94, 813);
@@ -626,17 +586,13 @@
             this.ClientSize = new System.Drawing.Size(1449, 848);
             this.Controls.Add(this.FPSTextBox);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.elbowRightTextBox);
-            this.Controls.Add(this.elbowLeftTextBox);
             this.Controls.Add(this.shoulderRightTextBox);
             this.Controls.Add(this.shoulderLeftTextBox);
             this.Controls.Add(this.spineBaseTextBox);
             this.Controls.Add(this.spineShoulderTextBox);
             this.Controls.Add(this.spineMidTextBox);
             this.Controls.Add(this.neckTextBox);
-            this.Controls.Add(this.label10);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -735,17 +691,13 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox neckTextBox;
         private System.Windows.Forms.TextBox spineMidTextBox;
         private System.Windows.Forms.TextBox spineShoulderTextBox;
         private System.Windows.Forms.TextBox spineBaseTextBox;
         private System.Windows.Forms.TextBox shoulderLeftTextBox;
         private System.Windows.Forms.TextBox shoulderRightTextBox;
-        private System.Windows.Forms.TextBox elbowLeftTextBox;
-        private System.Windows.Forms.TextBox elbowRightTextBox;
         private System.Windows.Forms.TextBox FPSTextBox;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Timer fpsTimer;

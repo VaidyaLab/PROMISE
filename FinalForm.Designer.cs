@@ -81,6 +81,8 @@
             this.shoulderRightTextBox = new System.Windows.Forms.TextBox();
             this.elbowLeftTextBox = new System.Windows.Forms.TextBox();
             this.elbowRightTextBox = new System.Windows.Forms.TextBox();
+            this.FPSTextBox = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.greenLightPictureBox)).BeginInit();
@@ -584,6 +586,22 @@
             this.elbowRightTextBox.Size = new System.Drawing.Size(203, 31);
             this.elbowRightTextBox.TabIndex = 79;
             // 
+            // FPSTextBox
+            // 
+            this.FPSTextBox.Location = new System.Drawing.Point(189, 1564);
+            this.FPSTextBox.Name = "FPSTextBox";
+            this.FPSTextBox.Size = new System.Drawing.Size(203, 31);
+            this.FPSTextBox.TabIndex = 81;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(122, 1567);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 25);
+            this.label11.TabIndex = 80;
+            this.label11.Text = "FPS";
+            // 
             // FinalForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -591,6 +609,8 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(2898, 1783);
+            this.Controls.Add(this.FPSTextBox);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.elbowRightTextBox);
             this.Controls.Add(this.elbowLeftTextBox);
             this.Controls.Add(this.shoulderRightTextBox);
@@ -711,5 +731,7 @@
         private System.Windows.Forms.TextBox shoulderRightTextBox;
         private System.Windows.Forms.TextBox elbowLeftTextBox;
         private System.Windows.Forms.TextBox elbowRightTextBox;
+        private System.Windows.Forms.TextBox FPSTextBox;
+        private System.Windows.Forms.Label label11;
     }
 }

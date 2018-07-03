@@ -177,7 +177,7 @@ namespace Final_Kinect
             {
                 // Turn on kinect
                 mKinectSensor.Open();
-
+                
                 // We are using kinect camera as well as body detection so here we have used MultiSourceFrameReader
                 mBodyframeReader = mKinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Body);
             }
@@ -389,9 +389,9 @@ namespace Final_Kinect
                 Math.Abs(mSpineMidPositionDiff) > limit ||
                 Math.Abs(mSpineShoulderPositionDiff) > limit ||
                 Math.Abs(mShoulderLeftPositionDiff) > limit ||
-                Math.Abs(mShoulderRightPositionDiff) > limit ||
-                Math.Abs(mElbowLeftPositionDiff) > limit ||
-                Math.Abs(mElbowLeftPositionDiff) > limit
+                Math.Abs(mShoulderRightPositionDiff) > limit //||
+            //    Math.Abs(mElbowLeftPositionDiff) > limit ||
+             //   Math.Abs(mElbowLeftPositionDiff) > limit
             );
         }
 
@@ -427,11 +427,12 @@ namespace Final_Kinect
 
             if (mSmoothingKernal % 2 == 0)
             {
-                return (medianSmoothing[mSmoothingKernal / 2] + medianSmoothing[mSmoothingKernal / 2 + 1]) / 2;
+             //   double returnVal = (medianSmoothing[mSmoothingKernal / 2 - 1] + medianSmoothing[mSmoothingKernal / 2]) / 2;
+                return (medianSmoothing[mSmoothingKernal / 2 - 1] + medianSmoothing[mSmoothingKernal / 2]) / 2;
             }
             else
             {
-                return medianSmoothing[(mSmoothingKernal + 1) / 2];
+                return medianSmoothing[(mSmoothingKernal/ 2)];
             }
         }
         private void UpdateMedianArrays()
@@ -457,9 +458,9 @@ namespace Final_Kinect
                 Math.Abs(mSpineMidPositionDiffMedian) > limit ||
                 Math.Abs(mSpineShoulderPositionDiffMedian) > limit ||
                 Math.Abs(mShoulderLeftPositionDiffMedian) > limit ||
-                Math.Abs(mShoulderRightPositionDiffMedian) > limit ||
-                Math.Abs(mElbowLeftPositionDiffMedian) > limit ||
-                Math.Abs(mElbowLeftPositionDiffMedian) > limit
+                Math.Abs(mShoulderRightPositionDiffMedian) > limit //||
+               // Math.Abs(mElbowLeftPositionDiffMedian) > limit ||
+                //Math.Abs(mElbowRightPositionDiffMedian) > limit
             );
         }
         #endregion
@@ -819,6 +820,9 @@ namespace Final_Kinect
             // Close all data files when form closes
             mDataFile.Close();
             mSubjectMovieForm.Close();
+            timer1.Dispose();
+            mKinectSensor.Close();
+            mBodyframeReader.Dispose();
         }
         private void FinalForm_FormClosed(object sender, FormClosedEventArgs e)
         {

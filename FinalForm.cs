@@ -25,6 +25,8 @@ namespace Final_Kinect
         Body[] mBody = null;
         Body[] mOriginalBody = null;
 
+        int mFPSCount = 0;
+
         // This is the form on which the participant will view the movie.
         SubjectMovieForm mSubjectMovieForm;
 
@@ -157,7 +159,7 @@ namespace Final_Kinect
             mElbowLeftPositionDiffMedianArray = new double[mSmoothingKernal];
             mElbowRightPositionDiffMedianArray = new double[mSmoothingKernal];
 
-            progressBar.Maximum = (2 * Convert.ToInt32(sessionTime));
+            progressBar.Maximum = (Convert.ToInt32(sessionTime));
             axWindowsMediaPlayer1.URL = videoFile;
 
             axWindowsMediaPlayer1.Ctlcontrols.stop();
@@ -184,6 +186,8 @@ namespace Final_Kinect
 
             if (mBodyframeReader != null)
             {
+                // First removal is to ensure that the event handler is not subscribed to twice.
+                mBodyframeReader.MultiSourceFrameArrived -= Reader_MultiSourceFrameArrived;
                 mBodyframeReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
 
                 if (mSubjectMovieForm != null)
@@ -200,9 +204,18 @@ namespace Final_Kinect
             {
                 stopButton.Enabled = true;
             }
+
+            initializeButton.Enabled = false;
+            fpsTimer.Enabled = true;
         }
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
+            if (mKinectSensor == null)
+            {
+                initializeButton.Enabled = true;
+                fpsTimer.Enabled = false;
+            }
+
             bool dataReceived = false;
             var reference = e.FrameReference.AcquireFrame();
 
@@ -239,6 +252,8 @@ namespace Final_Kinect
 
             if (dataReceived)
             {
+                mFPSCount++; // Maybe this should higher in the function?
+
                 bodyPictureBox.Refresh();
 
                 foreach (Body body in mBody)
@@ -726,6 +741,11 @@ namespace Final_Kinect
                     mSubjectMovieForm.UpdateProgressBar();
                 }
             }
+        }
+        private void fpsTimer_Tick(object sender, EventArgs e)
+        {
+            FPSTextBox.Text = mFPSCount.ToString();
+            mFPSCount = 0;
         }
         private void bodyPictureBox_Paint(object sender, PaintEventArgs e)
         {

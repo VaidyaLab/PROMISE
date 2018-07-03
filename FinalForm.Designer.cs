@@ -83,6 +83,7 @@
             this.elbowRightTextBox = new System.Windows.Forms.TextBox();
             this.FPSTextBox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.fpsTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.greenLightPictureBox)).BeginInit();
@@ -98,7 +99,7 @@
             this.axWindowsMediaPlayer1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.axWindowsMediaPlayer1.Enabled = true;
             this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(739, 3);
-            this.axWindowsMediaPlayer1.Margin = new System.Windows.Forms.Padding(4);
+            this.axWindowsMediaPlayer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
             this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
             this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(486, 435);
@@ -113,19 +114,19 @@
             this.panel1.Controls.Add(this.greenLightPictureBox);
             this.panel1.Controls.Add(this.yellowLightPictureBox);
             this.panel1.Controls.Add(this.redLightPictureBox);
-            this.panel1.Location = new System.Drawing.Point(2436, 4);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4);
+            this.panel1.Location = new System.Drawing.Point(1218, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(266, 879);
+            this.panel1.Size = new System.Drawing.Size(134, 458);
             this.panel1.TabIndex = 1;
             // 
             // stopButton
             // 
             this.stopButton.Enabled = false;
-            this.stopButton.Location = new System.Drawing.Point(50, 771);
-            this.stopButton.Margin = new System.Windows.Forms.Padding(4);
+            this.stopButton.Location = new System.Drawing.Point(25, 401);
+            this.stopButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.stopButton.Name = "stopButton";
-            this.stopButton.Size = new System.Drawing.Size(148, 40);
+            this.stopButton.Size = new System.Drawing.Size(74, 21);
             this.stopButton.TabIndex = 5;
             this.stopButton.Text = "Stop";
             this.stopButton.UseVisualStyleBackColor = true;
@@ -134,10 +135,10 @@
             // startButton
             // 
             this.startButton.Enabled = false;
-            this.startButton.Location = new System.Drawing.Point(52, 702);
-            this.startButton.Margin = new System.Windows.Forms.Padding(4);
+            this.startButton.Location = new System.Drawing.Point(26, 365);
+            this.startButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.startButton.Name = "startButton";
-            this.startButton.Size = new System.Drawing.Size(148, 40);
+            this.startButton.Size = new System.Drawing.Size(74, 21);
             this.startButton.TabIndex = 3;
             this.startButton.Text = "Start";
             this.startButton.UseVisualStyleBackColor = true;
@@ -145,10 +146,10 @@
             // 
             // initializeButton
             // 
-            this.initializeButton.Location = new System.Drawing.Point(54, 833);
-            this.initializeButton.Margin = new System.Windows.Forms.Padding(4);
+            this.initializeButton.Location = new System.Drawing.Point(27, 433);
+            this.initializeButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.initializeButton.Name = "initializeButton";
-            this.initializeButton.Size = new System.Drawing.Size(148, 40);
+            this.initializeButton.Size = new System.Drawing.Size(74, 21);
             this.initializeButton.TabIndex = 58;
             this.initializeButton.Text = "Initialize";
             this.initializeButton.UseVisualStyleBackColor = true;
@@ -157,8 +158,8 @@
             // greenLightPictureBox
             // 
             this.greenLightPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("greenLightPictureBox.Image")));
-            this.greenLightPictureBox.Location = new System.Drawing.Point(52, 523);
-            this.greenLightPictureBox.Margin = new System.Windows.Forms.Padding(4);
+            this.greenLightPictureBox.Location = new System.Drawing.Point(26, 272);
+            this.greenLightPictureBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.greenLightPictureBox.Name = "greenLightPictureBox";
             this.greenLightPictureBox.Size = new System.Drawing.Size(75, 75);
             this.greenLightPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -168,8 +169,8 @@
             // yellowLightPictureBox
             // 
             this.yellowLightPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("yellowLightPictureBox.Image")));
-            this.yellowLightPictureBox.Location = new System.Drawing.Point(52, 285);
-            this.yellowLightPictureBox.Margin = new System.Windows.Forms.Padding(4);
+            this.yellowLightPictureBox.Location = new System.Drawing.Point(26, 148);
+            this.yellowLightPictureBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.yellowLightPictureBox.Name = "yellowLightPictureBox";
             this.yellowLightPictureBox.Size = new System.Drawing.Size(75, 75);
             this.yellowLightPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -179,8 +180,8 @@
             // redLightPictureBox
             // 
             this.redLightPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("redLightPictureBox.Image")));
-            this.redLightPictureBox.Location = new System.Drawing.Point(52, 46);
-            this.redLightPictureBox.Margin = new System.Windows.Forms.Padding(4);
+            this.redLightPictureBox.Location = new System.Drawing.Point(26, 24);
+            this.redLightPictureBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.redLightPictureBox.Name = "redLightPictureBox";
             this.redLightPictureBox.Size = new System.Drawing.Size(75, 75);
             this.redLightPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -190,10 +191,10 @@
             // sessionElapsedTimeTextBox
             // 
             this.sessionElapsedTimeTextBox.Font = new System.Drawing.Font("Times New Roman", 10.125F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sessionElapsedTimeTextBox.Location = new System.Drawing.Point(1634, 1325);
-            this.sessionElapsedTimeTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.sessionElapsedTimeTextBox.Location = new System.Drawing.Point(817, 689);
+            this.sessionElapsedTimeTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.sessionElapsedTimeTextBox.Name = "sessionElapsedTimeTextBox";
-            this.sessionElapsedTimeTextBox.Size = new System.Drawing.Size(238, 39);
+            this.sessionElapsedTimeTextBox.Size = new System.Drawing.Size(121, 23);
             this.sessionElapsedTimeTextBox.TabIndex = 4;
             // 
             // timer1
@@ -204,17 +205,17 @@
             // progressBar
             // 
             this.progressBar.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.progressBar.Location = new System.Drawing.Point(1444, 998);
-            this.progressBar.Margin = new System.Windows.Forms.Padding(4);
+            this.progressBar.Location = new System.Drawing.Point(722, 519);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(1268, 75);
+            this.progressBar.Size = new System.Drawing.Size(634, 39);
             this.progressBar.TabIndex = 2;
             // 
             // pictureBox4
             // 
             this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(2490, 1479);
-            this.pictureBox4.Margin = new System.Windows.Forms.Padding(4);
+            this.pictureBox4.Location = new System.Drawing.Point(1245, 769);
+            this.pictureBox4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(150, 34);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -224,8 +225,8 @@
             // pictureBox5
             // 
             this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            this.pictureBox5.Location = new System.Drawing.Point(2490, 1552);
-            this.pictureBox5.Margin = new System.Windows.Forms.Padding(4);
+            this.pictureBox5.Location = new System.Drawing.Point(1245, 807);
+            this.pictureBox5.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(150, 40);
             this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -236,10 +237,10 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Times New Roman", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(1440, 885);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Location = new System.Drawing.Point(720, 460);
+            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(1258, 109);
+            this.label9.Size = new System.Drawing.Size(629, 55);
             this.label9.TabIndex = 37;
             this.label9.Text = "  P     R     O     M     I     S     E";
             // 
@@ -247,10 +248,10 @@
             // 
             this.warningLabel.AutoSize = true;
             this.warningLabel.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.warningLabel.Location = new System.Drawing.Point(1438, 1113);
-            this.warningLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.warningLabel.Location = new System.Drawing.Point(719, 579);
+            this.warningLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.warningLabel.Name = "warningLabel";
-            this.warningLabel.Size = new System.Drawing.Size(127, 31);
+            this.warningLabel.Size = new System.Drawing.Size(66, 17);
             this.warningLabel.TabIndex = 38;
             this.warningLabel.Text = "Warning:";
             // 
@@ -258,57 +259,54 @@
             // 
             this.notAllowedLabel.AutoSize = true;
             this.notAllowedLabel.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.notAllowedLabel.Location = new System.Drawing.Point(1438, 1183);
-            this.notAllowedLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.notAllowedLabel.Location = new System.Drawing.Point(719, 615);
+            this.notAllowedLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.notAllowedLabel.Name = "notAllowedLabel";
-            this.notAllowedLabel.Size = new System.Drawing.Size(167, 31);
+            this.notAllowedLabel.Size = new System.Drawing.Size(85, 17);
             this.notAllowedLabel.TabIndex = 39;
             this.notAllowedLabel.Text = "Not Allowed:";
             // 
             // lowerLimitSmallMovementTextBox
             // 
             this.lowerLimitSmallMovementTextBox.Font = new System.Drawing.Font("Times New Roman", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lowerLimitSmallMovementTextBox.Location = new System.Drawing.Point(1626, 1108);
-            this.lowerLimitSmallMovementTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.lowerLimitSmallMovementTextBox.Location = new System.Drawing.Point(813, 576);
+            this.lowerLimitSmallMovementTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.lowerLimitSmallMovementTextBox.Name = "lowerLimitSmallMovementTextBox";
-            this.lowerLimitSmallMovementTextBox.Size = new System.Drawing.Size(148, 39);
+            this.lowerLimitSmallMovementTextBox.Size = new System.Drawing.Size(76, 23);
             this.lowerLimitSmallMovementTextBox.TabIndex = 40;
             // 
             // lowerLimitLargeMovementTextBox
             // 
             this.lowerLimitLargeMovementTextBox.Font = new System.Drawing.Font("Times New Roman", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lowerLimitLargeMovementTextBox.Location = new System.Drawing.Point(1626, 1173);
-            this.lowerLimitLargeMovementTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.lowerLimitLargeMovementTextBox.Location = new System.Drawing.Point(813, 610);
+            this.lowerLimitLargeMovementTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.lowerLimitLargeMovementTextBox.Name = "lowerLimitLargeMovementTextBox";
-            this.lowerLimitLargeMovementTextBox.Size = new System.Drawing.Size(148, 39);
+            this.lowerLimitLargeMovementTextBox.Size = new System.Drawing.Size(76, 23);
             this.lowerLimitLargeMovementTextBox.TabIndex = 41;
             // 
             // notesTextBox
             // 
             this.notesTextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.notesTextBox.Location = new System.Drawing.Point(1416, 1479);
-            this.notesTextBox.Margin = new System.Windows.Forms.Padding(6);
+            this.notesTextBox.Location = new System.Drawing.Point(708, 769);
             this.notesTextBox.Multiline = true;
             this.notesTextBox.Name = "notesTextBox";
-            this.notesTextBox.Size = new System.Drawing.Size(1030, 146);
+            this.notesTextBox.Size = new System.Drawing.Size(517, 78);
             this.notesTextBox.TabIndex = 47;
             // 
             // notesLabel
             // 
             this.notesLabel.AutoSize = true;
-            this.notesLabel.Location = new System.Drawing.Point(1410, 1448);
-            this.notesLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.notesLabel.Location = new System.Drawing.Point(705, 753);
             this.notesLabel.Name = "notesLabel";
-            this.notesLabel.Size = new System.Drawing.Size(68, 25);
+            this.notesLabel.Size = new System.Drawing.Size(35, 13);
             this.notesLabel.TabIndex = 48;
             this.notesLabel.Text = "Notes";
             // 
             // setLimitsButton
             // 
-            this.setLimitsButton.Location = new System.Drawing.Point(1444, 1246);
-            this.setLimitsButton.Margin = new System.Windows.Forms.Padding(6);
+            this.setLimitsButton.Location = new System.Drawing.Point(722, 648);
             this.setLimitsButton.Name = "setLimitsButton";
-            this.setLimitsButton.Size = new System.Drawing.Size(196, 44);
+            this.setLimitsButton.Size = new System.Drawing.Size(98, 23);
             this.setLimitsButton.TabIndex = 49;
             this.setLimitsButton.Text = "Update Limits";
             this.setLimitsButton.UseVisualStyleBackColor = true;
@@ -316,10 +314,9 @@
             // 
             // movementProbeButton
             // 
-            this.movementProbeButton.Location = new System.Drawing.Point(1818, 1108);
-            this.movementProbeButton.Margin = new System.Windows.Forms.Padding(6);
+            this.movementProbeButton.Location = new System.Drawing.Point(909, 576);
             this.movementProbeButton.Name = "movementProbeButton";
-            this.movementProbeButton.Size = new System.Drawing.Size(192, 44);
+            this.movementProbeButton.Size = new System.Drawing.Size(96, 23);
             this.movementProbeButton.TabIndex = 50;
             this.movementProbeButton.Text = "Movement Probe";
             this.movementProbeButton.UseVisualStyleBackColor = true;
@@ -327,10 +324,9 @@
             // 
             // noContingencyButton
             // 
-            this.noContingencyButton.Location = new System.Drawing.Point(1818, 1173);
-            this.noContingencyButton.Margin = new System.Windows.Forms.Padding(6);
+            this.noContingencyButton.Location = new System.Drawing.Point(909, 610);
             this.noContingencyButton.Name = "noContingencyButton";
-            this.noContingencyButton.Size = new System.Drawing.Size(192, 44);
+            this.noContingencyButton.Size = new System.Drawing.Size(96, 23);
             this.noContingencyButton.TabIndex = 51;
             this.noContingencyButton.Text = "No Contingency";
             this.noContingencyButton.UseVisualStyleBackColor = true;
@@ -338,10 +334,9 @@
             // 
             // instructionButton
             // 
-            this.instructionButton.Location = new System.Drawing.Point(2056, 1108);
-            this.instructionButton.Margin = new System.Windows.Forms.Padding(6);
+            this.instructionButton.Location = new System.Drawing.Point(1028, 576);
             this.instructionButton.Name = "instructionButton";
-            this.instructionButton.Size = new System.Drawing.Size(192, 44);
+            this.instructionButton.Size = new System.Drawing.Size(96, 23);
             this.instructionButton.TabIndex = 52;
             this.instructionButton.Text = "Instruction";
             this.instructionButton.UseVisualStyleBackColor = true;
@@ -349,10 +344,9 @@
             // 
             // shapeButton
             // 
-            this.shapeButton.Location = new System.Drawing.Point(2056, 1171);
-            this.shapeButton.Margin = new System.Windows.Forms.Padding(6);
+            this.shapeButton.Location = new System.Drawing.Point(1028, 609);
             this.shapeButton.Name = "shapeButton";
-            this.shapeButton.Size = new System.Drawing.Size(192, 44);
+            this.shapeButton.Size = new System.Drawing.Size(96, 23);
             this.shapeButton.TabIndex = 53;
             this.shapeButton.Text = "Shape";
             this.shapeButton.UseVisualStyleBackColor = true;
@@ -361,10 +355,9 @@
             // currentLimitsLabel
             // 
             this.currentLimitsLabel.AutoSize = true;
-            this.currentLimitsLabel.Location = new System.Drawing.Point(1674, 1256);
-            this.currentLimitsLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.currentLimitsLabel.Location = new System.Drawing.Point(837, 653);
             this.currentLimitsLabel.Name = "currentLimitsLabel";
-            this.currentLimitsLabel.Size = new System.Drawing.Size(151, 25);
+            this.currentLimitsLabel.Size = new System.Drawing.Size(73, 13);
             this.currentLimitsLabel.TabIndex = 54;
             this.currentLimitsLabel.Text = "Current Limits:";
             // 
@@ -372,10 +365,10 @@
             // 
             this.sessionTimeLabel.AutoSize = true;
             this.sessionTimeLabel.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sessionTimeLabel.Location = new System.Drawing.Point(1438, 1331);
-            this.sessionTimeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.sessionTimeLabel.Location = new System.Drawing.Point(719, 692);
+            this.sessionTimeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.sessionTimeLabel.Name = "sessionTimeLabel";
-            this.sessionTimeLabel.Size = new System.Drawing.Size(176, 31);
+            this.sessionTimeLabel.Size = new System.Drawing.Size(94, 17);
             this.sessionTimeLabel.TabIndex = 55;
             this.sessionTimeLabel.Text = "Session Time:";
             // 
@@ -383,28 +376,28 @@
             // 
             this.conditionTimeLabel.AutoSize = true;
             this.conditionTimeLabel.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.conditionTimeLabel.Location = new System.Drawing.Point(1410, 1387);
-            this.conditionTimeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.conditionTimeLabel.Location = new System.Drawing.Point(705, 721);
+            this.conditionTimeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.conditionTimeLabel.Name = "conditionTimeLabel";
-            this.conditionTimeLabel.Size = new System.Drawing.Size(208, 31);
+            this.conditionTimeLabel.Size = new System.Drawing.Size(108, 17);
             this.conditionTimeLabel.TabIndex = 57;
             this.conditionTimeLabel.Text = "Condition Time:";
             // 
             // conditionElapsedTimeTextBox
             // 
             this.conditionElapsedTimeTextBox.Font = new System.Drawing.Font("Times New Roman", 10.125F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.conditionElapsedTimeTextBox.Location = new System.Drawing.Point(1634, 1381);
-            this.conditionElapsedTimeTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.conditionElapsedTimeTextBox.Location = new System.Drawing.Point(817, 718);
+            this.conditionElapsedTimeTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.conditionElapsedTimeTextBox.Name = "conditionElapsedTimeTextBox";
-            this.conditionElapsedTimeTextBox.Size = new System.Drawing.Size(238, 39);
+            this.conditionElapsedTimeTextBox.Size = new System.Drawing.Size(121, 23);
             this.conditionElapsedTimeTextBox.TabIndex = 56;
             // 
             // scanButton
             // 
-            this.scanButton.Location = new System.Drawing.Point(1944, 1379);
-            this.scanButton.Margin = new System.Windows.Forms.Padding(4);
+            this.scanButton.Location = new System.Drawing.Point(972, 717);
+            this.scanButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.scanButton.Name = "scanButton";
-            this.scanButton.Size = new System.Drawing.Size(148, 40);
+            this.scanButton.Size = new System.Drawing.Size(74, 21);
             this.scanButton.TabIndex = 6;
             this.scanButton.Text = "Scan";
             this.scanButton.UseVisualStyleBackColor = true;
@@ -412,10 +405,9 @@
             // 
             // stepUpButton
             // 
-            this.stepUpButton.Location = new System.Drawing.Point(2302, 1108);
-            this.stepUpButton.Margin = new System.Windows.Forms.Padding(6);
+            this.stepUpButton.Location = new System.Drawing.Point(1151, 576);
             this.stepUpButton.Name = "stepUpButton";
-            this.stepUpButton.Size = new System.Drawing.Size(192, 44);
+            this.stepUpButton.Size = new System.Drawing.Size(96, 23);
             this.stepUpButton.TabIndex = 59;
             this.stepUpButton.Text = "Step Up";
             this.stepUpButton.UseVisualStyleBackColor = true;
@@ -423,10 +415,9 @@
             // 
             // stepDownButton
             // 
-            this.stepDownButton.Location = new System.Drawing.Point(2302, 1173);
-            this.stepDownButton.Margin = new System.Windows.Forms.Padding(6);
+            this.stepDownButton.Location = new System.Drawing.Point(1151, 610);
             this.stepDownButton.Name = "stepDownButton";
-            this.stepDownButton.Size = new System.Drawing.Size(192, 44);
+            this.stepDownButton.Size = new System.Drawing.Size(96, 23);
             this.stepDownButton.TabIndex = 60;
             this.stepDownButton.Text = "Step Down";
             this.stepDownButton.UseVisualStyleBackColor = true;
@@ -434,181 +425,205 @@
             // 
             // bodyPictureBox
             // 
-            this.bodyPictureBox.Location = new System.Drawing.Point(110, 52);
-            this.bodyPictureBox.Margin = new System.Windows.Forms.Padding(6);
+            this.bodyPictureBox.Location = new System.Drawing.Point(55, 27);
             this.bodyPictureBox.Name = "bodyPictureBox";
-            this.bodyPictureBox.Size = new System.Drawing.Size(1226, 1263);
+            this.bodyPictureBox.Size = new System.Drawing.Size(613, 657);
             this.bodyPictureBox.TabIndex = 61;
             this.bodyPictureBox.TabStop = false;
             this.bodyPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.bodyPictureBox_Paint);
             // 
             // headTextBox
             // 
-            this.headTextBox.Location = new System.Drawing.Point(191, 1362);
+            this.headTextBox.Location = new System.Drawing.Point(96, 708);
+            this.headTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.headTextBox.Name = "headTextBox";
-            this.headTextBox.Size = new System.Drawing.Size(203, 31);
+            this.headTextBox.Size = new System.Drawing.Size(104, 20);
             this.headTextBox.TabIndex = 62;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(122, 1365);
+            this.label1.Location = new System.Drawing.Point(61, 710);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 25);
+            this.label1.Size = new System.Drawing.Size(33, 13);
             this.label1.TabIndex = 63;
             this.label1.Text = "Head";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(122, 1433);
+            this.label2.Location = new System.Drawing.Point(61, 745);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(61, 25);
+            this.label2.Size = new System.Drawing.Size(33, 13);
             this.label2.TabIndex = 64;
             this.label2.Text = "Neck";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(479, 1504);
+            this.label3.Location = new System.Drawing.Point(240, 782);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(116, 25);
+            this.label3.Size = new System.Drawing.Size(58, 13);
             this.label3.TabIndex = 65;
             this.label3.Text = "SpineBase";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(493, 1371);
+            this.label4.Location = new System.Drawing.Point(246, 713);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(102, 25);
+            this.label4.Size = new System.Drawing.Size(51, 13);
             this.label4.TabIndex = 66;
             this.label4.Text = "SpineMid";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(889, 1368);
+            this.label5.Location = new System.Drawing.Point(444, 711);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(134, 25);
+            this.label5.Size = new System.Drawing.Size(67, 13);
             this.label5.TabIndex = 67;
             this.label5.Text = "ShoulderLeft";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(442, 1436);
+            this.label6.Location = new System.Drawing.Point(221, 747);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(153, 25);
+            this.label6.Size = new System.Drawing.Size(76, 13);
             this.label6.TabIndex = 68;
             this.label6.Text = "SpineShoulder";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(903, 1567);
+            this.label7.Location = new System.Drawing.Point(452, 815);
+            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(120, 25);
+            this.label7.Size = new System.Drawing.Size(61, 13);
             this.label7.TabIndex = 69;
             this.label7.Text = "ElbowRight";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(875, 1436);
+            this.label8.Location = new System.Drawing.Point(438, 747);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(148, 25);
+            this.label8.Size = new System.Drawing.Size(74, 13);
             this.label8.TabIndex = 70;
             this.label8.Text = "ShoulderRight";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(917, 1498);
+            this.label10.Location = new System.Drawing.Point(458, 779);
+            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(106, 25);
+            this.label10.Size = new System.Drawing.Size(54, 13);
             this.label10.TabIndex = 71;
             this.label10.Text = "ElbowLeft";
             // 
             // neckTextBox
             // 
-            this.neckTextBox.Location = new System.Drawing.Point(189, 1430);
+            this.neckTextBox.Location = new System.Drawing.Point(94, 744);
+            this.neckTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.neckTextBox.Name = "neckTextBox";
-            this.neckTextBox.Size = new System.Drawing.Size(203, 31);
+            this.neckTextBox.Size = new System.Drawing.Size(104, 20);
             this.neckTextBox.TabIndex = 72;
             // 
             // spineMidTextBox
             // 
-            this.spineMidTextBox.Location = new System.Drawing.Point(601, 1368);
+            this.spineMidTextBox.Location = new System.Drawing.Point(300, 711);
+            this.spineMidTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.spineMidTextBox.Name = "spineMidTextBox";
-            this.spineMidTextBox.Size = new System.Drawing.Size(203, 31);
+            this.spineMidTextBox.Size = new System.Drawing.Size(104, 20);
             this.spineMidTextBox.TabIndex = 73;
             // 
             // spineShoulderTextBox
             // 
-            this.spineShoulderTextBox.Location = new System.Drawing.Point(601, 1430);
+            this.spineShoulderTextBox.Location = new System.Drawing.Point(300, 744);
+            this.spineShoulderTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.spineShoulderTextBox.Name = "spineShoulderTextBox";
-            this.spineShoulderTextBox.Size = new System.Drawing.Size(203, 31);
+            this.spineShoulderTextBox.Size = new System.Drawing.Size(104, 20);
             this.spineShoulderTextBox.TabIndex = 74;
             // 
             // spineBaseTextBox
             // 
-            this.spineBaseTextBox.Location = new System.Drawing.Point(601, 1501);
+            this.spineBaseTextBox.Location = new System.Drawing.Point(300, 781);
+            this.spineBaseTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.spineBaseTextBox.Name = "spineBaseTextBox";
-            this.spineBaseTextBox.Size = new System.Drawing.Size(203, 31);
+            this.spineBaseTextBox.Size = new System.Drawing.Size(104, 20);
             this.spineBaseTextBox.TabIndex = 75;
             // 
             // shoulderLeftTextBox
             // 
-            this.shoulderLeftTextBox.Location = new System.Drawing.Point(1029, 1365);
+            this.shoulderLeftTextBox.Location = new System.Drawing.Point(514, 710);
+            this.shoulderLeftTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.shoulderLeftTextBox.Name = "shoulderLeftTextBox";
-            this.shoulderLeftTextBox.Size = new System.Drawing.Size(203, 31);
+            this.shoulderLeftTextBox.Size = new System.Drawing.Size(104, 20);
             this.shoulderLeftTextBox.TabIndex = 76;
             // 
             // shoulderRightTextBox
             // 
-            this.shoulderRightTextBox.Location = new System.Drawing.Point(1029, 1433);
+            this.shoulderRightTextBox.Location = new System.Drawing.Point(514, 745);
+            this.shoulderRightTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.shoulderRightTextBox.Name = "shoulderRightTextBox";
-            this.shoulderRightTextBox.Size = new System.Drawing.Size(203, 31);
+            this.shoulderRightTextBox.Size = new System.Drawing.Size(104, 20);
             this.shoulderRightTextBox.TabIndex = 77;
             // 
             // elbowLeftTextBox
             // 
-            this.elbowLeftTextBox.Location = new System.Drawing.Point(1029, 1495);
+            this.elbowLeftTextBox.Location = new System.Drawing.Point(514, 777);
+            this.elbowLeftTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.elbowLeftTextBox.Name = "elbowLeftTextBox";
-            this.elbowLeftTextBox.Size = new System.Drawing.Size(203, 31);
+            this.elbowLeftTextBox.Size = new System.Drawing.Size(104, 20);
             this.elbowLeftTextBox.TabIndex = 78;
             // 
             // elbowRightTextBox
             // 
-            this.elbowRightTextBox.Location = new System.Drawing.Point(1029, 1564);
+            this.elbowRightTextBox.Location = new System.Drawing.Point(514, 813);
+            this.elbowRightTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.elbowRightTextBox.Name = "elbowRightTextBox";
-            this.elbowRightTextBox.Size = new System.Drawing.Size(203, 31);
+            this.elbowRightTextBox.Size = new System.Drawing.Size(104, 20);
             this.elbowRightTextBox.TabIndex = 79;
             // 
             // FPSTextBox
             // 
-            this.FPSTextBox.Location = new System.Drawing.Point(189, 1564);
+            this.FPSTextBox.Location = new System.Drawing.Point(94, 813);
+            this.FPSTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.FPSTextBox.Name = "FPSTextBox";
-            this.FPSTextBox.Size = new System.Drawing.Size(203, 31);
+            this.FPSTextBox.Size = new System.Drawing.Size(104, 20);
             this.FPSTextBox.TabIndex = 81;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(122, 1567);
+            this.label11.Location = new System.Drawing.Point(61, 815);
+            this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(53, 25);
+            this.label11.Size = new System.Drawing.Size(27, 13);
             this.label11.TabIndex = 80;
             this.label11.Text = "FPS";
             // 
+            // fpsTimer
+            // 
+            this.fpsTimer.Interval = 1000;
+            this.fpsTimer.Tick += new System.EventHandler(this.fpsTimer_Tick);
+            // 
             // FinalForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(2898, 1783);
+            this.ClientSize = new System.Drawing.Size(1449, 848);
             this.Controls.Add(this.FPSTextBox);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.elbowRightTextBox);
@@ -655,7 +670,7 @@
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.axWindowsMediaPlayer1);
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "FinalForm";
             this.Text = "Version 3 (Final Version)";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -733,5 +748,6 @@
         private System.Windows.Forms.TextBox elbowRightTextBox;
         private System.Windows.Forms.TextBox FPSTextBox;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Timer fpsTimer;
     }
 }

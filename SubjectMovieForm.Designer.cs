@@ -51,7 +51,7 @@
             // 
             this.axWindowsMediaPlayer1.Enabled = true;
             this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(2, 12);
-            this.axWindowsMediaPlayer1.Margin = new System.Windows.Forms.Padding(2);
+            this.axWindowsMediaPlayer1.Margin = new System.Windows.Forms.Padding(4);
             this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
             this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
             this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(1022, 507);
@@ -63,17 +63,17 @@
             this.panel1.Controls.Add(this.mGreenLightPictureBox);
             this.panel1.Controls.Add(this.mYellowLightPictureBox);
             this.panel1.Controls.Add(this.mRedLightPictureBox);
-            this.panel1.Location = new System.Drawing.Point(1082, 6);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2);
+            this.panel1.Location = new System.Drawing.Point(2164, 12);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(134, 479);
+            this.panel1.Size = new System.Drawing.Size(266, 919);
             this.panel1.TabIndex = 1;
             // 
             // mGreenLightPictureBox
             // 
             this.mGreenLightPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("mGreenLightPictureBox.Image")));
-            this.mGreenLightPictureBox.Location = new System.Drawing.Point(34, 365);
-            this.mGreenLightPictureBox.Margin = new System.Windows.Forms.Padding(2);
+            this.mGreenLightPictureBox.Location = new System.Drawing.Point(68, 702);
+            this.mGreenLightPictureBox.Margin = new System.Windows.Forms.Padding(4);
             this.mGreenLightPictureBox.Name = "mGreenLightPictureBox";
             this.mGreenLightPictureBox.Size = new System.Drawing.Size(75, 75);
             this.mGreenLightPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -83,8 +83,8 @@
             // mYellowLightPictureBox
             // 
             this.mYellowLightPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("mYellowLightPictureBox.Image")));
-            this.mYellowLightPictureBox.Location = new System.Drawing.Point(34, 186);
-            this.mYellowLightPictureBox.Margin = new System.Windows.Forms.Padding(2);
+            this.mYellowLightPictureBox.Location = new System.Drawing.Point(68, 358);
+            this.mYellowLightPictureBox.Margin = new System.Windows.Forms.Padding(4);
             this.mYellowLightPictureBox.Name = "mYellowLightPictureBox";
             this.mYellowLightPictureBox.Size = new System.Drawing.Size(75, 75);
             this.mYellowLightPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -94,8 +94,8 @@
             // mRedLightPictureBox
             // 
             this.mRedLightPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("mRedLightPictureBox.Image")));
-            this.mRedLightPictureBox.Location = new System.Drawing.Point(34, 23);
-            this.mRedLightPictureBox.Margin = new System.Windows.Forms.Padding(2);
+            this.mRedLightPictureBox.Location = new System.Drawing.Point(68, 44);
+            this.mRedLightPictureBox.Margin = new System.Windows.Forms.Padding(4);
             this.mRedLightPictureBox.Name = "mRedLightPictureBox";
             this.mRedLightPictureBox.Size = new System.Drawing.Size(75, 75);
             this.mRedLightPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -104,17 +104,17 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(1, 646);
-            this.progressBar1.Margin = new System.Windows.Forms.Padding(2);
+            this.progressBar1.Location = new System.Drawing.Point(2, 1242);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(4);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(1030, 43);
+            this.progressBar1.Size = new System.Drawing.Size(2060, 83);
             this.progressBar1.TabIndex = 2;
             // 
             // pictureBox4
             // 
             this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(1100, 554);
-            this.pictureBox4.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBox4.Location = new System.Drawing.Point(2200, 1065);
+            this.pictureBox4.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(150, 34);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -124,8 +124,8 @@
             // pictureBox5
             // 
             this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            this.pictureBox5.Location = new System.Drawing.Point(1100, 607);
-            this.pictureBox5.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBox5.Location = new System.Drawing.Point(2200, 1167);
+            this.pictureBox5.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(150, 40);
             this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -136,22 +136,22 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Times New Roman", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 563);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(0, 1083);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(953, 73);
+            this.label1.Size = new System.Drawing.Size(1900, 145);
             this.label1.TabIndex = 5;
             this.label1.Text = "   P      R      O      M      I      S      E";
             // 
             // SubjectMovieForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(1391, 705);
+            this.ClientSize = new System.Drawing.Size(2766, 1356);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.pictureBox4);
@@ -159,7 +159,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.axWindowsMediaPlayer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SubjectMovieForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Version 3 (Final Version)";

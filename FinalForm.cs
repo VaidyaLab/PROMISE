@@ -159,7 +159,7 @@ namespace Final_Kinect
             mElbowLeftPositionDiffMedianArray = new double[mSmoothingKernal];
             mElbowRightPositionDiffMedianArray = new double[mSmoothingKernal];
 
-            progressBar.Maximum = (Convert.ToInt32(sessionTime));
+            progressBar.Maximum = (Convert.ToInt32(sessionTime) * 60);
             axWindowsMediaPlayer1.URL = videoFile;
 
             axWindowsMediaPlayer1.Ctlcontrols.stop();
@@ -261,11 +261,17 @@ namespace Final_Kinect
                     // Process if the body has been detected
                     if (body.IsTracked)
                     {
+                        if (!mOriginalJointPositionsSet)
+                        {
+                            SetOriginalJointPositions();
+                        }
                         SetCurrentJointPoisitions(body);
                         SetPositionDiff();
 
                         if (mSessionState == STARTED)
                         {
+                            //CheckTrackedJoints(body);
+
                             startButton.BackColor = Color.DeepSkyBlue;
 
                             UpdateStopwatches();
@@ -273,11 +279,6 @@ namespace Final_Kinect
                             if (timer1.Enabled == false)
                             {
                                 timer1.Enabled = true;
-                            }
-
-                            if (!mOriginalJointPositionsSet)
-                            {
-                                SetOriginalJointPositions();
                             }
 
                             UpdateMedianArrays();
@@ -324,6 +325,44 @@ namespace Final_Kinect
                     }
                 }
             }
+        }
+
+        private bool CheckTrackedJoints(Body body)
+        {
+            String untrackedJoints = "";
+
+            if (body.Joints[JointType.Head].TrackingState == TrackingState.Tracked)
+            {
+                untrackedJoints += "Head; ";
+            }
+            if (body.Joints[JointType.Neck].TrackingState == TrackingState.Tracked)
+            {
+                untrackedJoints += "Neck; ";
+            }
+            if (body.Joints[JointType.SpineBase].TrackingState == TrackingState.Tracked)
+            {
+                untrackedJoints += "SpineBase; ";
+            }
+            if (body.Joints[JointType.SpineMid].TrackingState == TrackingState.Tracked)
+            {
+                untrackedJoints += "SpineMid; ";
+            }
+            if (body.Joints[JointType.SpineShoulder].TrackingState == TrackingState.Tracked)
+            {
+                untrackedJoints += "SpineShoulder; ";
+            }
+            if (body.Joints[JointType.ShoulderLeft].TrackingState == TrackingState.Tracked)
+            {
+                untrackedJoints += "ShoulderLeft; ";
+            }
+            if (body.Joints[JointType.ShoulderRight].TrackingState == TrackingState.Tracked)
+            {
+                untrackedJoints += "ShoulderRight; ";
+            }
+
+            UpdateDataFile("Untracked Joints: " + untrackedJoints.TrimEnd(';',' '));
+
+            return untrackedJoints == "" ? false : true;
         }
 
         #region Joint positions and diffs
@@ -381,15 +420,15 @@ namespace Final_Kinect
                 mElbowLeftPositionDiff = MathExtensions.Length(mCurrentElbowLeftPosition, mOriginalElbowLeftPosition) * 1000;
                 mElbowRightPositionDiff = MathExtensions.Length(mCurrentElbowRightPosition, mOriginalElbowRightPosition) * 1000;
 
-                headTextBox.Text = ((int)mHeadPositionDiff).ToString();
-                neckTextBox.Text = ((int)mNeckPositionDiff).ToString();
-                spineBaseTextBox.Text = ((int)mSpineBasePositionDiff).ToString();
-                spineMidTextBox.Text = ((int)mSpineMidPositionDiff).ToString();
-                spineShoulderTextBox.Text = ((int)mSpineShoulderPositionDiff).ToString();
-                shoulderLeftTextBox.Text = ((int)mShoulderLeftPositionDiff).ToString();
-                shoulderRightTextBox.Text = ((int)mShoulderRightPositionDiff).ToString();
-                elbowLeftTextBox.Text = ((int)mElbowLeftPositionDiff).ToString();
-                elbowRightTextBox.Text = ((int)mElbowRightPositionDiff).ToString();
+                headTextBox.Text = ((int) Math.Round(mHeadPositionDiff)).ToString();
+                neckTextBox.Text = ((int) Math.Round(mNeckPositionDiff)).ToString();
+                spineBaseTextBox.Text = ((int) Math.Round(mSpineBasePositionDiff)).ToString();
+                spineMidTextBox.Text = ((int) Math.Round(mSpineMidPositionDiff)).ToString();
+                spineShoulderTextBox.Text = ((int) Math.Round(mSpineShoulderPositionDiff)).ToString();
+                shoulderLeftTextBox.Text = ((int) Math.Round(mShoulderLeftPositionDiff)).ToString();
+                shoulderRightTextBox.Text = ((int) Math.Round(mShoulderRightPositionDiff)).ToString();
+                //elbowLeftTextBox.Text = ((int)mElbowLeftPositionDiff).ToString();
+                //elbowRightTextBox.Text = ((int)mElbowRightPositionDiff).ToString();
             }
 
         }
@@ -730,8 +769,7 @@ namespace Final_Kinect
         {
             mTickCount++;
 
-            // Every second, increase progress
-            if (mTickCount % 60 == 0)
+            if (progressBar.Value < progressBar.Maximum)
             {
                 progressBar.Value++;
                 progressBar.Update();
@@ -739,7 +777,12 @@ namespace Final_Kinect
                 if (mSubjectMovieForm != null)
                 {
                     mSubjectMovieForm.UpdateProgressBar();
-                }
+                }               
+            }
+            else
+            {
+                mSessionState = 21;
+                startButton.BackColor = Color.Red;
             }
         }
         private void fpsTimer_Tick(object sender, EventArgs e)

@@ -92,7 +92,7 @@ namespace Final_Kinect
 
             joint = joint.ScaleTo(pictureBox.Width, pictureBox.Height);
 
-            SolidBrush solidBrush = new SolidBrush(originalBody ? Color.Black : Color.LightBlue);
+            SolidBrush solidBrush = new SolidBrush(originalBody ? Color.Black : (joint.TrackingState == TrackingState.Tracked ? Color.LightBlue : Color.Red));
 
             graphics.FillEllipse(solidBrush, new Rectangle((int) joint.Position.X - 20 / 2, (int) joint.Position.Y - 20 / 2, 20, 20));
 

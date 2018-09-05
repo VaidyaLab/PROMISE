@@ -270,6 +270,12 @@ namespace Final_Kinect
                         {
                             startButton.BackColor = Color.DeepSkyBlue;
 
+                            if (mConditionStopwatch.ElapsedTicks >= mAutoShapeInterval && mAutoShape)
+                            {
+                                UpdateLimitsTextBox((mWarning + 2).ToString(), (mNotAllowed + 2).ToString());
+                                UpdateCurrentLimits(true, true);
+                            }
+
                             UpdateStopwatches();
 
                             if (timer1.Enabled == false)
@@ -551,6 +557,11 @@ namespace Final_Kinect
 
             mSessionStopwatch.Stop();
             mConditionStopwatch.Stop();
+            if (mAutoShape)
+            {
+                UpdateLimitsTextBox((mWarning - 2).ToString(), (mNotAllowed - 2).ToString());
+                UpdateCurrentLimits(true, false);
+            }
             mSessionState = 21;
 
             UpdateDataFile("Large Movement");
@@ -603,7 +614,7 @@ namespace Final_Kinect
             lowerLimitSmallMovementTextBox.Text = warning;
             lowerLimitLargeMovementTextBox.Text = notAllowed;
         }
-        private void UpdateCurrentLimits(bool updateDateFile)
+        private void UpdateCurrentLimits(bool updateDateFile, bool restartStopwatch)
         {
             if (updateDateFile == true)
             {
@@ -613,7 +624,10 @@ namespace Final_Kinect
             mWarning = Convert.ToInt32(lowerLimitSmallMovementTextBox.Text);
             mNotAllowed = Convert.ToInt32(lowerLimitLargeMovementTextBox.Text);
 
-            mConditionStopwatch.Restart();
+            if (restartStopwatch)
+            {
+                mConditionStopwatch.Restart();
+            }
 
             UpdateCurrentLimitsLabel();
         }
@@ -693,11 +707,6 @@ namespace Final_Kinect
             if (mConditionStopwatch.IsRunning == false)
             {
                 mConditionStopwatch.Start();
-            }
-            else if (mConditionStopwatch.ElapsedTicks >= mAutoShapeInterval && mAutoShape)
-            {
-                UpdateLimitsTextBox((mWarning + 2).ToString(), (mNotAllowed + 2).ToString());
-                UpdateCurrentLimits(true);
             }
 
             conditionElapsedTimeTextBox.Text = mConditionStopwatch.Elapsed.ToString("mm\\:ss\\.ff");
@@ -815,7 +824,7 @@ namespace Final_Kinect
         private void startButton_Click(object sender, EventArgs e)
         {
             mSessionState = 22;
-            UpdateCurrentLimits(false);
+            UpdateCurrentLimits(false, true);
 
             startButton.BackColor = Color.DeepSkyBlue;
         }
@@ -826,7 +835,7 @@ namespace Final_Kinect
         }
         private void setLimitsButton_Click(object sender, EventArgs e)
         {
-            UpdateCurrentLimits(true);
+            UpdateCurrentLimits(true, true);
         }
         private void FinalForm_Load(object sender, EventArgs e)
         {            

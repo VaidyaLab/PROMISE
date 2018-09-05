@@ -26,6 +26,7 @@ namespace Final_Kinect
         Body[] mOriginalBody = null;
 
         int mFPSCount = 0;
+        int mAutoShapeInterval = 120000; // Two minutes
 
         // This is the form on which the participant will view the movie.
         SubjectMovieForm mSubjectMovieForm;
@@ -39,6 +40,7 @@ namespace Final_Kinect
 
         bool mCurrentJointPositionsSet = false;
         bool mOriginalJointPositionsSet = false;
+        bool mAutoShape = true;
 
         CameraSpacePoint mCurrentHeadPosition,
             mCurrentNeckPosition,
@@ -388,8 +390,6 @@ namespace Final_Kinect
                 spineShoulderTextBox.Text = ((int)mSpineShoulderPositionDiff).ToString();
                 shoulderLeftTextBox.Text = ((int)mShoulderLeftPositionDiff).ToString();
                 shoulderRightTextBox.Text = ((int)mShoulderRightPositionDiff).ToString();
-                elbowLeftTextBox.Text = ((int)mElbowLeftPositionDiff).ToString();
-                elbowRightTextBox.Text = ((int)mElbowRightPositionDiff).ToString();
             }
 
         }
@@ -473,9 +473,7 @@ namespace Final_Kinect
                 Math.Abs(mSpineMidPositionDiffMedian) > limit ||
                 Math.Abs(mSpineShoulderPositionDiffMedian) > limit ||
                 Math.Abs(mShoulderLeftPositionDiffMedian) > limit ||
-                Math.Abs(mShoulderRightPositionDiffMedian) > limit //||
-               // Math.Abs(mElbowLeftPositionDiffMedian) > limit ||
-                //Math.Abs(mElbowRightPositionDiffMedian) > limit
+                Math.Abs(mShoulderRightPositionDiffMedian) > limit
             );
         }
         #endregion
@@ -695,6 +693,11 @@ namespace Final_Kinect
             if (mConditionStopwatch.IsRunning == false)
             {
                 mConditionStopwatch.Start();
+            }
+            else if (mConditionStopwatch.ElapsedTicks >= mAutoShapeInterval && mAutoShape)
+            {
+                UpdateLimitsTextBox((mWarning + 2).ToString(), (mNotAllowed + 2).ToString());
+                UpdateCurrentLimits(true);
             }
 
             conditionElapsedTimeTextBox.Text = mConditionStopwatch.Elapsed.ToString("mm\\:ss\\.ff");

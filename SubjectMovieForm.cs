@@ -4,7 +4,10 @@ using System.Windows.Forms;
 namespace Final_Kinect
 {
     public partial class SubjectMovieForm : Form
-    {        
+    {
+        int mVolume;
+        System.Drawing.Color mBGColor;
+
         public SubjectMovieForm(string videoFile, int progressBarMaximum)
         {            
             InitializeComponent();
@@ -13,6 +16,9 @@ namespace Final_Kinect
             axWindowsMediaPlayer1.Ctlcontrols.stop();
 
             progressBar1.Maximum = progressBarMaximum;
+            mVolume = axWindowsMediaPlayer1.settings.volume;
+            mBGColor = this.BackColor;
+         
         }
         private void SubjectMovieForm_Load(object sender, EventArgs e)
         {
@@ -30,6 +36,25 @@ namespace Final_Kinect
             progressBar1.Value++;
             progressBar1.Update();
         }
+        public void BaselineScreen(bool baseline)
+        {
+            if (baseline)
+            {
+                this.BackColor = System.Drawing.Color.Black;
+            }
+            else
+            {
+                this.BackColor = mBGColor;
+            }
+
+            axWindowsMediaPlayer1.Visible = !baseline;
+            panel1.Visible = !baseline;
+            label1.Visible = !baseline;
+            progressBar1.Visible = !baseline;
+            pictureBox4.Visible = !baseline;
+            pictureBox5.Visible = !baseline;
+
+        }
         public void MediaPlayerPlay()
         {
             axWindowsMediaPlayer1.Ctlcontrols.play();
@@ -39,6 +64,18 @@ namespace Final_Kinect
             if (axWindowsMediaPlayer1 != null)
             {
                 axWindowsMediaPlayer1.Ctlcontrols.pause();
+            }
+        }
+        public void MediaPlayerMute(bool mute)
+        {
+            if (mute)
+            {
+                axWindowsMediaPlayer1.settings.volume = 0;
+                
+            }
+            else
+            {
+                axWindowsMediaPlayer1.settings.volume = mVolume;
             }
         }
         public void SetRedLightVisible(bool visible)

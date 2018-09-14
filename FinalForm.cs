@@ -26,7 +26,7 @@ namespace Final_Kinect
         Body[] mOriginalBody = null;
 
         int mFPSCount = 0;
-        int mAutoShapeInterval = 120000; // Two minutes
+        int mAutoShapeInterval = 30000; // 30 seconds
 
         // This is the form on which the participant will view the movie.
         SubjectMovieForm mSubjectMovieForm;
@@ -40,7 +40,8 @@ namespace Final_Kinect
 
         bool mCurrentJointPositionsSet = false;
         bool mOriginalJointPositionsSet = false;
-        bool mAutoShape = true;
+        bool mAutoShape = false;
+        bool mBaseline = false;
 
         CameraSpacePoint mCurrentHeadPosition,
             mCurrentNeckPosition,
@@ -270,15 +271,15 @@ namespace Final_Kinect
                         {
                             startButton.BackColor = Color.DeepSkyBlue;
 
-                            if (mConditionStopwatch.ElapsedTicks >= mAutoShapeInterval && mAutoShape)
+                            if (mConditionStopwatch.ElapsedMilliseconds >= mAutoShapeInterval && mAutoShape)
                             {
-                                UpdateLimitsTextBox((mWarning + 2).ToString(), (mNotAllowed + 2).ToString());
+                                UpdateLimitsTextBox((mWarning - 2).ToString(), (mNotAllowed - 2).ToString());
                                 UpdateCurrentLimits(true, true);
                             }
 
                             UpdateStopwatches();
 
-                            if (timer1.Enabled == false)
+                            if (timer1.Enabled == false) // Progress bar
                             {
                                 timer1.Enabled = true;
                             }
@@ -559,7 +560,7 @@ namespace Final_Kinect
             mConditionStopwatch.Stop();
             if (mAutoShape)
             {
-                UpdateLimitsTextBox((mWarning - 2).ToString(), (mNotAllowed - 2).ToString());
+                UpdateLimitsTextBox((mWarning + 2).ToString(), (mNotAllowed + 2).ToString());
                 UpdateCurrentLimits(true, false);
             }
             mSessionState = 21;
@@ -573,7 +574,10 @@ namespace Final_Kinect
                 timer1.Enabled = true;
             }
 
-            MediaPlayersPlay();
+            if (!mBaseline)
+            {
+                MediaPlayersPlay();
+            }
 
             SetAllTrafficLights(false, true, false);
 
@@ -586,8 +590,11 @@ namespace Final_Kinect
                 timer1.Enabled = true;
             }
 
-            MediaPlayersPlay();
-                              
+            if (!mBaseline)
+            {
+                MediaPlayersPlay();
+            }
+            
             SetAllTrafficLights(false, false, true);
 
             UpdateDataFile("");
@@ -736,6 +743,22 @@ namespace Final_Kinect
             }
         }
 
+        private void StopBaseline()
+        {
+            mBaseline = false;
+            mSubjectMovieForm.BaselineScreen(mBaseline); // Set background original and make labels visible.
+            mSubjectMovieForm.MediaPlayerMute(mBaseline);
+
+            if (mSessionState == STARTED)
+            {
+                if (mSubjectMovieForm.Visible == false)
+                {
+                    mSubjectMovieForm.Show();
+                }
+                MediaPlayersPlay();
+            }
+        }
+
         #region Events (except Kinect's FrameArrived event)
         // Timer event for progress bar
         private void timer1_Tick(object sender, EventArgs e)
@@ -797,7 +820,27 @@ namespace Final_Kinect
         }
         private void movementProbeButton_Click(object sender, EventArgs e)
         {
-            UpdateLimitsTextBox("1000", "1000");
+            UpdateLimitsTextBox("9999", "9999");
+            UpdateCurrentLimits(true, true);
+            if (mBaseline)
+            {
+                StopBaseline();
+            }
+            else
+            {
+                mBaseline = true;
+                mSubjectMovieForm.BaselineScreen(mBaseline); // Set background black and make labels invisible
+                mSubjectMovieForm.MediaPlayerMute(mBaseline); 
+
+                if (mSessionState == STARTED)
+                {
+                    if (mSubjectMovieForm.Visible == false)
+                    {
+                        mSubjectMovieForm.Show();
+                    }
+                    MediaPlayersPause();
+                }       
+            }
         }
         private void shapeButton_Click(object sender, EventArgs e)
         {
@@ -823,18 +866,19 @@ namespace Final_Kinect
         }
         private void startButton_Click(object sender, EventArgs e)
         {
-            mSessionState = 22;
+            mSessionState = STARTED;
             UpdateCurrentLimits(false, true);
 
             startButton.BackColor = Color.DeepSkyBlue;
         }
         private void stopButton_Click(object sender, EventArgs e)
         {
-            mSessionState = 21;
+            mSessionState = STOPPED;
             startButton.BackColor = Color.Red;
         }
         private void setLimitsButton_Click(object sender, EventArgs e)
         {
+            StopBaseline();
             UpdateCurrentLimits(true, true);
         }
         private void FinalForm_Load(object sender, EventArgs e)

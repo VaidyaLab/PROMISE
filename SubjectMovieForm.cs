@@ -13,6 +13,7 @@ namespace Final_Kinect
             InitializeComponent();
 
             axWindowsMediaPlayer1.URL = videoFile;
+            axWindowsMediaPlayer1.uiMode = "None";
             axWindowsMediaPlayer1.Ctlcontrols.stop();
 
             progressBar1.Maximum = progressBarMaximum;

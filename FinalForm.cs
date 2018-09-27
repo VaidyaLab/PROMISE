@@ -40,6 +40,7 @@ namespace Final_Kinect
 
         bool mCurrentJointPositionsSet = false;
         bool mOriginalJointPositionsSet = false;
+        bool mSessionOriginalJointPositionsSet = true;
         bool mAutoShape = false;
         bool mBaseline = false;
 
@@ -62,6 +63,14 @@ namespace Final_Kinect
             mOriginalShoulderRightPosition,
             mOriginalElbowLeftPosition,
             mOriginalElbowRightPosition;
+
+        CameraSpacePoint mSessionOriginalHeadPosition,
+            mSessionOriginalNeckPosition,
+            mSessionOriginalSpineBasePosition,
+            mSessionOriginalSpineMidPosition,
+            mSessionOriginalSpineShoulderPosition,
+            mSessionOriginalShoulderLeftPosition,
+            mSessionOriginalShoulderRightPosition;
 
         double mHeadPositionDiff = 0,
             mNeckPositionDiff = 0,
@@ -286,7 +295,11 @@ namespace Final_Kinect
 
                             if (!mOriginalJointPositionsSet)
                             {
-                                SetOriginalJointPositions();
+                                SetOriginalJointPositions(false);
+                            }
+                            if (!mSessionOriginalJointPositionsSet)
+                            {
+                                SetOriginalJointPositions(true);
                             }
 
                             UpdateMedianArrays();
@@ -336,26 +349,46 @@ namespace Final_Kinect
         }
 
         #region Joint positions and diffs
-        private void SetOriginalJointPositions()
+        private void SetOriginalJointPositions(bool setSession)
         {
             if (mCurrentJointPositionsSet)
             {
-                mOriginalHeadPosition = mCurrentHeadPosition;
-                mOriginalNeckPosition = mCurrentNeckPosition;
-                mOriginalSpineBasePosition = mCurrentSpineBasePosition;
-                mOriginalSpineMidPosition = mCurrentSpineMidPosition;
-                mOriginalSpineShoulderPosition = mCurrentSpineShoulderPosition;
-                mOriginalShoulderLeftPosition = mCurrentShoulderLeftPosition;
-                mOriginalShoulderRightPosition = mCurrentShoulderRightPosition;
-                mOriginalElbowLeftPosition = mCurrentElbowLeftPosition;
-                mOriginalElbowRightPosition = mCurrentElbowRightPosition;
-
-                if (!mOriginalJointPositionsSet)
+                if (setSession == true)
                 {
-                    mOriginalJointPositionsSet = true;
-                }
+                    mSessionOriginalHeadPosition = mCurrentHeadPosition;
+                    mSessionOriginalNeckPosition = mCurrentNeckPosition;
+                    mSessionOriginalSpineBasePosition = mCurrentSpineBasePosition;
+                    mSessionOriginalSpineMidPosition = mCurrentSpineMidPosition;
+                    mSessionOriginalSpineShoulderPosition = mCurrentSpineShoulderPosition;
+                    mSessionOriginalShoulderLeftPosition = mCurrentShoulderLeftPosition;
+                    mSessionOriginalShoulderRightPosition = mCurrentShoulderRightPosition;
 
-                mDataFile.WriteLine("SCAN," + mSessionStopwatch.Elapsed.ToString());
+                    if (!mSessionOriginalJointPositionsSet)
+                    {
+                        mSessionOriginalJointPositionsSet = true;
+                    }
+
+                    mDataFile.WriteLine("Session Original SCAN," + mSessionStopwatch.Elapsed.ToString());
+                }
+                else
+                {
+                    mOriginalHeadPosition = mCurrentHeadPosition;
+                    mOriginalNeckPosition = mCurrentNeckPosition;
+                    mOriginalSpineBasePosition = mCurrentSpineBasePosition;
+                    mOriginalSpineMidPosition = mCurrentSpineMidPosition;
+                    mOriginalSpineShoulderPosition = mCurrentSpineShoulderPosition;
+                    mOriginalShoulderLeftPosition = mCurrentShoulderLeftPosition;
+                    mOriginalShoulderRightPosition = mCurrentShoulderRightPosition;
+                    mOriginalElbowLeftPosition = mCurrentElbowLeftPosition;
+                    mOriginalElbowRightPosition = mCurrentElbowRightPosition;
+
+                    if (!mOriginalJointPositionsSet)
+                    {
+                        mOriginalJointPositionsSet = true;
+                    }
+
+                    mDataFile.WriteLine("SCAN," + mSessionStopwatch.Elapsed.ToString());
+                }
             }
         }
         private void SetCurrentJointPoisitions(Body body)
@@ -880,6 +913,7 @@ namespace Final_Kinect
         {
             StopBaseline();
             UpdateCurrentLimits(true, true);
+            mOriginalJointPositionsSet = false;
         }
         private void FinalForm_Load(object sender, EventArgs e)
         {            

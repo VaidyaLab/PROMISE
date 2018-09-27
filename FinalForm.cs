@@ -41,8 +41,9 @@ namespace Final_Kinect
         bool mCurrentJointPositionsSet = false;
         bool mOriginalJointPositionsSet = false;
         bool mSessionOriginalJointPositionsSet = true;
-        bool mAutoShape = false;
-        bool mBaseline = false;
+
+        bool mAutoShape = false; // Not currently enabled. Set to true to enable
+        bool mBaseline = false; // Default to false. Will be set to true if Movement proble button clicked
 
         CameraSpacePoint mCurrentHeadPosition,
             mCurrentNeckPosition,
@@ -102,6 +103,30 @@ namespace Final_Kinect
             mElbowLeftPositionDiffMean = 0,
             mElbowRightPositionDiffMean = 0;
 
+        double mSessionHeadPositionDiff = 0,
+            mSessionNeckPositionDiff = 0,
+            mSessionSpineBasePositionDiff = 0,
+            mSessionSpineMidPositionDiff = 0,
+            mSessionSpineShoulderPositionDiff = 0,
+            mSessionShoulderLeftPositionDiff = 0,
+            mSessionShoulderRightPositionDiff = 0;
+
+        double mSessionHeadPositionDiffMeanSum = 0,
+            mSessionNeckPositionDiffMeanSum = 0,
+            mSessionSpineBasePositionDiffMeanSum = 0,
+            mSessionSpineMidPositionDiffMeanSum = 0,
+            mSessionSpineShoulderPositionDiffMeanSum = 0,
+            mSessionShoulderLeftPositionDiffMeanSum = 0,
+            mSessionShoulderRightPositionDiffMeanSum = 0;
+
+        double mSessionHeadPositionDiffMean = 0,
+            mSessionNeckPositionDiffMean = 0,
+            mSessionSpineBasePositionDiffMean = 0,
+            mSessionSpineMidPositionDiffMean = 0,
+            mSessionSpineShoulderPositionDiffMean = 0,
+            mSessionShoulderLeftPositionDiffMean = 0,
+            mSessionShoulderRightPositionDiffMean = 0;
+
         int mSmoothingKernal,
             mWarning,
             mNotAllowed;
@@ -109,7 +134,7 @@ namespace Final_Kinect
         // This should probably be set to zero and iterate earlier down below (if we ultimately need this at all).
         int mMeanDataReadIteration = 1;
 
-        // These store particular differences in order to determine median
+        // These store particular differences in order to determine median in relation to ConditionOriginal
         double[] mHeadPositionDiffMedianArray,
             mNeckPositionDiffMedianArray,
             mSpineBasePositionDiffMedianArray,
@@ -129,6 +154,23 @@ namespace Final_Kinect
             mShoulderRightPositionDiffMedian,
             mElbowLeftPositionDiffMedian,
             mElbowRightPositionDiffMedian;
+
+        // These store particular differences in order to determine median in relation to SessionOriginal
+        double[] mSessionHeadPositionDiffMedianArray,
+            mSessionNeckPositionDiffMedianArray,
+            mSessionSpineBasePositionDiffMedianArray,
+            mSessionSpineMidPositionDiffMedianArray,
+            mSessionSpineShoulderPositionDiffMedianArray,
+            mSessionShoulderLeftPositionDiffMedianArray,
+            mSessionShoulderRightPositionDiffMedianArray;
+
+        double mSessionHeadPositionDiffMedian,
+            mSessionNeckPositionDiffMedian,
+            mSessionSpineBasePositionDiffMedian,
+            mSessionSpineMidPositionDiffMedian,
+            mSessionSpineShoulderPositionDiffMedian,
+            mSessionShoulderLeftPositionDiffMedian,
+            mSessionShoulderRightPositionDiffMedian;
 
         /* This will be incremented on every tick. When the tick interval
          * is set for 1000, then mTickCount % 60 will be 0 and thus allow
@@ -295,11 +337,11 @@ namespace Final_Kinect
 
                             if (!mOriginalJointPositionsSet)
                             {
-                                SetOriginalJointPositions(false);
+                                SetOriginalJointPositions(false); // False for Condition Original
                             }
                             if (!mSessionOriginalJointPositionsSet)
                             {
-                                SetOriginalJointPositions(true);
+                                SetOriginalJointPositions(true); // True for Session Original
                             }
 
                             UpdateMedianArrays();
@@ -432,6 +474,16 @@ namespace Final_Kinect
                 shoulderRightTextBox.Text = ((int)mShoulderRightPositionDiff).ToString();
             }
 
+            if (mSessionOriginalJointPositionsSet)
+            {
+                mSessionHeadPositionDiff = MathExtensions.Length(mCurrentHeadPosition, mSessionOriginalHeadPosition) * 1000;
+                mSessionNeckPositionDiff = MathExtensions.Length(mCurrentNeckPosition, mSessionOriginalNeckPosition) * 1000;
+                mSessionSpineBasePositionDiff = MathExtensions.Length(mCurrentSpineBasePosition, mSessionOriginalSpineBasePosition) * 1000;
+                mSessionSpineMidPositionDiff = MathExtensions.Length(mCurrentSpineMidPosition, mSessionOriginalSpineMidPosition) * 1000;
+                mSessionSpineShoulderPositionDiff = MathExtensions.Length(mCurrentSpineShoulderPosition, mSessionOriginalSpineShoulderPosition) * 1000;
+                mSessionShoulderLeftPositionDiff = MathExtensions.Length(mCurrentShoulderLeftPosition, mSessionOriginalShoulderLeftPosition) * 1000;
+                mSessionShoulderRightPositionDiff = MathExtensions.Length(mCurrentShoulderRightPosition, mSessionOriginalShoulderRightPosition) * 1000;
+            }
         }
         #endregion
 
@@ -444,9 +496,7 @@ namespace Final_Kinect
                 Math.Abs(mSpineMidPositionDiff) > limit ||
                 Math.Abs(mSpineShoulderPositionDiff) > limit ||
                 Math.Abs(mShoulderLeftPositionDiff) > limit ||
-                Math.Abs(mShoulderRightPositionDiff) > limit //||
-            //    Math.Abs(mElbowLeftPositionDiff) > limit ||
-             //   Math.Abs(mElbowLeftPositionDiff) > limit
+                Math.Abs(mShoulderRightPositionDiff) > limit
             );
         }
 
@@ -462,6 +512,14 @@ namespace Final_Kinect
             mShoulderRightPositionDiffMedian = GetMedian(mShoulderRightPositionDiffMedianArray);
             mElbowLeftPositionDiffMedian = GetMedian(mElbowLeftPositionDiffMedianArray);
             mElbowRightPositionDiffMedian = GetMedian(mElbowRightPositionDiffMedianArray);
+
+            mSessionHeadPositionDiffMedian = GetMedian(mSessionHeadPositionDiffMedianArray);
+            mSessionNeckPositionDiffMedian = GetMedian(mSessionNeckPositionDiffMedianArray);
+            mSessionSpineBasePositionDiffMedian = GetMedian(mSessionSpineBasePositionDiffMedianArray);
+            mSessionSpineMidPositionDiffMedian = GetMedian(mSessionSpineMidPositionDiffMedianArray);
+            mSessionSpineShoulderPositionDiffMedian = GetMedian(mSessionSpineShoulderPositionDiffMedianArray);
+            mSessionShoulderLeftPositionDiffMedian = GetMedian(mSessionShoulderLeftPositionDiffMedianArray);
+            mSessionShoulderRightPositionDiffMedian = GetMedian(mSessionShoulderRightPositionDiffMedianArray);
         }
         private double GetMedian(double[] medianSmoothing)
         {
@@ -503,6 +561,14 @@ namespace Final_Kinect
             mShoulderRightPositionDiffMedianArray[element] = mShoulderRightPositionDiff;
             mElbowLeftPositionDiffMedianArray[element] = mElbowLeftPositionDiff;
             mElbowRightPositionDiffMedianArray[element] = mElbowRightPositionDiff;
+
+            mSessionHeadPositionDiffMedianArray[element] = mSessionHeadPositionDiff;
+            mSessionNeckPositionDiffMedianArray[element] = mSessionNeckPositionDiff;
+            mSessionSpineBasePositionDiffMedianArray[element] = mSessionSpineBasePositionDiff;
+            mSessionSpineMidPositionDiffMedianArray[element] = mSessionSpineMidPositionDiff;
+            mSessionSpineShoulderPositionDiffMedianArray[element] = mSessionSpineShoulderPositionDiff;
+            mSessionShoulderLeftPositionDiffMedianArray[element] = mSessionShoulderLeftPositionDiff;
+            mSessionShoulderRightPositionDiffMedianArray[element] = mSessionShoulderRightPositionDiff;
         }
         private bool MedianOver(int limit)
         {
@@ -530,6 +596,14 @@ namespace Final_Kinect
             mShoulderRightPositionDiffMean = mShoulderRightPositionDiffMeanSum / mSmoothingKernal;
             mElbowLeftPositionDiffMean = mElbowLeftPositionDiffMeanSum / mSmoothingKernal;
             mElbowRightPositionDiffMean = mElbowRightPositionDiffMeanSum / mSmoothingKernal;
+
+            mSessionHeadPositionDiffMean = mSessionHeadPositionDiffMeanSum / mSmoothingKernal;
+            mSessionNeckPositionDiffMean = mSessionNeckPositionDiffMeanSum / mSmoothingKernal;
+            mSessionSpineBasePositionDiffMean = mSessionSpineBasePositionDiffMeanSum / mSmoothingKernal;
+            mSessionSpineMidPositionDiffMean = mSessionSpineMidPositionDiffMeanSum / mSmoothingKernal;
+            mSessionSpineShoulderPositionDiffMean = mSessionSpineShoulderPositionDiffMeanSum / mSmoothingKernal;
+            mSessionShoulderLeftPositionDiffMean = mSessionShoulderLeftPositionDiffMeanSum / mSmoothingKernal;
+            mSessionShoulderRightPositionDiffMean = mSessionShoulderRightPositionDiffMeanSum / mSmoothingKernal;
         }
         private void UpdateMeanSums()
         {
@@ -542,6 +616,14 @@ namespace Final_Kinect
             mShoulderRightPositionDiffMeanSum += mShoulderRightPositionDiff;
             mElbowLeftPositionDiffMeanSum += mElbowLeftPositionDiff;
             mElbowRightPositionDiffMeanSum += mElbowRightPositionDiff;
+
+            mSessionHeadPositionDiffMeanSum += mSessionHeadPositionDiff;
+            mSessionNeckPositionDiffMeanSum += mSessionNeckPositionDiff;
+            mSessionSpineBasePositionDiffMeanSum += mSessionSpineBasePositionDiff;
+            mSessionSpineMidPositionDiffMeanSum += mSessionSpineMidPositionDiff;
+            mSessionSpineShoulderPositionDiffMeanSum += mSessionSpineShoulderPositionDiff;
+            mSessionShoulderLeftPositionDiffMeanSum += mSessionShoulderLeftPositionDiff;
+            mSessionShoulderRightPositionDiffMeanSum += mSessionShoulderRightPositionDiff;
         }
         private void ResetMeanSums()
         {
@@ -596,7 +678,7 @@ namespace Final_Kinect
                 UpdateLimitsTextBox((mWarning + 2).ToString(), (mNotAllowed + 2).ToString());
                 UpdateCurrentLimits(true, false);
             }
-            mSessionState = 21;
+            mSessionState = STOPPED;
 
             UpdateDataFile("Large Movement");
         }
@@ -677,6 +759,7 @@ namespace Final_Kinect
         }
         #endregion
 
+        #region Miscellaneous
         private void InitializeDataFiles(String filePath, String subjectInitials, String experimentNumber)
         {
             mDataFile = new StreamWriter(
@@ -692,7 +775,10 @@ namespace Final_Kinect
                 "Timestamp," +
                 "MeanHeadDiff,MeanNeckDiff,MeanSpineBaseDiff,MeanSpineMidDiff,MeanSpineShoulderDiff,MeanShoulderLeftDiff,MeanShoulderRightDiff,MeanElbowLeftDiff,MeanElbowRightDiff,," +
                 "MedianHeadDiff,MedianNeckDiff,MedianSpineBaseDiff,MedianSpineMidDiff,MedianSpineShoulderDiff,MedianShoulderLeftDiff,MedianShoulderRightDiff,MedianElbowLeftDiff,MedianElbowRightDiff,," +
-                "RawHeadDiff,RawNeckDiff,RawSpineBaseDiff,RawSpineMidDiff,RawSpineShoulderDiff,RawShoulderLeftDiff,RawShoulderRightDiff,RawElbowLeftDiff,RawElbowRightDiff"
+                "RawHeadDiff,RawNeckDiff,RawSpineBaseDiff,RawSpineMidDiff,RawSpineShoulderDiff,RawShoulderLeftDiff,RawShoulderRightDiff,RawElbowLeftDiff,RawElbowRightDiff,," +
+                "SessionMeanHeadDiff,SessionMeanNeckDiff,SessionMeanSpineBaseDiff,SessionMeanSpineMidDiff,SessionMeanSpineShoulderDiff,SessionMeanShoulderLeftDiff,SessionMeanShoulderRightDiff,," +
+                "SessionMedianHeadDiff,SessionMedianNeckDiff,SessionMedianSpineBaseDiff,SessionMedianSpineMidDiff,SessionMedianSpineShoulderDiff,SessionMedianShoulderLeftDiff,SessionMedianShoulderRightDiff,," +
+                "SessionRawHeadDiff,SessionRawNeckDiff,SessionRawSpineBaseDiff,SessionRawSpineMidDiff,SessionRawSpineShoulderDiff,SessionRawShoulderLeftDiff,SessionRawShoulderRightDiff"
             );
         }
         private void UpdateDataFile(String sessionEvent)
@@ -707,9 +793,7 @@ namespace Final_Kinect
                 mSpineMidPositionDiffMean.ToString() + "," +
                 mSpineShoulderPositionDiffMean.ToString() + "," +
                 mShoulderLeftPositionDiffMean.ToString() + "," +
-                mShoulderRightPositionDiffMean.ToString() + "," +
-                mElbowLeftPositionDiffMean.ToString() + "," +
-                mElbowRightPositionDiffMean.ToString() + ",," +
+                mShoulderRightPositionDiffMean.ToString() + ",," +
                 // Median Diff
                 mHeadPositionDiffMedian.ToString() + "," +
                 mNeckPositionDiffMedian.ToString() + "," +
@@ -717,9 +801,7 @@ namespace Final_Kinect
                 mSpineMidPositionDiffMedian.ToString() + "," +
                 mSpineShoulderPositionDiffMedian.ToString() + "," +
                 mShoulderLeftPositionDiffMedian.ToString() + "," +
-                mShoulderRightPositionDiffMedian.ToString() + "," +
-                mElbowLeftPositionDiffMedian.ToString() + "," +
-                mElbowRightPositionDiffMedian.ToString() + ",," +
+                mShoulderRightPositionDiffMedian.ToString() + ",," +
                 // Raw Diff
                 mHeadPositionDiff.ToString() + "," +
                 mNeckPositionDiff.ToString() + "," +
@@ -727,9 +809,31 @@ namespace Final_Kinect
                 mSpineMidPositionDiff.ToString() + "," +
                 mSpineShoulderPositionDiff.ToString() + "," +
                 mShoulderLeftPositionDiff.ToString() + "," +
-                mShoulderRightPositionDiff.ToString() + "," +
-                mElbowLeftPositionDiff.ToString() + "," +
-                mElbowRightPositionDiff.ToString()
+                mShoulderRightPositionDiff.ToString() + ",," +
+                // Session Mean Diff
+                mSessionHeadPositionDiffMean.ToString() + "," +
+                mSessionNeckPositionDiffMean.ToString() + "," +
+                mSessionSpineBasePositionDiffMean.ToString() + "," +
+                mSessionSpineMidPositionDiffMean.ToString() + "," +
+                mSessionSpineShoulderPositionDiffMean.ToString() + "," +
+                mSessionShoulderLeftPositionDiffMean.ToString() + "," +
+                mSessionShoulderRightPositionDiffMean.ToString() + ",," +
+                // Session Median Diff
+                mSessionHeadPositionDiffMedian.ToString() + "," +
+                mSessionNeckPositionDiffMedian.ToString() + "," +
+                mSessionSpineBasePositionDiffMedian.ToString() + "," +
+                mSessionSpineMidPositionDiffMedian.ToString() + "," +
+                mSessionSpineShoulderPositionDiffMedian.ToString() + "," +
+                mSessionShoulderLeftPositionDiffMedian.ToString() + "," +
+                mSessionShoulderRightPositionDiffMedian.ToString() + ",," +
+                // Session Raw Diff
+                mSessionHeadPositionDiff.ToString() + "," +
+                mSessionNeckPositionDiff.ToString() + "," +
+                mSessionSpineBasePositionDiff.ToString() + "," +
+                mSessionSpineMidPositionDiff.ToString() + "," +
+                mSessionSpineShoulderPositionDiff.ToString() + "," +
+                mSessionShoulderLeftPositionDiff.ToString() + "," +
+                mSessionShoulderRightPositionDiff.ToString()
             );
         }
 
@@ -791,6 +895,7 @@ namespace Final_Kinect
                 MediaPlayersPlay();
             }
         }
+        #endregion
 
         #region Events (except Kinect's FrameArrived event)
         // Timer event for progress bar

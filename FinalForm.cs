@@ -36,11 +36,13 @@ namespace Final_Kinect
 
         int mSessionState = 0;
 
+        bool mStartedShaping = false;
+
         StreamWriter mDataFile;
 
         bool mCurrentJointPositionsSet = false;
         bool mOriginalJointPositionsSet = false;
-        bool mSessionOriginalJointPositionsSet = true;
+        bool mSessionOriginalJointPositionsSet = false;
 
         bool mAutoShape = false; // Not currently enabled. Set to true to enable
         bool mBaseline = false; // Default to false. Will be set to true if Movement proble button clicked
@@ -212,6 +214,14 @@ namespace Final_Kinect
             mShoulderRightPositionDiffMedianArray = new double[mSmoothingKernal];
             mElbowLeftPositionDiffMedianArray = new double[mSmoothingKernal];
             mElbowRightPositionDiffMedianArray = new double[mSmoothingKernal];
+
+            mSessionHeadPositionDiffMedianArray = new double[mSmoothingKernal];
+            mSessionNeckPositionDiffMedianArray = new double[mSmoothingKernal];
+            mSessionSpineBasePositionDiffMedianArray = new double[mSmoothingKernal];
+            mSessionSpineMidPositionDiffMedianArray = new double[mSmoothingKernal];
+            mSessionSpineShoulderPositionDiffMedianArray = new double[mSmoothingKernal];
+            mSessionShoulderLeftPositionDiffMedianArray = new double[mSmoothingKernal];
+            mSessionShoulderRightPositionDiffMedianArray = new double[mSmoothingKernal];
 
             progressBar.Maximum = (Convert.ToInt32(sessionTime));
             axWindowsMediaPlayer1.URL = videoFile;
@@ -636,6 +646,14 @@ namespace Final_Kinect
             mShoulderRightPositionDiffMeanSum = 0;
             mElbowLeftPositionDiffMeanSum = 0;
             mElbowRightPositionDiffMeanSum = 0;
+
+            mSessionHeadPositionDiffMeanSum = 0;
+            mSessionNeckPositionDiffMeanSum = 0;
+            mSessionSpineBasePositionDiffMeanSum = 0;
+            mSessionSpineMidPositionDiffMeanSum = 0;
+            mSessionSpineShoulderPositionDiffMeanSum = 0;
+            mSessionShoulderLeftPositionDiffMeanSum = 0;
+            mSessionShoulderRightPositionDiffMeanSum = 0;
         }
         private void MeansUpdates()
         {
@@ -982,7 +1000,8 @@ namespace Final_Kinect
         }
         private void shapeButton_Click(object sender, EventArgs e)
         {
-            UpdateLimitsTextBox("11", "13");
+            UpdateLimitsTextBox("150", "100");
+            mStartedShaping = true;
         }
         private void stepUpButton_Click(object sender, EventArgs e)
         {
@@ -997,6 +1016,10 @@ namespace Final_Kinect
         private void scanButton_Click(object sender, EventArgs e)
         {
             mOriginalJointPositionsSet = false;
+        }
+        private void sessionScanButton_Click(object sender, EventArgs e)
+        {
+            mSessionOriginalJointPositionsSet = false;
         }
         private void initializeButton_Click(object sender, EventArgs e)
         {
@@ -1016,8 +1039,19 @@ namespace Final_Kinect
         }
         private void setLimitsButton_Click(object sender, EventArgs e)
         {
-            StopBaseline();
+            if (mBaseline)
+            {
+                StopBaseline();
+            }
+
             UpdateCurrentLimits(true, true);
+
+            if (mStartedShaping)
+            {
+                mStartedShaping = false;
+                mSessionOriginalJointPositionsSet = false;
+            }
+
             mOriginalJointPositionsSet = false;
         }
         private void FinalForm_Load(object sender, EventArgs e)
